@@ -7,11 +7,10 @@ body {
   color: #f2f2f2;
   background-color: #0a0b0d;
   -webkit-tap-highlight-color: transparent;
-  font-family: "comic sans ms", sans-serif !important;
 }
 
 main {
-  padding: 3rem 5%;
+  padding: 3%;
   display: flex;
   flex-direction: column;
   gap: 3rem;
@@ -24,5 +23,21 @@ h1 {
 
 input,
 button {
-  all: revert;
+  border: 1px solid white;
+  background-color: #303030;
+  transition: 0.1s filter ease-out;
+
+  &:hover {
+    filter: contrast(0.8);
+  }
+}
+
+input:focus {
+  filter: contrast(0.7);
+}
+
+button {
+  padding: 0.65rem 2rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
 }
