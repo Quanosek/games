@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 
-// import "the-new-css-reset/css/reset.css";
+import "the-new-css-reset/css/reset.css";
 import "./globals.scss";
 
 export const metadata: Metadata = {
