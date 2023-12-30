@@ -1,8 +1,10 @@
-.preview {
+.data {
+  margin-top: 10rem;
   scale: 2;
 
   $cell-width: 18.55px;
   $cell-correction: 2.65px;
+  $letter-spacing: 1.65px;
 
   width: 550px;
   display: flex;
@@ -14,14 +16,13 @@
   gap: 8.15px;
 
   font-size: 140%;
-  letter-spacing: 1.65px;
+  letter-spacing: $letter-spacing;
 
   color: #d9c465;
   text-transform: uppercase;
 
   div {
     display: flex;
-    justify-content: space-between;
     gap: $cell-width;
   }
 
@@ -34,6 +35,14 @@
     width: 100%;
     display: flex;
     justify-content: flex-start;
+  }
+
+  .dots {
+    letter-spacing: 0;
+    font-size: 50%;
+    align-items: flex-end;
+    gap: $letter-spacing;
+    text-align: start;
   }
 
   .points {

@@ -128,11 +128,11 @@ export default function Question({ id }: { id: number }) {
       "width=960, height=540"
     );
 
-    const controls = window.open(
-      "/controls",
-      "Familiada - Panel sterowania",
-      "width=960, height=540"
-    );
+    // const controls = window.open(
+    //   "/controls",
+    //   "Familiada - Panel sterowania",
+    //   "width=960, height=540"
+    // );
   };
 
   return (
@@ -170,9 +170,11 @@ export default function Question({ id }: { id: number }) {
           <button type="submit">
             <p>👀 Podgląd</p>
           </button>
+
           <button type="button" onClick={handleClearBoard}>
             <p>🧹 Wyczyść</p>
           </button>
+
           <button type="button" onClick={handleShowBoard}>
             <p>🖥️ Pokaż</p>
           </button>
@@ -185,14 +187,17 @@ export default function Question({ id }: { id: number }) {
             const formattedAnswer = el.answer
               .split(" ")
               .filter((el: string) => el);
+
             return (
               <div key={i}>
                 <p>{i + 1}</p>
+
                 <div className={styles.answer}>
                   {formattedAnswer.map((word: string, i: number) => (
-                    <div key={i}>{word}</div>
+                    <p key={i}>{word}</p>
                   ))}
                 </div>
+
                 <p className={styles.points}>{el.points}</p>
               </div>
             );
