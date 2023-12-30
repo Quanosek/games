@@ -53,11 +53,10 @@ export default function Question() {
       .map(({ answer, points }) => ({ answer, points }));
 
     if (!(sortedAnswers.length > 1)) {
-      window.alert("Brak informacji do wyświetlenia planszy!");
+      return window.alert("Brak informacji do wyświetlenia planszy!");
     }
 
     setAnswers(sortedAnswers);
-    localStorage.setItem("answers", JSON.stringify(sortedAnswers));
   };
 
   return (
