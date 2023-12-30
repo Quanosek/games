@@ -1,7 +1,7 @@
 "use client";
 
 import localFont from "next/font/local";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 import styles from "./question.module.scss";
 
@@ -25,11 +25,14 @@ export default function Question({ id }: { id: number }) {
   // define answers state
   const [answers, setAnswers] = useState<any>();
 
+  useEffect(() => {
+    const answers = localStorage.getItem("answers");
+    if (answers) setAnswers(JSON.parse(answers)[id]);
+  }, [id]);
+
   // handle form submit button
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // console.log(`plansza ${id + 1}`);
 
     const elements = Array.from(e.target.elements)
       .map((el: any) => {
@@ -56,7 +59,70 @@ export default function Question({ id }: { id: number }) {
       return window.alert("Brak informacji do wyświetlenia planszy!");
     }
 
+    // manage local storage data
+    const local = localStorage.getItem("answers");
+
+    if (!local) {
+      // create new data with board
+      localStorage.setItem(
+        "answers",
+        JSON.stringify({
+          [id]: sortedAnswers,
+        })
+      );
+    } else {
+      const parsed = JSON.parse(local);
+
+      if (parsed[id]) {
+        // update existing board
+        parsed[id] = sortedAnswers;
+        localStorage.setItem("answers", JSON.stringify(parsed));
+      } else {
+        // create new board
+        localStorage.setItem(
+          "answers",
+          JSON.stringify({
+            ...parsed,
+            [id]: sortedAnswers,
+          })
+        );
+      }
+    }
+
     setAnswers(sortedAnswers);
+    window.alert("Zapisano planszę do pamięci lokalnej.");
+  };
+
+  const handleClearBoard = (e: ChangeEvent<EventTarget>) => {
+    if (!window.confirm("Czy na pewno chcesz wyczyścić planszę?")) return;
+
+    // manage local storage data
+    const local = localStorage.getItem("answers");
+
+    if (local) {
+      const parsed = JSON.parse(local);
+
+      if (parsed[id]) {
+        // remove existing board
+        delete parsed[id];
+
+        // modify id of other boards
+        Object.keys(parsed).forEach((key) => {
+          if (Number(key) > id) {
+            parsed[Number(key) - 1] = parsed[key];
+            delete parsed[key];
+          }
+        });
+
+        localStorage.setItem("answers", JSON.stringify(parsed));
+      }
+    }
+
+    setAnswers(undefined);
+  };
+
+  const handleShowBoard = (e: ChangeEvent<EventTarget>) => {
+    //
   };
 
   return (
@@ -91,7 +157,15 @@ export default function Question({ id }: { id: number }) {
         ))}
 
         <div className={styles.buttons}>
-          <button type="submit">Podgląd</button>
+          <button type="submit">
+            <p>👀 Podgląd</p>
+          </button>
+          <button type="button" onClick={handleClearBoard}>
+            <p>🧹 Wyczyść</p>
+          </button>
+          <button type="button" onClick={handleShowBoard}>
+            <p>🖥️ Pokaż</p>
+          </button>
         </div>
       </form>
 
