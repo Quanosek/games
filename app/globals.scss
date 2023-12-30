@@ -1,11 +1,15 @@
 :root {
   color-scheme: dark;
+
+  --white: #f2f2f2;
+  --black: #0a0b0d;
+  --yellow: #d9c465;
 }
 
 html,
 body {
-  color: #f2f2f2;
-  background-color: #0a0b0d;
+  color: var(--white);
+  background-color: var(--black);
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   display: flex;

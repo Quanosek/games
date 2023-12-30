@@ -33,6 +33,7 @@ export default function Board({ params }: { params: { id: number } }) {
   };
 
   const pointsAmount = useRef(0);
+  const mainScore = useRef(0);
 
   // team mistakes
   const [redMistakes, setRedMistakes] = useState(0);
@@ -41,18 +42,29 @@ export default function Board({ params }: { params: { id: number } }) {
   // keyboard navigation
   useEffect(() => {
     const KeyupEvent = (event: KeyboardEvent) => {
-      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+      if (event.shiftKey || event.altKey || event.metaKey) {
         return;
       }
 
       // show answer
       if ([1, 2, 3, 4, 5, 6].includes(+event.key)) {
+        event.preventDefault();
+
         const number = Number(event.key);
         if (!answers[number - 1]) return;
 
         if (!show.includes(number)) {
-          pointsAmount.current += answers[number - 1].points;
           setShow([...show, number]);
+
+          if (!event.ctrlKey) {
+            const points = answers[number - 1].points;
+            pointsAmount.current += points;
+
+            let score = points;
+            if (answers.length === 5) score = points * 2;
+            if (answers.length < 5) score = points * 3;
+            mainScore.current += score;
+          }
         }
       }
 
@@ -120,6 +132,14 @@ export default function Board({ params }: { params: { id: number } }) {
 
   return (
     <div className={`${dottedFont.className} ${styles.container}`}>
+      <div className={styles.summary}>
+        <div>
+          {numberFormatter(mainScore.current).map((el: string, i: number) => {
+            return <p key={i}>{el}</p>;
+          })}
+        </div>
+      </div>
+
       <div className={styles.data}>
         <div className={styles.mistakes}>{handleMistakes(redMistakes)}</div>
 

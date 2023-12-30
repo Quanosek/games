@@ -10,6 +10,36 @@
   background-position: center;
 }
 
+.summary {
+  position: absolute;
+  top: 1.05vw;
+  left: 0vw;
+
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  opacity: 75%;
+  font-size: 8.7vw;
+  color: var(--yellow);
+  filter: contrast(1.5) saturate(0.9);
+
+  div {
+    width: 19vw;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.2vw;
+
+    p {
+      width: 5.5vw;
+      display: flex;
+      align-items: center;
+      letter-spacing: 0;
+      // background-color: #13469d;
+    }
+  }
+}
+
 .data {
   $cell-width: 1.86vw;
   $cell-space: 0.57vw;
@@ -24,7 +54,7 @@
   display: flex;
   gap: calc($cell-width + 2 * $cell-space);
 
-  color: #d9c465;
+  color: var(--yellow);
   text-transform: uppercase;
 
   div {
