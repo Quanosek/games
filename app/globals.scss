@@ -8,6 +8,9 @@ body {
   background-color: #0a0b0d;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 main {

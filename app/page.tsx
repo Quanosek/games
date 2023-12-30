@@ -36,6 +36,15 @@ export default function Home() {
         />
       </div>
 
+      <p className={styles.description}>
+        Dodaj planszę, uzupełnij pytaniami i punktami. Następnie kliknij{" "}
+        {`"Podgląd"`}, aby zobaczyć posortowaną planszę i zapisać ją lokalnie na
+        urządzeniu.
+        <br />
+        Wybierając opcję {`"Pokaż"`} wyświetlisz planszę na zewnętrznym oknie,
+        które można ustawić na pełen ekran np. na rzutniku dla wszystkich.
+      </p>
+
       {[...Array(counter)].map((_, i) => (
         <div className={styles.board} key={i}>
           <input
