@@ -17,13 +17,26 @@ export default function Board({ params }: { params: { id: number } }) {
   const [answers, setAnswers] = useState<any>();
   const [show, setShow] = useState<Array<number>>([]);
 
-  const pointsAmount = useRef(0);
-
   // set answers
   useEffect(() => {
     const answers = localStorage.getItem("answers");
     if (answers) setAnswers(JSON.parse(answers)[id]);
   }, [id]);
+
+  const numberFormatter = (number: number) => {
+    const size = number.toString().length;
+
+    // reserve 3 cells for points
+    return size <= 2
+      ? ["", ...(size === 1 ? [""] : []), ...number.toString().split("")]
+      : number.toString().split("");
+  };
+
+  const pointsAmount = useRef(0);
+
+  // team mistakes
+  const [redMistakes, setRedMistakes] = useState(0);
+  const [blueMistakes, setBlueMistakes] = useState(0);
 
   // keyboard navigation
   useEffect(() => {
@@ -45,37 +58,70 @@ export default function Board({ params }: { params: { id: number } }) {
 
       // close board
       if (event.key === "Escape") window.close();
+
+      // manage teams mistakes
+      switch (event.key.toUpperCase()) {
+        case "Q":
+          setRedMistakes(4);
+          break;
+        case "W":
+          if (redMistakes >= 3) return;
+          setRedMistakes(redMistakes + 1);
+          break;
+        case "E":
+          setRedMistakes(0);
+          setBlueMistakes(0);
+          break;
+        case "R":
+          if (blueMistakes >= 3) return;
+          setBlueMistakes(blueMistakes + 1);
+          break;
+        case "T":
+          setBlueMistakes(4);
+          break;
+      }
     };
 
     document.addEventListener("keyup", KeyupEvent);
     return () => document.removeEventListener("keyup", KeyupEvent);
-  }, [answers, show]);
+  }, [answers, show, blueMistakes, redMistakes]);
 
-  const numberFormatter = (number: number) => {
-    const size = number.toString().length;
-
-    // reserve 3 cells for points
-    return size <= 2
-      ? ["", ...(size === 1 ? [""] : []), ...number.toString().split("")]
-      : number.toString().split("");
-  };
-
-  if (!answers) return null;
-
-  return (
-    <div className={`${dottedFont.className} ${styles.container}`}>
-      <div className={styles.data}>
-        <div className={styles.mistakes}>
-          {/* <Image
+  const handleMistakes = (teamCounter: number) => {
+    return (
+      <div className={styles.mistakes}>
+        {(teamCounter > 3 && (
+          <Image
             className={styles.big}
             src="/images/x_big.webp"
             alt="X"
             width={111}
             height={283}
-          /> */}
+            draggable={false}
+          />
+        )) ||
+          [...Array(teamCounter)].map((_, i) => {
+            return (
+              <Image
+                key={i}
+                src="/images/x_small.webp"
+                alt="x"
+                width={111}
+                height={163}
+                draggable={false}
+              />
+            );
+          })}
+      </div>
+    );
+  };
 
-          {/* <Image src="/images/x_small.webp" alt="x" width={111} height={163} /> */}
-        </div>
+  // render content only with answers loaded
+  if (!answers) return null;
+
+  return (
+    <div className={`${dottedFont.className} ${styles.container}`}>
+      <div className={styles.data}>
+        <div className={styles.mistakes}>{handleMistakes(redMistakes)}</div>
 
         <div className={styles.main}>
           {answers.map((el: any, i: number) => {
@@ -131,17 +177,7 @@ export default function Board({ params }: { params: { id: number } }) {
           </div>
         </div>
 
-        <div className={styles.mistakes}>
-          {/* <Image
-            className={styles.big}
-            src="/images/x_big.webp"
-            alt="X"
-            width={111}
-            height={283}
-          /> */}
-
-          {/* <Image src="/images/x_small.webp" alt="x" width={111} height={163} /> */}
-        </div>
+        <div className={styles.mistakes}>{handleMistakes(blueMistakes)}</div>
       </div>
     </div>
   );

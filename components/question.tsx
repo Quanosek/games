@@ -131,17 +131,11 @@ export default function Question({ id }: { id: number }) {
       return window.alert("Najpierw musisz zapisać planszę!");
     }
 
-    const board = window.open(
+    window.open(
       `/board/${id}`,
       "Familiada - Tablica wyników",
       "width=960, height=540"
     );
-
-    // const controls = window.open(
-    //   "/controls",
-    //   "Familiada - Panel sterowania",
-    //   "width=960, height=540"
-    // );
   };
 
   return (
