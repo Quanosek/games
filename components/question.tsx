@@ -93,7 +93,7 @@ export default function Question({ id }: { id: number }) {
     window.alert("Zapisano planszę do pamięci lokalnej.");
   };
 
-  const handleClearBoard = (e: ChangeEvent<EventTarget>) => {
+  const handleClearBoard = () => {
     if (!window.confirm("Czy na pewno chcesz wyczyścić planszę?")) return;
 
     // manage local storage data
@@ -172,10 +172,17 @@ export default function Question({ id }: { id: number }) {
       <div className={`${dottedFont.className} ${styles.preview}`}>
         {answers &&
           answers.map((el: any, i: number) => {
+            const formattedAnswer = el.answer
+              .split(" ")
+              .filter((el: string) => el);
             return (
               <div key={i}>
-                <h2>{i + 1}</h2>
-                <p className={styles.answer}>{el.answer}</p>
+                <p>{i + 1}</p>
+                <div className={styles.answer}>
+                  {formattedAnswer.map((word: string, i: number) => (
+                    <div key={i}>{word}</div>
+                  ))}
+                </div>
                 <p className={styles.points}>{el.points}</p>
               </div>
             );
