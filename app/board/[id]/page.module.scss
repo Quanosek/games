@@ -23,8 +23,11 @@
   $cell-width: 1.86vw;
   $cell-space: 0.57vw;
 
-  padding-top: calc(1 * 3.665vw);
-  padding-left: calc(4 * ($cell-width + $cell-space));
+  $top-space: 3.65vw;
+  $save-space: $cell-width + $cell-space;
+
+  padding-top: $top-space;
+  padding-left: calc(4 * ($save-space));
 
   font-size: 2.8vw;
   letter-spacing: 0.45vw;
@@ -32,6 +35,7 @@
   color: #d9c465;
   text-transform: uppercase;
 
+  // one line of content
   .item {
     gap: calc($cell-width + 2 * $cell-space);
   }
@@ -42,7 +46,7 @@
 
     .answer,
     .dots {
-      width: calc(17 * ($cell-width + $cell-space) - $cell-space);
+      width: calc(17 * ($save-space) - $cell-space);
     }
 
     p {
@@ -50,25 +54,34 @@
       display: flex;
       align-items: center;
       letter-spacing: 0;
+      // background-color: #13469d;
+    }
+
+    .answer {
+      width: 100%;
+
+      p {
+        justify-content: flex-start;
+      }
+    }
+
+    .dots {
+      position: relative;
+      align-items: flex-end;
+      font-size: 50%;
+      letter-spacing: 0;
+
+      p {
+        justify-content: center;
+      }
     }
   }
 
-  .answer {
-    width: 100%;
+  .pointsAmount {
+    padding-top: $top-space;
+    padding-left: calc(14 * ($save-space));
 
-    p {
-      justify-content: flex-start;
-    }
-  }
-
-  .dots {
-    position: relative;
-    align-items: flex-end;
-    font-size: 50%;
-    letter-spacing: 0;
-
-    p {
-      justify-content: center;
-    }
+    display: flex;
+    gap: calc(($save-space) + $cell-space);
   }
 }
