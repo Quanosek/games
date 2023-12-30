@@ -1,4 +1,4 @@
-.title {
+.header {
   margin: -2.5rem;
   scale: 60%;
 }
@@ -13,12 +13,15 @@
   background-color: #121212;
   max-width: 1440px;
 
-  h1 {
+  .title {
     font-size: 150%;
     font-weight: bold;
+    border: none;
+    background-color: transparent;
   }
 
   hr {
+    margin: -0.25rem 0 0.25rem;
     width: 100%;
     height: 1px;
     background-color: #f2f2f2;

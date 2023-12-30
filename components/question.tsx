@@ -1,25 +1,23 @@
 "use client";
 
 import localFont from "next/font/local";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 import styles from "./question.module.scss";
 
 const dottedFont = localFont({
   src: "../fonts/familiada.woff2",
-  weight: "normal",
-  style: "normal",
   display: "swap",
 });
 
-export default function Question() {
+export default function Question({ id }: { id: number }) {
   // valid inputs
-  const answerFormat = (e: any) => {
+  const answerFormat = (e: ChangeEvent<HTMLInputElement>) => {
     const filtered = e.target.value.replace(/[^a-zA-Z\s.]/g, "");
     e.target.value = filtered;
   };
 
-  const pointsFormat = (e: any) => {
+  const pointsFormat = (e: ChangeEvent<HTMLInputElement>) => {
     const filtered = e.target.value.replace(/[^0-9]/g, "");
     e.target.value = filtered;
   };
@@ -28,8 +26,10 @@ export default function Question() {
   const [answers, setAnswers] = useState<any>();
 
   // handle form submit button
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // console.log(`plansza ${id + 1}`);
 
     const elements = Array.from(e.target.elements)
       .map((el: any) => {
@@ -60,23 +60,25 @@ export default function Question() {
   };
 
   return (
-    <div className={styles.preview}>
-      <form className={styles.list} onSubmit={handleSubmit}>
+    <div className={styles.board}>
+      <form onSubmit={handleSubmit}>
         {Array.from({ length: 6 }).map((_, i) => (
-          <div className={styles.answers} key={i}>
-            <div className={styles.text}>
+          <div className={styles.list} key={i}>
+            <div className={styles.answer}>
               <p>Odpowiedź {i + 1}:</p>
+
               <input
                 id={`${i}-answer`}
                 type="text"
                 autoComplete="off"
-                maxLength={24}
+                maxLength={17}
                 onChange={answerFormat}
               />
             </div>
 
             <div className={styles.points}>
               <p>Liczba punktów:</p>
+
               <input
                 id={`${i}-points`}
                 type="text"
@@ -93,25 +95,18 @@ export default function Question() {
         </div>
       </form>
 
-      <section className={`${dottedFont.className} ${styles.board}`}>
+      <div className={`${dottedFont.className} ${styles.preview}`}>
         {answers &&
           answers.map((el: any, i: number) => {
             return (
               <div key={i}>
                 <h2>{i + 1}</h2>
-                <p
-                  className={styles.answer}
-                  style={{
-                    borderBottom: el.answer ? "" : "3px dotted #d9c465",
-                  }}
-                >
-                  {el.answer}
-                </p>
+                <p className={styles.answer}>{el.answer}</p>
                 <p className={styles.points}>{el.points}</p>
               </div>
             );
           })}
-      </section>
+      </div>
     </div>
   );
 }

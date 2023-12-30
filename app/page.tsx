@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
     <main>
-      <div className={styles.title}>
+      <div className={styles.header}>
         <Image
           alt="FAMILIADA"
           src="/title.png"
@@ -24,9 +24,13 @@ export default function Home() {
 
       {[...Array(counter + 1)].map((_, i) => (
         <div className={styles.board} key={i}>
-          <h1>Plansza {i + 1}</h1>
+          <input
+            className={styles.title}
+            type="text"
+            defaultValue={`Plansza ${i + 1}`}
+          />
           <hr />
-          <Question />
+          <Question id={i} />
         </div>
       ))}
 
