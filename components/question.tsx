@@ -121,8 +121,18 @@ export default function Question({ id }: { id: number }) {
     setAnswers(undefined);
   };
 
-  const handleShowBoard = (e: ChangeEvent<EventTarget>) => {
-    //
+  const handleShowBoard = () => {
+    const board = window.open(
+      `/board/${id}`,
+      "Familiada - Tablica wyników",
+      "width=960, height=540"
+    );
+
+    const controls = window.open(
+      "/controls",
+      "Familiada - Panel sterowania",
+      "width=960, height=540"
+    );
   };
 
   return (

@@ -63,12 +63,11 @@
   padding-right: calc(4 * $cell-width - 2 * $cell-correction);
   gap: 8.15px;
 
+  color: #d9c465;
   font-size: 140%;
   letter-spacing: 1.65px;
-
-  color: #d9c465;
-  background-color: #2c2933;
   text-transform: uppercase;
+
   background: no-repeat url("/board_empty.jpg");
   background-size: contain;
 
