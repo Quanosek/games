@@ -16,6 +16,12 @@ export default function Board({ params }: { params: { id: number } }) {
   const [answers, setAnswers] = useState<any>();
   const [show, setShow] = useState<Array<number>>([]);
 
+  // set answers
+  useEffect(() => {
+    const answers = localStorage.getItem("answers");
+    if (answers) setAnswers(JSON.parse(answers)[id]);
+  }, [id]);
+
   // keyboard navigation
   useEffect(() => {
     const KeyupEvent = (event: KeyboardEvent) => {
@@ -27,52 +33,60 @@ export default function Board({ params }: { params: { id: number } }) {
         const number = Number(event.key);
         if (!show.includes(number)) setShow([...show, number]);
       }
+
+      if (event.key.toUpperCase() === "ESCAPE") window.close();
     };
 
     document.addEventListener("keyup", KeyupEvent);
     return () => document.removeEventListener("keyup", KeyupEvent);
   }, [show]);
 
-  useEffect(() => {
-    const answers = localStorage.getItem("answers");
-    if (answers) setAnswers(JSON.parse(answers)[id]);
-  }, [id]);
-
   return (
-    <div className={`${dottedFont.className} ${styles.data}`}>
-      {answers &&
-        answers.map((el: any, i: number) => {
-          let answer = el.answer.split(" ").filter((el: string) => el);
-          let points = el.points;
+    <div className={`${dottedFont.className} ${styles.container}`}>
+      <div className={styles.data}>
+        {answers &&
+          answers.map((el: any, i: number) => {
+            const answer = el.answer.split("");
+            const points =
+              el.points.toString().length === 1
+                ? ["", ...el.points.toString()]
+                : el.points.toString().split("");
 
-          return (
-            <div key={i}>
-              <p>{i + 1}</p>
+            return (
+              <div className={styles.item} key={i}>
+                <p>{i + 1}</p>
 
-              {show.includes(i + 1) && (
-                <>
-                  <div className={styles.answer}>
-                    {answer.map((word: string, i: number) => (
-                      <p key={i}>{word}</p>
-                    ))}
+                {/* answer revealed */}
+                {show.includes(i + 1) && (
+                  <>
+                    <div className={styles.answer}>
+                      {answer.map((word: string, i: number) => (
+                        <p key={i}>{word}</p>
+                      ))}
+                    </div>
+
+                    <div className={styles.points}>
+                      {points.map((word: string, i: number) => (
+                        <p key={i}>{word}</p>
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                {/* answer hidden */}
+                {!show.includes(i + 1) && (
+                  <div className={styles.dots}>
+                    {Array(17)
+                      .fill("...")
+                      .map((cell: string, i: number) => (
+                        <p key={i}>{cell}</p>
+                      ))}
                   </div>
-
-                  <p className={styles.points}>{points}</p>
-                </>
-              )}
-
-              {!show.includes(i + 1) && (
-                <div className={styles.dots}>
-                  {Array(17)
-                    .fill("...")
-                    .map((cell: string, i: number) => (
-                      <p key={i}>{cell}</p>
-                    ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
+                )}
+              </div>
+            );
+          })}
+      </div>
     </div>
   );
 }

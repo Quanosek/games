@@ -24,6 +24,7 @@ export default function Question({ id }: { id: number }) {
 
   // define answers state
   const [answers, setAnswers] = useState<any>();
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     const answers = localStorage.getItem("answers");
@@ -90,6 +91,7 @@ export default function Question({ id }: { id: number }) {
     }
 
     setAnswers(sortedAnswers);
+    setIsSaved(true);
     window.alert("Zapisano planszę do pamięci lokalnej.");
   };
 
@@ -122,6 +124,13 @@ export default function Question({ id }: { id: number }) {
   };
 
   const handleShowBoard = () => {
+    const answers = localStorage.getItem("answers");
+    const local = answers && JSON.parse(answers)[id];
+
+    if (!(isSaved || local)) {
+      return window.alert("Najpierw musisz zapisać planszę!");
+    }
+
     const board = window.open(
       `/board/${id}`,
       "Familiada - Tablica wyników",
@@ -168,7 +177,7 @@ export default function Question({ id }: { id: number }) {
 
         <div className={styles.buttons}>
           <button type="submit">
-            <p>👀 Podgląd</p>
+            <p>💾 Zapisz</p>
           </button>
 
           <button type="button" onClick={handleClearBoard}>

@@ -1,51 +1,74 @@
+.container {
+  position: relative;
+  width: 100svw;
+  height: 100svh;
+  overflow: hidden;
+
+  background-image: url("/images/background.webp");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .data {
-  margin-top: 10rem;
-  scale: 2;
-
-  $cell-width: 18.55px;
-  $cell-correction: 2.65px;
-  $letter-spacing: 1.65px;
-
-  width: 550px;
+  // board positioning
+  position: absolute;
+  top: 17.41vw;
+  left: 13.85vw;
   display: flex;
   flex-direction: column;
+  gap: 1.21vw;
 
-  padding-top: calc(1 * 27.8px);
-  padding-left: calc(4 * $cell-width);
-  padding-right: calc(4 * $cell-width - 2 * $cell-correction);
-  gap: 8.15px;
+  // content positioning
+  $cell-width: 1.86vw;
+  $cell-space: 0.57vw;
 
-  font-size: 140%;
-  letter-spacing: $letter-spacing;
+  padding-top: calc(1 * 3.665vw);
+  padding-left: calc(4 * ($cell-width + $cell-space));
+
+  font-size: 2.8vw;
+  letter-spacing: 0.45vw;
 
   color: #d9c465;
   text-transform: uppercase;
 
-  div {
-    display: flex;
-    gap: $cell-width;
+  .item {
+    gap: calc($cell-width + 2 * $cell-space);
   }
 
-  // fix "1" on board
-  div:first-of-type p:first-of-type {
-    margin-left: 2.65px;
+  div {
+    display: flex;
+    gap: $cell-space;
+
+    .answer,
+    .dots {
+      width: calc(17 * ($cell-width + $cell-space) - $cell-space);
+    }
+
+    p {
+      width: $cell-width;
+      display: flex;
+      align-items: center;
+      letter-spacing: 0;
+    }
   }
 
   .answer {
     width: 100%;
-    display: flex;
-    justify-content: flex-start;
+
+    p {
+      justify-content: flex-start;
+    }
   }
 
   .dots {
-    letter-spacing: 0;
-    font-size: 50%;
+    position: relative;
     align-items: flex-end;
-    gap: $letter-spacing;
-    text-align: start;
-  }
+    font-size: 50%;
+    letter-spacing: 0;
 
-  .points {
-    padding-left: 0.5rem;
+    p {
+      justify-content: center;
+    }
   }
 }

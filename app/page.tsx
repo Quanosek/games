@@ -28,7 +28,7 @@ export default function Home() {
       <div className={styles.header}>
         <Image
           alt="FAMILIADA"
-          src="/title.png"
+          src="/images/title.png"
           width={893}
           height={255}
           draggable={false}
