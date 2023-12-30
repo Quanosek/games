@@ -11,42 +11,55 @@
 }
 
 .data {
-  // board positioning
-  position: absolute;
-  top: 17.41vw;
-  left: 13.85vw;
-  display: flex;
-  flex-direction: column;
-  gap: 1.21vw;
-
-  // content positioning
   $cell-width: 1.86vw;
   $cell-space: 0.57vw;
-
   $top-space: 3.65vw;
   $save-space: $cell-width + $cell-space;
 
-  padding-top: $top-space;
-  padding-left: calc(4 * ($save-space));
+  position: relative;
+  top: 17.41vw;
+  left: 13.85vw;
 
-  font-size: 2.8vw;
-  letter-spacing: 0.45vw;
+  height: 35.35vw;
+  display: flex;
+  gap: calc($cell-width + 2 * $cell-space);
 
   color: #d9c465;
   text-transform: uppercase;
 
-  // one line of content
-  .item {
-    gap: calc($cell-width + 2 * $cell-space);
-  }
-
   div {
     display: flex;
     gap: $cell-space;
+  }
+
+  .mistakes {
+    width: calc(3 * $save-space - $cell-space);
+    flex-direction: column-reverse;
+    gap: 1.05vw;
+
+    img {
+      width: 100%;
+      height: auto;
+
+      &.big {
+        margin-bottom: calc(2 * $top-space);
+      }
+    }
+  }
+
+  .main {
+    padding-top: $top-space;
+    display: flex;
+    flex-direction: column;
+    gap: 1.21vw;
+
+    font-size: 2.8vw;
+    letter-spacing: 0.45vw;
 
     .answer,
     .dots {
-      width: calc(17 * ($save-space) - $cell-space);
+      margin-left: $save-space;
+      width: calc(16 * ($save-space) - $cell-space);
     }
 
     p {
@@ -75,13 +88,13 @@
         justify-content: center;
       }
     }
-  }
 
-  .pointsAmount {
-    padding-top: $top-space;
-    padding-left: calc(14 * ($save-space));
+    .pointsAmount {
+      padding-top: $top-space;
+      padding-left: calc(14 * ($save-space));
 
-    display: flex;
-    gap: calc(($save-space) + $cell-space);
+      display: flex;
+      gap: calc($cell-width + 2 * $cell-space);
+    }
   }
 }

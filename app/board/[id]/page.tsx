@@ -1,6 +1,7 @@
 "use client";
 
 import localFont from "next/font/local";
+import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 
 import styles from "./page.module.scss";
@@ -31,8 +32,10 @@ export default function Board({ params }: { params: { id: number } }) {
         return;
       }
 
+      // show answer
       if ([1, 2, 3, 4, 5, 6].includes(+event.key)) {
         const number = Number(event.key);
+        if (!answers[number - 1]) return;
 
         if (!show.includes(number)) {
           pointsAmount.current += answers[number - 1].points;
@@ -40,6 +43,7 @@ export default function Board({ params }: { params: { id: number } }) {
         }
       }
 
+      // close board
       if (event.key === "Escape") window.close();
     };
 
@@ -61,57 +65,82 @@ export default function Board({ params }: { params: { id: number } }) {
   return (
     <div className={`${dottedFont.className} ${styles.container}`}>
       <div className={styles.data}>
-        {answers.map((el: any, i: number) => {
-          const answer = el.answer.split("");
-          const points = numberFormatter(el.points);
+        <div className={styles.mistakes}>
+          {/* <Image
+            className={styles.big}
+            src="/images/x_big.webp"
+            alt="X"
+            width={111}
+            height={283}
+          /> */}
 
-          return (
-            <div className={styles.item} key={i}>
-              <p>{i + 1}</p>
+          {/* <Image src="/images/x_small.webp" alt="x" width={111} height={163} /> */}
+        </div>
 
-              {(show.includes(i + 1) && (
-                // show answer
-                <>
-                  <div className={styles.answer}>
-                    {answer.map((word: string, i: number) => {
-                      return <p key={i}>{word}</p>;
-                    })}
-                  </div>
+        <div className={styles.main}>
+          {answers.map((el: any, i: number) => {
+            const answer = el.answer.split("");
+            const points = numberFormatter(el.points);
+            const dots = Array(17).fill("...");
 
-                  <div className={styles.points}>
-                    {points.map((word: string, i: number) => {
-                      return <p key={i}>{word}</p>;
-                    })}
-                  </div>
-                </>
-              )) || (
-                // show dots
-                <div className={styles.dots}>
-                  {Array(17)
-                    .fill("...")
-                    .map((cell: string, i: number) => {
+            return (
+              <div key={i}>
+                <p>{i + 1}</p>
+
+                {(show.includes(i + 1) && (
+                  // show answer
+                  <>
+                    <div className={styles.answer}>
+                      {answer.map((word: string, i: number) => {
+                        return <p key={i}>{word}</p>;
+                      })}
+                    </div>
+
+                    <div className={styles.points}>
+                      {points.map((word: string, i: number) => {
+                        return <p key={i}>{word}</p>;
+                      })}
+                    </div>
+                  </>
+                )) || (
+                  // show dots
+                  <div className={styles.dots}>
+                    {dots.map((cell: string, i: number) => {
                       return <p key={i}>{cell}</p>;
                     })}
-                </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+
+          <div className={styles.pointsAmount}>
+            <div>
+              {"SUMA".split("").map((el: string, i: number) => {
+                return <p key={i}>{el}</p>;
+              })}
+            </div>
+
+            <div>
+              {numberFormatter(pointsAmount.current).map(
+                (el: string, i: number) => {
+                  return <p key={i}>{el}</p>;
+                }
               )}
             </div>
-          );
-        })}
-
-        <div className={styles.pointsAmount}>
-          <div>
-            {"SUMA".split("").map((el: string, i: number) => {
-              return <p key={i}>{el}</p>;
-            })}
           </div>
+        </div>
 
-          <div>
-            {numberFormatter(pointsAmount.current).map(
-              (el: string, i: number) => {
-                return <p key={i}>{el}</p>;
-              }
-            )}
-          </div>
+        <div className={styles.mistakes}>
+          {/* <Image
+            className={styles.big}
+            src="/images/x_big.webp"
+            alt="X"
+            width={111}
+            height={283}
+          /> */}
+
+          {/* <Image src="/images/x_small.webp" alt="x" width={111} height={163} /> */}
         </div>
       </div>
     </div>
