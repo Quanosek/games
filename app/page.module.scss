@@ -1,13 +1,24 @@
 .header {
-  margin: -2.5rem;
-  scale: 60%;
+  margin: -2rem;
+  scale: 65%;
 }
 
 .description {
   opacity: 80%;
   margin: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+
   font-size: 110%;
   text-align: center;
+
+  span {
+    opacity: 60%;
+    font-weight: bold;
+  }
 }
 
 .board {
@@ -42,5 +53,5 @@
 }
 
 .addButton {
-  margin: 0.8rem 5rem;
+  margin: 0.5rem 0 5rem;
 }

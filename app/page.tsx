@@ -38,14 +38,29 @@ export default function Home() {
           />
         </div>
 
-        <p className={styles.description}>
-          Dodaj planszę, uzupełnij pytaniami i punktami. Następnie kliknij{" "}
-          {`"Podgląd"`}, aby zobaczyć posortowaną planszę i zapisać ją lokalnie
-          na urządzeniu.
-          <br />
-          Wybierając opcję {`"Pokaż"`} wyświetlisz planszę na zewnętrznym oknie,
-          które można ustawić na pełen ekran np. na rzutniku dla wszystkich.
-        </p>
+        <div className={styles.description}>
+          <p>
+            Dodaj planszę, uzupełnij pytaniami i punktami. Następnie kliknij{" "}
+            {`"Podgląd"`}, aby zobaczyć posortowaną planszę i zapisać ją
+            lokalnie na urządzeniu.
+            <br />
+            Wybierając opcję {`"Pokaż"`} wyświetlisz planszę na zewnętrznym
+            oknie, które można ustawić na pełen ekran np. na rzutniku dla
+            wszystkich.
+          </p>
+
+          <p>
+            Klawisze numeryczne <span>[1-6]</span> odpowiadają za odkrywanie
+            odpowiedzi. Wciśnięcie ich z użyciem klawisza <span>[Shift]</span>{" "}
+            odkrywa odpowiedź bez przydzielania punktów.
+            <br />
+            Klawisze <span>[Q, W, R, T]</span> odpowiadają za przydzielanie{" "}
+            {`"X"`} za błędy, gdzie <span>[Q]</span> i <span>[T]</span> to{" "}
+            {`"duży X"`}, a <span>[W]</span> i <span>[R]</span> to {`"małe x"`}.
+            <br />
+            Klawisz <span>[E]</span> resetuje błędy na tablicy.
+          </p>
+        </div>
 
         {[...Array(counter)].map((_, i) => (
           <div className={styles.board} key={i}>
@@ -63,7 +78,7 @@ export default function Home() {
           className={styles.addButton}
           onClick={() => setCounter(counter + 1)}
         >
-          <p>➕ Dodaj planszę</p>
+          <p>➕ Dodaj nową planszę</p>
         </button>
       </main>
 
