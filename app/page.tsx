@@ -65,6 +65,18 @@ export default function Home() {
           </p>
         </div>
 
+        <button
+          onClick={() => {
+            window.open(
+              "/board/title",
+              "familiada_tablica",
+              "width=960, height=540"
+            );
+          }}
+        >
+          ✨ Pokaż tablicę tytułową
+        </button>
+
         {[...Array(counter)].map((_, i) => (
           <div className={styles.board} key={i}>
             <input

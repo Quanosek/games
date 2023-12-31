@@ -1,0 +1,11 @@
+.container {
+  position: relative;
+  width: 100svw;
+  height: 100svh;
+  overflow: hidden;
+
+  background-image: url("/images/background_title.webp");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}

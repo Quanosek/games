@@ -1,7 +1,7 @@
 "use client";
 
 import localFont from "next/font/local";
-import { ChangeEvent, useEffect, useState, useRef } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 import styles from "./question.module.scss";
 
@@ -125,9 +125,6 @@ export default function Question({ id }: { id: number }) {
     setAnswers(undefined);
   };
 
-  // audio files support
-  const audioIntro = useRef<any>();
-
   const handleShowBoard = () => {
     const answers = localStorage.getItem("answers");
     const local = answers && JSON.parse(answers)[id];
@@ -136,13 +133,7 @@ export default function Question({ id }: { id: number }) {
       return window.alert("Najpierw musisz zapisać planszę!");
     }
 
-    audioIntro.current.play();
-
-    window.open(
-      `/board/${id}`,
-      "Familiada - Tablica wyników",
-      "width=960, height=540"
-    );
+    window.open(`/board/${id}`, "familiada_tablica", "width=960, height=540");
   };
 
   return (
@@ -216,9 +207,6 @@ export default function Question({ id }: { id: number }) {
             );
           })}
       </div>
-
-      {/* audio effects */}
-      <audio ref={audioIntro} src="/music/intro.mp3" />
     </div>
   );
 }

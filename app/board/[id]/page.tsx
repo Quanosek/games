@@ -13,7 +13,7 @@ const dottedFont = localFont({
   display: "swap",
 });
 
-export default function Board({ params }: { params: { id: number } }) {
+export default function BoardID({ params }: { params: { id: number } }) {
   const { id } = params;
 
   const [answers, setAnswers] = useState<any>();
@@ -205,8 +205,9 @@ export default function Board({ params }: { params: { id: number } }) {
       </div>
 
       {/* audio effects */}
-      <audio ref={audioGood} src="/music/good.mp3" />
-      <audio ref={audioWrong} src="/music/wrong.mp3" />
+      <audio src="/audio/intro.mp3" autoPlay />
+      <audio ref={audioGood} src="/audio/good.mp3" />
+      <audio ref={audioWrong} src="/audio/wrong.mp3" />
     </div>
   );
 }
