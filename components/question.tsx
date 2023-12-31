@@ -59,7 +59,7 @@ export default function Question({ id }: { id: number }) {
       .map(({ answer, points }) => ({ answer, points }));
 
     if (!(sortedAnswers.length > 1)) {
-      return window.alert("Brak informacji do wyświetlenia planszy!");
+      return window.alert(`Brak wystarczających informacji planszy!`);
     }
 
     // manage local storage data
@@ -94,7 +94,7 @@ export default function Question({ id }: { id: number }) {
 
     setAnswers(sortedAnswers);
     setIsSaved(true);
-    window.alert("Zapisano planszę do pamięci lokalnej.");
+    window.alert("Pomyślnie zapisano planszę. Możesz ją teraz wyświetlić!");
   };
 
   const handleClearBoard = () => {

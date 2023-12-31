@@ -40,13 +40,15 @@ export default function Home() {
 
         <div className={styles.description}>
           <p>
-            Dodaj planszę, uzupełnij pytaniami i punktami. Następnie kliknij{" "}
-            {`"Podgląd"`}, aby zobaczyć posortowaną planszę i zapisać ją
-            lokalnie na urządzeniu.
+            Dodaj plansze, uzupełnij je pytaniami i punktami, następnie kliknij
+            przycisk {`"Podgląd"`}, aby zobaczyć posortowaną planszę obok i
+            zapisać ją na swoim urządzeniu.
             <br />
-            Wybierając opcję {`"Pokaż"`} wyświetlisz planszę na zewnętrznym
-            oknie, które można ustawić na pełen ekran np. na rzutniku dla
-            wszystkich.
+            Aby wyświetlić tablicę wyników należy wybrać przycisk {`"Pokaż"`},
+            który otworzy ją w zewnętrznym oknie,
+            <br />
+            które najlepiej jest ustawić w trybie pełnoekranowym na drugim
+            ekranie poprzez użycie klawisza <span>[f11]</span>.
           </p>
 
           <p>
@@ -55,10 +57,11 @@ export default function Home() {
             odkrywa odpowiedź bez przydzielania punktów.
             <br />
             Klawisze <span>[Q, W, R, T]</span> odpowiadają za przydzielanie{" "}
-            {`"X"`} za błędy, gdzie <span>[Q]</span> i <span>[T]</span> to{" "}
-            {`"duży X"`}, a <span>[W]</span> i <span>[R]</span> to {`"małe x"`}.
+            {`"X"`} za błędne odpowiedzi, gdzie <span>[Q]</span> i{" "}
+            <span>[T]</span> to {`"duży X"`}, a <span>[W]</span> i{" "}
+            <span>[R]</span> to {`"małe x"`}.
             <br />
-            Klawisz <span>[E]</span> resetuje błędy na tablicy.
+            Klawisz <span>[E]</span> usuwa wszystkie błędy widoczne na tablicy.
           </p>
         </div>
 
