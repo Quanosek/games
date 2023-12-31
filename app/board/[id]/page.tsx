@@ -32,6 +32,10 @@ export default function Board({ params }: { params: { id: number } }) {
   const [redMistakes, setRedMistakes] = useState(0);
   const [blueMistakes, setBlueMistakes] = useState(0);
 
+  // audio files support
+  const audioGood = useRef<any>();
+  const audioWrong = useRef<any>();
+
   // keyboard navigation
   useEffect(() => {
     const KeyupEvent = (event: KeyboardEvent) => {
@@ -47,6 +51,7 @@ export default function Board({ params }: { params: { id: number } }) {
         if (!answers[number - 1]) return;
 
         if (!show.includes(number)) {
+          audioGood.current.play();
           setShow([...show, number]);
 
           if (!event.ctrlKey) {
@@ -67,11 +72,14 @@ export default function Board({ params }: { params: { id: number } }) {
       // manage teams mistakes
       switch (event.key.toUpperCase()) {
         case "Q":
+          if (redMistakes > 3) return;
           setRedMistakes(4);
+          audioWrong.current.play();
           break;
         case "W":
           if (redMistakes >= 3) return;
           setRedMistakes(redMistakes + 1);
+          audioWrong.current.play();
           break;
         case "E":
           setRedMistakes(0);
@@ -80,9 +88,12 @@ export default function Board({ params }: { params: { id: number } }) {
         case "R":
           if (blueMistakes >= 3) return;
           setBlueMistakes(blueMistakes + 1);
+          audioWrong.current.play();
           break;
         case "T":
+          if (blueMistakes > 3) return;
           setBlueMistakes(4);
+          audioWrong.current.play();
           break;
       }
     };
@@ -192,6 +203,10 @@ export default function Board({ params }: { params: { id: number } }) {
 
         <div className={styles.mistakes}>{handleMistakes(blueMistakes)}</div>
       </div>
+
+      {/* audio effects */}
+      <audio ref={audioGood} src="/music/good.mp3" />
+      <audio ref={audioWrong} src="/music/wrong.mp3" />
     </div>
   );
 }
