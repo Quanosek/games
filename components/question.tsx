@@ -5,6 +5,8 @@ import { ChangeEvent, useEffect, useState } from "react";
 
 import styles from "./question.module.scss";
 
+import numberFormatter from "@/functions/numberFormatter";
+
 const dottedFont = localFont({
   src: "../fonts/familiada.woff2",
   display: "swap",
@@ -187,21 +189,24 @@ export default function Question({ id }: { id: number }) {
       <div className={`${dottedFont.className} ${styles.preview}`}>
         {answers &&
           answers.map((el: any, i: number) => {
-            const formattedAnswer = el.answer
-              .split(" ")
-              .filter((el: string) => el);
+            const answer = el.answer.split("");
+            const points = numberFormatter(el.points);
 
             return (
               <div key={i}>
                 <p>{i + 1}</p>
 
                 <div className={styles.answer}>
-                  {formattedAnswer.map((word: string, i: number) => (
-                    <p key={i}>{word}</p>
-                  ))}
+                  {answer.map((word: string, i: number) => {
+                    return <p key={i}>{word}</p>;
+                  })}
                 </div>
 
-                <p className={styles.points}>{el.points}</p>
+                <div className={styles.points}>
+                  {points.map((word: string, i: number) => {
+                    return <p key={i}>{word}</p>;
+                  })}
+                </div>
               </div>
             );
           })}

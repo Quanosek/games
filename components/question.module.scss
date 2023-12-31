@@ -3,7 +3,6 @@
   gap: 2rem;
 
   form {
-    margin-top: 5px;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -44,50 +43,52 @@
   }
 }
 
-.buttons {
-  margin-top: 1.5rem;
-  display: flex;
-  gap: 1rem;
-}
-
 .preview {
-  $cell-width: 18.55px;
-  $cell-correction: 2.65px;
+  scale: 1.2;
+  margin: 16px 46.5px;
 
-  width: 550px;
+  $cell-width: 14.5px;
+  $cell-space: 5.5px;
+  $save-space: $cell-width + $cell-space;
+
+  padding-top: 30px;
+  padding-left: 20.5px;
+
+  width: calc(951px / 2);
+  height: calc(463px / 2);
   display: flex;
   flex-direction: column;
-
-  padding-top: calc(1 * 27.8px);
-  padding-left: calc(4 * $cell-width);
-  padding-right: calc(4 * $cell-width - 2 * $cell-correction);
-  gap: 8.15px;
+  gap: 10px;
 
   color: var(--yellow);
-  font-size: 140%;
-  letter-spacing: 1.65px;
+  font-size: 142%;
   text-transform: uppercase;
 
-  background: no-repeat url("/images/board_empty.webp");
+  background: no-repeat url("/images/board_mini.webp");
   background-size: contain;
 
   div {
     display: flex;
-    gap: $cell-width;
+    gap: $cell-space;
   }
 
-  // fix "1" on board
-  div:first-of-type p:first-of-type {
-    margin-left: 2.65px;
+  p {
+    width: $cell-width;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    letter-spacing: 0;
+    // background-color: #13469d;
   }
 
   .answer {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
+    margin-left: $save-space;
+    width: calc(17 * ($save-space) - $cell-space);
   }
+}
 
-  .points {
-    padding-left: 0.5rem;
-  }
+.buttons {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
 }

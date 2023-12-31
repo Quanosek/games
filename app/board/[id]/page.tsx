@@ -6,6 +6,8 @@ import { useEffect, useState, useRef } from "react";
 
 import styles from "./page.module.scss";
 
+import numberFormatter from "@/functions/numberFormatter";
+
 const dottedFont = localFont({
   src: "../../../fonts/familiada.woff2",
   display: "swap",
@@ -22,15 +24,6 @@ export default function Board({ params }: { params: { id: number } }) {
     const answers = localStorage.getItem("answers");
     if (answers) setAnswers(JSON.parse(answers)[id]);
   }, [id]);
-
-  const numberFormatter = (number: number) => {
-    const size = number.toString().length;
-
-    // reserve 3 cells for points
-    return size <= 2
-      ? ["", ...(size === 1 ? [""] : []), ...number.toString().split("")]
-      : number.toString().split("");
-  };
 
   const pointsAmount = useRef(0);
   const mainScore = useRef(0);
