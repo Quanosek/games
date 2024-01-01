@@ -10,14 +10,14 @@ import Question from "@/components/question";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
-  const [counter, setCounter] = useState(0);
+  const [counter, setCounter] = useState(1);
 
   useEffect(() => {
-    const local = localStorage.getItem("answers");
-    if (local) {
-      const parsed = JSON.parse(local);
-      setCounter(Object.keys(parsed).length);
-    }
+    let answers = localStorage.getItem("answers");
+    if (!answers) answers = "{}";
+
+    const parsed = JSON.parse(answers);
+    setCounter(Object.keys(parsed).length || 1);
 
     setLoading(false);
   }, []);
@@ -74,25 +74,16 @@ export default function Home() {
             );
           }}
         >
-          ✨ Pokaż tablicę tytułową
+          <p>✨ Pokaż tablicę tytułową</p>
         </button>
 
         {[...Array(counter)].map((_, i) => (
-          <div className={styles.board} key={i}>
-            <input
-              className={styles.title}
-              type="text"
-              defaultValue={`Plansza ${i + 1}`}
-            />
-            <hr />
+          <div className={styles.question} key={i}>
             <Question id={i} />
           </div>
         ))}
 
-        <button
-          className={styles.addButton}
-          onClick={() => setCounter(counter + 1)}
-        >
+        <button onClick={() => setCounter(counter + 1)}>
           <p>➕ Dodaj nową planszę</p>
         </button>
       </main>

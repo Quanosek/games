@@ -3,6 +3,7 @@
   width: 100svw;
   height: 100svh;
   overflow: hidden;
+  user-select: none;
 
   background-image: url("/images/background.webp");
   background-size: contain;
@@ -34,7 +35,7 @@
       width: 5.5vw;
       display: flex;
       align-items: center;
-      // background-color: #13469d;
+      // background-color: var(--dark-blue);
     }
   }
 }

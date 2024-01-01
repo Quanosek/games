@@ -1,12 +1,12 @@
 "use client";
 
-import localFont from "next/font/local";
 import { ChangeEvent, useEffect, useState } from "react";
 
 import styles from "./question.module.scss";
 
 import numberFormatter from "@/functions/numberFormatter";
 
+import localFont from "next/font/local";
 const dottedFont = localFont({
   src: "../fonts/familiada.woff2",
   display: "swap",
@@ -137,75 +137,85 @@ export default function Question({ id }: { id: number }) {
   };
 
   return (
-    <div className={styles.board}>
-      <form onSubmit={handleSubmit}>
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div className={styles.list} key={i}>
-            <div className={styles.answer}>
-              <p>Odpowiedź {i + 1}:</p>
+    <div className={styles.container}>
+      <input
+        className={styles.title}
+        type="text"
+        defaultValue={`Plansza ${id + 1}`}
+      />
 
-              <input
-                id={`${i}-answer`}
-                type="text"
-                autoComplete="off"
-                maxLength={17}
-                onChange={answerFormat}
-              />
-            </div>
+      <hr />
 
-            <div className={styles.points}>
-              <p>Liczba punktów:</p>
+      <div className={styles.question}>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div className={styles.list} key={i}>
+              <div className={styles.answer}>
+                <p>Odpowiedź {i + 1}:</p>
 
-              <input
-                id={`${i}-points`}
-                type="text"
-                autoComplete="off"
-                maxLength={2}
-                onChange={pointsFormat}
-              />
-            </div>
-          </div>
-        ))}
-
-        <div className={styles.buttons}>
-          <button type="submit">
-            <p>💾 Zapisz</p>
-          </button>
-
-          <button type="button" onClick={handleClearBoard}>
-            <p>🧹 Wyczyść</p>
-          </button>
-
-          <button type="button" onClick={handleShowBoard}>
-            <p>🖥️ Pokaż</p>
-          </button>
-        </div>
-      </form>
-
-      <div className={`${dottedFont.className} ${styles.preview}`}>
-        {answers &&
-          answers.map((el: any, i: number) => {
-            const answer = el.answer.split("");
-            const points = numberFormatter(el.points);
-
-            return (
-              <div key={i}>
-                <p>{i + 1}</p>
-
-                <div className={styles.answer}>
-                  {answer.map((word: string, i: number) => {
-                    return <p key={i}>{word}</p>;
-                  })}
-                </div>
-
-                <div className={styles.points}>
-                  {points.map((word: string, i: number) => {
-                    return <p key={i}>{word}</p>;
-                  })}
-                </div>
+                <input
+                  id={`${i}-answer`}
+                  type="text"
+                  autoComplete="off"
+                  maxLength={17}
+                  onChange={answerFormat}
+                />
               </div>
-            );
-          })}
+
+              <div className={styles.points}>
+                <p>Liczba punktów:</p>
+
+                <input
+                  id={`${i}-points`}
+                  type="text"
+                  autoComplete="off"
+                  maxLength={2}
+                  onChange={pointsFormat}
+                />
+              </div>
+            </div>
+          ))}
+
+          <div className={styles.buttons}>
+            <button type="submit">
+              <p>💾 Zapisz</p>
+            </button>
+
+            <button type="button" onClick={handleClearBoard}>
+              <p>🧹 Wyczyść</p>
+            </button>
+
+            <button type="button" onClick={handleShowBoard}>
+              <p>🖥️ Pokaż</p>
+            </button>
+          </div>
+        </form>
+
+        <div className={`${dottedFont.className} ${styles.preview}`}>
+          {answers &&
+            answers.map((el: any, i: number) => {
+              const answer = el.answer.split("");
+              const points = numberFormatter(el.points);
+
+              return (
+                <div key={i}>
+                  <p>{i + 1}</p>
+
+                  <div className={styles.answer}>
+                    {answer.map((word: string, i: number) => {
+                      return <p key={i}>{word}</p>;
+                    })}
+                  </div>
+
+                  <div className={styles.points}>
+                    {points.map((word: string, i: number) => {
+                      return <p key={i}>{word}</p>;
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+        </div>
       </div>
     </div>
   );

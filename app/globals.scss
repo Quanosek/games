@@ -4,25 +4,19 @@
   --white: #f2f2f2;
   --black: #0a0b0d;
   --yellow: #d9c465;
-
+  --dark-blue: #13469d;
   --background: #121212;
 }
 
 html,
 body {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
   color: var(--white);
   background-color: var(--black);
   -webkit-tap-highlight-color: transparent;
-  user-select: none;
 }
 
 main {
-  padding: 2rem 3%;
+  padding: 2rem 3% 5rem;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -53,29 +47,23 @@ button {
 
 footer {
   padding: 1.5rem 3%;
-  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   gap: 0.5rem;
   background-color: var(--background);
-
-  span {
-    position: relative;
-    bottom: 1px;
-  }
 
   p {
     opacity: 80%;
     font-size: 90%;
   }
 
-  a {
-    opacity: 100% !important;
+  span {
+    position: relative;
+    bottom: 1px;
+  }
 
-    &:hover {
-      text-decoration: underline;
-    }
+  a:hover {
+    text-decoration: underline;
   }
 }

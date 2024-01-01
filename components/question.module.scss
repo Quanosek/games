@@ -1,12 +1,39 @@
-.board {
+.container {
+  width: 100%;
   display: flex;
-  gap: 2rem;
+  flex-direction: column;
 
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  .title {
+    padding: 0.8rem 0.65rem;
+    font-size: 150%;
+    font-weight: bold;
+    border: none;
+    background-color: var(--background);
+
+    &:hover {
+      filter: contrast(0.95);
+    }
+    &:focus {
+      filter: contrast(0.9);
+    }
   }
+
+  hr {
+    margin-bottom: 1.5rem;
+    height: 1px;
+    background-color: var(--white);
+  }
+
+  .question {
+    display: flex;
+    gap: 2rem;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .list {
@@ -16,31 +43,37 @@
   div {
     display: flex;
     align-items: center;
-
-    input {
-      padding: 0.5rem 1rem;
-    }
   }
 
-  .answer {
-    p {
-      width: 7rem;
-    }
+  input {
+    padding: 0.5rem 1rem;
+  }
+}
 
-    input {
-      width: 16rem;
-    }
+.answer {
+  p {
+    width: 7rem;
   }
 
-  .points {
-    p {
-      width: 8rem;
-    }
-
-    input {
-      width: 4rem;
-    }
+  input {
+    width: 16rem;
   }
+}
+
+.points {
+  p {
+    width: 8rem;
+  }
+
+  input {
+    width: 4rem;
+  }
+}
+
+.buttons {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
 }
 
 .preview {
@@ -59,6 +92,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  user-select: none;
 
   color: var(--yellow);
   font-size: 142%;
@@ -78,17 +112,11 @@
     justify-content: flex-start;
     align-items: center;
     letter-spacing: 0;
-    // background-color: #13469d;
+    // background-color: var(--dark-blue);
   }
 
   .answer {
     margin-left: $save-space;
     width: calc(17 * ($save-space) - $cell-space);
   }
-}
-
-.buttons {
-  margin-top: 1.5rem;
-  display: flex;
-  gap: 1rem;
 }
