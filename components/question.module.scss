@@ -2,8 +2,14 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  gap: 1.65rem;
+}
 
-  .title {
+.question {
+  display: flex;
+  flex-direction: column;
+
+  input {
     padding: 0.8rem 0.65rem;
     font-size: 150%;
     font-weight: bold;
@@ -19,15 +25,8 @@
   }
 
   hr {
-    margin-bottom: 1.5rem;
     height: 1px;
     background-color: var(--white);
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.65rem;
   }
 }
 

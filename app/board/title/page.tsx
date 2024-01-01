@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import styles from "./page.module.scss";
 
-export default function BoardID() {
+export default function BoardTitle() {
   // keyboard navigation
   useEffect(() => {
     const KeyupEvent = (event: KeyboardEvent) => {

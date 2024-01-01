@@ -13,28 +13,15 @@ const dottedFont = localFont({
 });
 
 export default function Question({ id }: { id: number }) {
-  // valid inputs
-  const answerFormat = (e: ChangeEvent<HTMLInputElement>) => {
-    const filtered = e.target.value.replace(/[^a-zA-Z\s.]/g, "");
-    e.target.value = filtered;
-  };
-
-  const pointsFormat = (e: ChangeEvent<HTMLInputElement>) => {
-    const filtered = e.target.value.replace(/[^0-9]/g, "");
-    e.target.value = filtered;
-  };
-
-  // define answers state
-  const [answers, setAnswers] = useState<any>();
+  const [data, setData] = useState<any>();
   const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     const answers = localStorage.getItem("answers");
-    if (answers) setAnswers(JSON.parse(answers)[id]);
+    if (answers) setData(JSON.parse(answers)[id]);
   }, [id]);
 
-  // handle form submit button
-  const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const elements = Array.from(e.target.elements)
@@ -92,22 +79,30 @@ export default function Question({ id }: { id: number }) {
       }
     }
 
-    setAnswers(sortedAnswers);
+    setData(sortedAnswers);
     setIsSaved(true);
     window.alert("Pomyślnie zapisano planszę. Możesz ją teraz wyświetlić!");
+  };
+
+  const answerInputFormat = (e: ChangeEvent<HTMLInputElement>) => {
+    const filtered = e.target.value.replace(/[^a-zA-Z\s.]/g, "");
+    e.target.value = filtered;
+  };
+
+  const pointsInputFormat = (e: ChangeEvent<HTMLInputElement>) => {
+    const filtered = e.target.value.replace(/[^0-9]/g, "");
+    e.target.value = filtered;
   };
 
   const handleClearBoard = () => {
     if (!window.confirm("Czy na pewno chcesz wyczyścić planszę?")) return;
 
-    // manage local storage data
     const local = localStorage.getItem("answers");
 
     if (local) {
       const parsed = JSON.parse(local);
 
       if (parsed[id]) {
-        // remove existing board
         delete parsed[id];
 
         // modify id of other boards
@@ -122,7 +117,7 @@ export default function Question({ id }: { id: number }) {
       }
     }
 
-    setAnswers(undefined);
+    setData(undefined);
   };
 
   const handleShowBoard = () => {
@@ -137,88 +132,88 @@ export default function Question({ id }: { id: number }) {
   };
 
   return (
-    <div className={styles.container}>
-      <input
-        className={styles.title}
-        type="text"
-        defaultValue={`Plansza ${id + 1}`}
-      />
+    <form className={styles.container} onSubmit={handleFormSubmit}>
+      {/* custom question */}
+      <div className={styles.question}>
+        <input type="text" defaultValue={`Plansza ${id + 1}`} />
 
-      <hr />
+        <hr />
+      </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className={styles.content}>
-          <div className={styles.answers}>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div className={styles.list} key={i}>
-                <div className={styles.answer}>
-                  <p>Odpowiedź {i + 1}:</p>
+      <div className={styles.content}>
+        {/* input form */}
+        <div className={styles.answers}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div className={styles.list} key={i}>
+              <div className={styles.answer}>
+                <p>Odpowiedź {i + 1}:</p>
 
-                  <input
-                    id={`${i}-answer`}
-                    type="text"
-                    autoComplete="off"
-                    maxLength={17}
-                    onChange={answerFormat}
-                  />
-                </div>
-
-                <div className={styles.points}>
-                  <p>Liczba punktów:</p>
-
-                  <input
-                    id={`${i}-points`}
-                    type="text"
-                    autoComplete="off"
-                    maxLength={2}
-                    onChange={pointsFormat}
-                  />
-                </div>
+                <input
+                  id={`${i}-answer`}
+                  type="text"
+                  autoComplete="off"
+                  maxLength={17}
+                  onChange={answerInputFormat}
+                />
               </div>
-            ))}
-          </div>
 
-          <div className={`${dottedFont.className} ${styles.preview}`}>
-            {answers &&
-              answers.map((el: any, i: number) => {
-                const answer = el.answer.split("");
-                const points = numberFormatter(el.points);
+              <div className={styles.points}>
+                <p>Liczba punktów:</p>
 
-                return (
-                  <div key={i}>
-                    <p>{i + 1}</p>
+                <input
+                  id={`${i}-points`}
+                  type="text"
+                  autoComplete="off"
+                  maxLength={2}
+                  onChange={pointsInputFormat}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
 
-                    <div className={styles.answer}>
-                      {answer.map((word: string, i: number) => {
-                        return <p key={i}>{word}</p>;
-                      })}
-                    </div>
+        {/* preview board of answers */}
+        <div className={`${dottedFont.className} ${styles.preview}`}>
+          {data &&
+            data.map((el: any, i: number) => {
+              const answer = el.answer.split("");
+              const points = numberFormatter(el.points);
 
-                    <div className={styles.points}>
-                      {points.map((word: string, i: number) => {
-                        return <p key={i}>{word}</p>;
-                      })}
-                    </div>
+              return (
+                <div key={i}>
+                  <p>{i + 1}</p>
+
+                  <div className={styles.answer}>
+                    {answer.map((word: string, i: number) => {
+                      return <p key={i}>{word}</p>;
+                    })}
                   </div>
-                );
-              })}
-          </div>
+
+                  <div className={styles.points}>
+                    {points.map((word: string, i: number) => {
+                      return <p key={i}>{word}</p>;
+                    })}
+                  </div>
+                </div>
+              );
+            })}
         </div>
+      </div>
 
-        <div className={styles.buttons}>
-          <button type="submit">
-            <p>💾 Zapisz</p>
-          </button>
+      {/* bottom buttons controls */}
+      <div className={styles.buttons}>
+        <button type="submit">
+          <p>💾 Zapisz</p>
+        </button>
 
-          <button type="button" onClick={handleClearBoard}>
-            <p>🧹 Wyczyść</p>
-          </button>
+        <button type="button" onClick={handleClearBoard}>
+          <p>🧹 Wyczyść</p>
+        </button>
 
-          <button type="button" onClick={handleShowBoard}>
-            <p>🖥️ Pokaż</p>
-          </button>
-        </div>
-      </form>
-    </div>
+        <button type="button" onClick={handleShowBoard}>
+          <p>🖥️ Pokaż</p>
+        </button>
+      </div>
+    </form>
   );
 }
