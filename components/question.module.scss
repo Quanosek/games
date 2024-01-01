@@ -24,13 +24,19 @@
     background-color: var(--white);
   }
 
-  .question {
+  form {
     display: flex;
-    gap: 2rem;
+    flex-direction: column;
+    gap: 1.65rem;
   }
 }
 
-.form {
+.content {
+  display: flex;
+  gap: 2rem;
+}
+
+.answers {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -48,30 +54,29 @@
   input {
     padding: 0.5rem 1rem;
   }
-}
 
-.answer {
-  p {
-    width: 7rem;
+  .answer {
+    p {
+      width: 7rem;
+    }
+
+    input {
+      width: 16rem;
+    }
   }
 
-  input {
-    width: 16rem;
-  }
-}
+  .points {
+    p {
+      width: 8rem;
+    }
 
-.points {
-  p {
-    width: 8rem;
-  }
-
-  input {
-    width: 4rem;
+    input {
+      width: 4rem;
+    }
   }
 }
 
 .buttons {
-  margin-top: 1.5rem;
   display: flex;
   gap: 1rem;
 }
