@@ -53,7 +53,7 @@ export default function Home() {
 
           <p>
             Klawisze numeryczne <span>[1-6]</span> odpowiadają za odkrywanie
-            odpowiedzi. Wciśnięcie ich z użyciem klawisza <span>[Shift]</span>{" "}
+            odpowiedzi. Wciśnięcie ich z użyciem klawisza <span>[Ctrl]</span>{" "}
             odkrywa odpowiedź bez przydzielania punktów.
             <br />
             Klawisze <span>[Q, W, R, T]</span> odpowiadają za przydzielanie{" "}
