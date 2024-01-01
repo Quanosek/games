@@ -22,7 +22,7 @@ export default function BoardID({ params }: { params: { id: number } }) {
   // set answers
   useEffect(() => {
     const answers = localStorage.getItem("answers");
-    if (answers) setAnswers(JSON.parse(answers)[id]);
+    if (answers) setAnswers(JSON.parse(answers)[id - 1]);
   }, [id]);
 
   const pointsAmount = useRef(0);
@@ -65,9 +65,6 @@ export default function BoardID({ params }: { params: { id: number } }) {
           }
         }
       }
-
-      // close board
-      if (event.key === "Escape") window.close();
 
       // manage teams mistakes
       switch (event.key.toUpperCase()) {

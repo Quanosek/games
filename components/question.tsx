@@ -25,9 +25,7 @@ export default function Question({ id }: { id: number }) {
     e.preventDefault();
 
     const elements = Array.from(e.target.elements)
-      .map((el: any) => {
-        if (el.type === "text") return [el.id, el.value];
-      })
+      .map((el: any) => el.type === "text" && [el.id, el.value])
       .filter((el: any) => el);
 
     const collection = new Map();
@@ -128,7 +126,11 @@ export default function Question({ id }: { id: number }) {
       return window.alert("Najpierw musisz zapisać planszę!");
     }
 
-    window.open(`/board/${id}`, "familiada_tablica", "width=960, height=540");
+    window.open(
+      `/board/${id + 1}`,
+      "familiada_tablica",
+      "width=960, height=540"
+    );
   };
 
   return (
@@ -136,7 +138,6 @@ export default function Question({ id }: { id: number }) {
       {/* custom question */}
       <div className={styles.question}>
         <input type="text" defaultValue={`Plansza ${id + 1}`} />
-
         <hr />
       </div>
 

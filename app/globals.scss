@@ -25,7 +25,8 @@ main {
 }
 
 input,
-button {
+button,
+.button {
   border: 1px solid #ffffff;
   background-color: #303030;
   transition: 0.1s filter ease-out;
@@ -39,7 +40,8 @@ input:focus {
   filter: contrast(0.7);
 }
 
-button {
+button,
+.button {
   padding: 0.65rem 2rem;
   border-radius: 0.4rem;
   cursor: pointer;
@@ -65,5 +67,22 @@ footer {
 
   a:hover {
     text-decoration: underline;
+  }
+}
+
+.notFound {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+
+  h1 {
+    font-size: 200%;
+  }
+
+  span {
+    opacity: 80%;
+    font-size: 90%;
   }
 }
