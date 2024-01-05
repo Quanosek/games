@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import Footer from "@/components/footer";
+import { Header, Footer } from "@/components/assets";
 
 export default function NotFound() {
   const router = useRouter();
@@ -21,6 +21,8 @@ export default function NotFound() {
 
   return (
     <>
+      <Header />
+
       <main className="notFound">
         <h1>Nie znaleziono strony!</h1>
 

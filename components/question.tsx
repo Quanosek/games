@@ -8,7 +8,7 @@ import numberFormatter from "@/functions/numberFormatter";
 
 import localFont from "next/font/local";
 const dottedFont = localFont({
-  src: "../fonts/familiada.woff2",
+  src: "../fonts/familiada_regular.woff2",
   display: "swap",
 });
 
@@ -127,7 +127,7 @@ export default function Question({ id }: { id: number }) {
     }
 
     window.open(
-      `/board/${id + 1}`,
+      `/familiada/board/${id + 1}`,
       "familiada_tablica",
       "width=960, height=540"
     );

@@ -9,7 +9,7 @@ import styles from "./page.module.scss";
 import numberFormatter from "@/functions/numberFormatter";
 
 const dottedFont = localFont({
-  src: "../../../fonts/familiada.woff2",
+  src: "../../../../fonts/familiada_regular.woff2",
   display: "swap",
 });
 

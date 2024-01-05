@@ -1,28 +1,19 @@
-.header {
-  margin: -2rem;
-  scale: 65%;
-  user-select: none;
+.title {
+  font-size: 150%;
+  font-weight: bold;
 }
 
-.description {
-  opacity: 80%;
+.buttons {
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1rem;
 
-  font-size: 110%;
-  text-align: center;
-
-  span {
-    opacity: 60%;
-    font-weight: bold;
+  a {
+    width: 14rem;
+    display: flex;
+    justify-content: center;
   }
-}
-
-.question {
-  padding: 1.5rem 2rem 2rem;
-  border-radius: 0.6rem;
-  background-color: var(--background);
 }

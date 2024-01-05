@@ -1,3 +1,4 @@
+// global styles
 :root {
   color-scheme: dark;
 
@@ -8,6 +9,12 @@
   --background: #121212;
 }
 
+// tab focus border
+*:focus-visible {
+  box-shadow: 0 0 1px 2px var(--white);
+}
+
+// default reset
 html,
 body {
   color: var(--white);
@@ -15,9 +22,12 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+$header-link-height: 3.5rem;
+$header-width-padding: 0.5rem;
+
 main {
   padding: 2rem 3% 5rem;
-  min-height: 100svh;
+  min-height: calc(100svh - ($header-link-height + 2 * $header-width-padding));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,18 +52,59 @@ input:focus {
 
 button,
 .button {
+  position: relative;
+  bottom: 0;
   padding: 0.65rem 2rem;
   border-radius: 0.4rem;
   cursor: pointer;
+  transition: 0.15s ease-in-out;
+
+  &:hover {
+    bottom: 2px;
+  }
+}
+
+header,
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--background);
+}
+
+$link-padding: 2rem;
+
+header {
+  padding: $header-width-padding calc(3% - $link-padding);
+
+  .headerTitle {
+    display: flex;
+    font-weight: bold;
+
+    p {
+      font-size: 135%;
+    }
+  }
+
+  a {
+    position: relative;
+    bottom: 0;
+    padding: 1rem $link-padding;
+    height: $header-link-height;
+    display: flex;
+    align-items: center;
+    border-radius: 0.6rem;
+    transition: 0.15s ease-in-out;
+
+    &:hover {
+      bottom: 1.5px;
+      text-decoration: underline;
+    }
+  }
 }
 
 footer {
   padding: 1.5rem 3%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: var(--background);
 
   p {
     opacity: 80%;
@@ -85,4 +136,10 @@ footer {
     opacity: 80%;
     font-size: 90%;
   }
+}
+
+.disabled {
+  opacity: 50%;
+  user-select: none;
+  pointer-events: none;
 }
