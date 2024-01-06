@@ -1,11 +1,4 @@
-import { Roboto } from "next/font/google";
 import type { Metadata } from "next";
-
-const font = Roboto({
-  weight: "400",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 // familiada metadata
 export const metadata: Metadata = {
@@ -21,5 +14,5 @@ export default function FamiliadaLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className={font.className}>{children}</div>;
+  return <>{children}</>;
 }

@@ -36,7 +36,8 @@ $header-height: 3.5rem;
 $header-padding: 0.5rem;
 
 main {
-  padding: 2rem 3% 5rem;
+  position: relative;
+  padding: 2rem 3% 6rem;
   min-height: calc(100svh - ($header-height + 2 * $header-padding));
   width: min(100%, 1440px);
   display: flex;
