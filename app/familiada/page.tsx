@@ -15,12 +15,15 @@ export default function FamiliadaPage() {
   useEffect(() => {
     const local = localStorage.getItem("questions") || "{}";
     const questions = JSON.parse(local);
-    setCounter(Object.keys(questions).length || 1);
 
+    // rewrite keys to be in order
+    const newOrder = {} as any;
+    Object.keys(questions).forEach((key, i) => (newOrder[i] = questions[key]));
+    localStorage.setItem("questions", JSON.stringify(newOrder));
+
+    setCounter(Object.keys(newOrder).length || 1);
     setLoading(false);
   }, []);
-
-  if (loading) return null;
 
   return (
     <>
@@ -75,15 +78,19 @@ export default function FamiliadaPage() {
           <p>✨ Pokaż tablicę tytułową</p>
         </button>
 
-        {[...Array(counter)].map((_, i) => (
-          <div className={styles.question} key={i}>
-            <Question id={i} />
-          </div>
-        ))}
+        {(loading && <p>Ładowanie...</p>) || (
+          <>
+            {[...Array(counter)].map((_, i) => (
+              <div className={styles.question} key={i}>
+                <Question id={i} />
+              </div>
+            ))}
 
-        <button onClick={() => setCounter(counter + 1)}>
-          <p>➕ Dodaj nową planszę</p>
-        </button>
+            <button onClick={() => setCounter(counter + 1)}>
+              <p>➕ Dodaj nową planszę</p>
+            </button>
+          </>
+        )}
       </main>
 
       <footer className={styles.footer}>

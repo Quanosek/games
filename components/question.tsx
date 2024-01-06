@@ -47,15 +47,6 @@ export default function QuestionComponent({ id }: { id: number }) {
 
       if (parsed[id]) {
         delete parsed[id];
-
-        // modify id of other boards
-        Object.keys(parsed).forEach((key) => {
-          if (Number(key) > id) {
-            parsed[Number(key) - 1] = parsed[key];
-            delete parsed[key];
-          }
-        });
-
         localStorage.setItem("questions", JSON.stringify(parsed));
       }
     }
