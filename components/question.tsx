@@ -15,83 +15,27 @@ const dottedFont = localFont({
 export default function QuestionComponent({ id }: { id: number }) {
   const [data, setData] = useState<any>();
 
+  const defaultTitle = `Plansza ${id + 1}`;
+  const [title, setTitle] = useState(defaultTitle);
+
+  const [answers, setAnswers] = useState<string[]>([]);
+  const [points, setPoints] = useState<string[]>([]);
+
+  // setting up default values on load
   useEffect(() => {
     const local = localStorage.getItem("questions") || "{}";
     const question = JSON.parse(local)[id];
-    if (question) setData(question.answers);
-  }, [id]);
 
-  const handleFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    if (question) {
+      const { elements, title } = question;
 
-    const Collection = new Map();
-    let title = "";
+      setData(elements);
+      setTitle(title || defaultTitle);
 
-    Array.from(e.target.elements).forEach((el: any) => {
-      if (el.type !== "text") return;
-
-      const [index, type] = el.id.split("-");
-      if (index === "title") return (title = el.value);
-
-      if (!Collection.has(index)) Collection.set(index, []);
-
-      const parsedValue = type === "points" ? Number(el.value) : el.value;
-      Collection.get(index)[type] = parsedValue;
-    });
-
-    const answers = Array.from(Collection.values())
-      .filter((el) => el.answer && el.points)
-      .sort((a, b) => b.points - a.points)
-      .map(({ answer, points }) => ({ answer, points }));
-
-    if (!answers.length) {
-      return window.alert(
-        "Przed zapisaniem, uzupełnij plansze o wymagane dane."
-      );
-    } else if (!(answers.length > 2)) {
-      return window.alert(
-        "Plansza musi zawierać co najmniej 3 odpowiedzi z podanymi wartościami punktowymi."
-      );
+      setAnswers(elements.map((el: { answer: string }) => el.answer));
+      setPoints(elements.map((el: { points: number }) => el.points));
     }
-
-    // manage local storage data
-    const local = localStorage.getItem("questions");
-    let result = {};
-
-    if (local) {
-      const parsed = JSON.parse(local);
-
-      if (parsed[id]) {
-        parsed[id] = { title, answers };
-        result = parsed;
-      } else {
-        result = {
-          ...parsed,
-          [id]: { title, answers },
-        };
-      }
-    } else {
-      result = {
-        [id]: { title, answers },
-      };
-    }
-
-    setData(answers);
-    localStorage.setItem("questions", JSON.stringify(result));
-    window.alert(
-      "Plansza została zapisana, możesz teraz ją wyświetlić w osobnym oknie."
-    );
-  };
-
-  const handleAnswerChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const filtered = e.target.value.replace(/[^a-zA-Z\s.]/g, "");
-    e.target.value = filtered;
-  };
-
-  const handlePointsChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const filtered = e.target.value.replace(/[^0-9]/g, "");
-    e.target.value = filtered;
-  };
+  }, [id, defaultTitle]);
 
   const handleClearBoard = () => {
     if (!window.confirm("Czy na pewno chcesz wyczyścić całą planszę?")) return;
@@ -116,13 +60,84 @@ export default function QuestionComponent({ id }: { id: number }) {
       }
     }
 
+    // restore to default values
     setData(undefined);
+    setTitle(defaultTitle);
+    setAnswers([]);
+    setPoints([]);
+  };
+
+  const handleFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // parse form data
+    const Collection = new Map();
+
+    Array.from(e.target.elements).forEach((el: any) => {
+      if (el.type !== "text") return;
+
+      const [index, type] = el.id.split("-");
+      if (index === "title") return setTitle(el.value || defaultTitle);
+
+      if (!Collection.has(index)) Collection.set(index, []);
+
+      const parsedValue = type === "points" ? Number(el.value) : el.value;
+      Collection.get(index)[type] = parsedValue;
+    });
+
+    const elements = Array.from(Collection.values())
+      .filter((el) => el.answer && el.points)
+      .sort((a, b) => b.points - a.points)
+      .map(({ answer, points }) => ({ answer, points }));
+
+    // game rules error handling
+    if (!elements.length) {
+      return window.alert(
+        "Przed zapisaniem, uzupełnij plansze o wymagane dane."
+      );
+    } else if (!(elements.length > 2)) {
+      return window.alert(
+        "Plansza musi zawierać co najmniej 3 odpowiedzi z podanymi wartościami punktowymi."
+      );
+    }
+
+    // manage local storage data
+    const local = localStorage.getItem("questions");
+    let result = {};
+
+    if (local) {
+      const parsed = JSON.parse(local);
+
+      if (parsed[id]) {
+        parsed[id] = { title, elements };
+        result = parsed;
+      } else {
+        result = {
+          ...parsed,
+          [id]: { title, elements },
+        };
+      }
+    } else {
+      result = {
+        [id]: { title, elements },
+      };
+    }
+
+    // save data
+    setData(elements);
+    localStorage.setItem("questions", JSON.stringify(result));
+
+    window.alert(
+      "Plansza została zapisana, możesz teraz ją wyświetlić w osobnym oknie."
+    );
   };
 
   const handleShowBoard = () => {
-    if (!data)
+    if (!data) {
       return window.alert("Przed wyświetleniem musisz zapisać planszę!");
+    }
 
+    // open new window with board
     window.open(
       `/familiada/board/${id + 1}`,
       "familiada_tablica",
@@ -132,9 +147,15 @@ export default function QuestionComponent({ id }: { id: number }) {
 
   return (
     <form className={styles.container} onSubmit={handleFormSubmit}>
-      {/* custom question */}
+      {/* custom question title */}
       <div className={styles.question}>
-        <input id="title" type="text" defaultValue={`Plansza ${id + 1}`} />
+        <input
+          id="title"
+          type="text"
+          value={title}
+          placeholder={defaultTitle}
+          onChange={(e) => setTitle(e.target.value)}
+        />
         <hr />
       </div>
 
@@ -150,8 +171,16 @@ export default function QuestionComponent({ id }: { id: number }) {
                   id={`${i}-answer`}
                   type="text"
                   autoComplete="off"
-                  maxLength={17}
-                  onChange={handleAnswerChange}
+                  maxLength={17} // 17 characters board limit
+                  value={answers[i] || ""}
+                  onChange={(e) => {
+                    // answer input
+                    setAnswers((prev) => {
+                      const copy = [...prev];
+                      copy[i] = e.target.value.replace(/[^a-zA-Z\s.]/g, "");
+                      return copy;
+                    });
+                  }}
                 />
               </div>
 
@@ -162,8 +191,16 @@ export default function QuestionComponent({ id }: { id: number }) {
                   id={`${i}-points`}
                   type="text"
                   autoComplete="off"
-                  maxLength={2}
-                  onChange={handlePointsChange}
+                  maxLength={2} // 2 characters board limit
+                  value={points[i] || ""}
+                  onChange={(e) => {
+                    // points input
+                    setPoints((prev) => {
+                      const copy = [...prev];
+                      copy[i] = e.target.value.replace(/[^0-9]/g, "");
+                      return copy;
+                    });
+                  }}
                 />
               </div>
             </div>
@@ -175,21 +212,22 @@ export default function QuestionComponent({ id }: { id: number }) {
           {data &&
             data.map((el: { answer: string; points: number }, i: number) => {
               const answer = el.answer.split("");
-              const points = numberFormatter(el.points);
+              const points = numberFormatter(Number(el.points));
 
+              // board layout
               return (
                 <div key={i}>
                   <p>{i + 1}</p>
 
                   <div className={styles.answer}>
-                    {answer.map((word: string, i: number) => {
-                      return <p key={i}>{word}</p>;
+                    {answer.map((value: string, i: number) => {
+                      return <p key={i}>{value}</p>;
                     })}
                   </div>
 
                   <div className={styles.points}>
-                    {points.map((word: string, i: number) => {
-                      return <p key={i}>{word}</p>;
+                    {points.map((value: string, i: number) => {
+                      return <p key={i}>{value}</p>;
                     })}
                   </div>
                 </div>
@@ -200,12 +238,12 @@ export default function QuestionComponent({ id }: { id: number }) {
 
       {/* bottom buttons controls */}
       <div className={styles.buttons}>
-        <button type="submit">
-          <p>💾 Zapisz</p>
-        </button>
-
         <button type="button" onClick={handleClearBoard}>
           <p>🧹 Wyczyść</p>
+        </button>
+
+        <button type="submit">
+          <p>💾 Zapisz</p>
         </button>
 
         <button type="button" onClick={handleShowBoard}>

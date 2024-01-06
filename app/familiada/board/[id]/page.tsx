@@ -23,7 +23,7 @@ export default function BoardID({ params }: { params: { id: number } }) {
   useEffect(() => {
     const local = localStorage.getItem("questions") || "{}";
     const question = JSON.parse(local)[id - 1];
-    if (question) setAnswers(question.answers);
+    if (question) setAnswers(question.elements);
   }, [id]);
 
   const pointsAmount = useRef(0);
