@@ -46,8 +46,12 @@ button,
   }
 }
 
-input:focus {
-  filter: contrast(0.7);
+input {
+  box-shadow: none !important;
+
+  &:focus {
+    filter: contrast(0.7);
+  }
 }
 
 button,

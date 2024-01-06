@@ -8,16 +8,14 @@ import styles from "./page.module.scss";
 
 import Question from "@/components/question";
 
-export default function Home() {
+export default function FamiliadaPage() {
   const [loading, setLoading] = useState(true);
   const [counter, setCounter] = useState(1);
 
   useEffect(() => {
-    let answers = localStorage.getItem("answers");
-    if (!answers) answers = "{}";
-
-    const parsed = JSON.parse(answers);
-    setCounter(Object.keys(parsed).length || 1);
+    const local = localStorage.getItem("questions") || "{}";
+    const questions = JSON.parse(local);
+    setCounter(Object.keys(questions).length || 1);
 
     setLoading(false);
   }, []);

@@ -21,8 +21,9 @@ export default function BoardID({ params }: { params: { id: number } }) {
 
   // set answers
   useEffect(() => {
-    const answers = localStorage.getItem("answers");
-    if (answers) setAnswers(JSON.parse(answers)[id - 1]);
+    const local = localStorage.getItem("questions") || "{}";
+    const question = JSON.parse(local)[id - 1];
+    if (question) setAnswers(question.answers);
   }, [id]);
 
   const pointsAmount = useRef(0);
@@ -33,8 +34,8 @@ export default function BoardID({ params }: { params: { id: number } }) {
   const [blueMistakes, setBlueMistakes] = useState(0);
 
   // audio files support
-  const audioGood = useRef<any>();
-  const audioWrong = useRef<any>();
+  const audioGood = useRef<HTMLAudioElement>(null);
+  const audioWrong = useRef<HTMLAudioElement>(null);
 
   // keyboard navigation
   useEffect(() => {
@@ -51,7 +52,7 @@ export default function BoardID({ params }: { params: { id: number } }) {
         if (!answers[number - 1]) return;
 
         if (!show.includes(number)) {
-          audioGood.current.play();
+          audioGood.current && audioGood.current.play();
           setShow([...show, number]);
 
           if (!event.ctrlKey) {
@@ -65,6 +66,8 @@ export default function BoardID({ params }: { params: { id: number } }) {
           }
         }
       }
+
+      if (!audioWrong.current) return;
 
       // manage teams mistakes
       switch (event.key.toUpperCase()) {
@@ -145,7 +148,7 @@ export default function BoardID({ params }: { params: { id: number } }) {
         <div className={styles.mistakes}>{handleMistakes(redMistakes)}</div>
 
         <div className={styles.main}>
-          {answers.map((el: any, i: number) => {
+          {answers.map((el: { answer: string; points: number }, i: number) => {
             const answer = el.answer.split("");
             const points = numberFormatter(el.points);
             const dots = Array(17).fill("...");

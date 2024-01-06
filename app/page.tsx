@@ -3,7 +3,7 @@ import Link from "next/link";
 import styles from "./page.module.scss";
 import { Header, Footer } from "@/components/assets";
 
-export default function Page() {
+export default function HomePage() {
   return (
     <>
       <Header />

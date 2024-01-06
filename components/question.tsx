@@ -12,90 +12,91 @@ const dottedFont = localFont({
   display: "swap",
 });
 
-export default function Question({ id }: { id: number }) {
+export default function QuestionComponent({ id }: { id: number }) {
   const [data, setData] = useState<any>();
-  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
-    const answers = localStorage.getItem("answers");
-    if (answers) setData(JSON.parse(answers)[id]);
+    const local = localStorage.getItem("questions") || "{}";
+    const question = JSON.parse(local)[id];
+    if (question) setData(question.answers);
   }, [id]);
 
   const handleFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const elements = Array.from(e.target.elements)
-      .map((el: any) => el.type === "text" && [el.id, el.value])
-      .filter((el: any) => el);
+    const Collection = new Map();
+    let title = "";
 
-    const collection = new Map();
+    Array.from(e.target.elements).forEach((el: any) => {
+      if (el.type !== "text") return;
 
-    elements.forEach(([id, value]: any) => {
-      const [index, type] = id.split("-");
-      const parsedValue = type === "points" ? Number(value) : value;
+      const [index, type] = el.id.split("-");
+      if (index === "title") return (title = el.value);
 
-      if (!collection.has(index)) collection.set(index, []);
-      collection.get(index)[type] = parsedValue;
+      if (!Collection.has(index)) Collection.set(index, []);
+
+      const parsedValue = type === "points" ? Number(el.value) : el.value;
+      Collection.get(index)[type] = parsedValue;
     });
 
-    const sortedAnswers = Array.from(collection.values())
+    const answers = Array.from(Collection.values())
       .filter((el) => el.answer && el.points)
       .sort((a, b) => b.points - a.points)
       .map(({ answer, points }) => ({ answer, points }));
 
-    if (!(sortedAnswers.length > 1)) {
-      return window.alert(`Brak wystarczających informacji planszy!`);
+    if (!answers.length) {
+      return window.alert(
+        "Przed zapisaniem, uzupełnij plansze o wymagane dane."
+      );
+    } else if (!(answers.length > 2)) {
+      return window.alert(
+        "Plansza musi zawierać co najmniej 3 odpowiedzi z podanymi wartościami punktowymi."
+      );
     }
 
     // manage local storage data
-    const local = localStorage.getItem("answers");
+    const local = localStorage.getItem("questions");
+    let result = {};
 
-    if (!local) {
-      // create new data with board
-      localStorage.setItem(
-        "answers",
-        JSON.stringify({
-          [id]: sortedAnswers,
-        })
-      );
-    } else {
+    if (local) {
       const parsed = JSON.parse(local);
 
       if (parsed[id]) {
-        // update existing board
-        parsed[id] = sortedAnswers;
-        localStorage.setItem("answers", JSON.stringify(parsed));
+        parsed[id] = { title, answers };
+        result = parsed;
       } else {
-        // create new board
-        localStorage.setItem(
-          "answers",
-          JSON.stringify({
-            ...parsed,
-            [id]: sortedAnswers,
-          })
-        );
+        result = {
+          ...parsed,
+          [id]: { title, answers },
+        };
       }
+    } else {
+      result = {
+        [id]: { title, answers },
+      };
     }
 
-    setData(sortedAnswers);
-    setIsSaved(true);
-    window.alert("Pomyślnie zapisano planszę. Możesz ją teraz wyświetlić!");
+    setData(answers);
+    localStorage.setItem("questions", JSON.stringify(result));
+    window.alert(
+      "Plansza została zapisana, możesz teraz ją wyświetlić w osobnym oknie."
+    );
   };
 
-  const answerInputFormat = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleAnswerChange = (e: ChangeEvent<HTMLInputElement>) => {
     const filtered = e.target.value.replace(/[^a-zA-Z\s.]/g, "");
     e.target.value = filtered;
   };
 
-  const pointsInputFormat = (e: ChangeEvent<HTMLInputElement>) => {
+  const handlePointsChange = (e: ChangeEvent<HTMLInputElement>) => {
     const filtered = e.target.value.replace(/[^0-9]/g, "");
     e.target.value = filtered;
   };
 
   const handleClearBoard = () => {
-    if (!window.confirm("Czy na pewno chcesz wyczyścić planszę?")) return;
+    if (!window.confirm("Czy na pewno chcesz wyczyścić całą planszę?")) return;
 
-    const local = localStorage.getItem("answers");
+    const local = localStorage.getItem("questions");
 
     if (local) {
       const parsed = JSON.parse(local);
@@ -111,7 +112,7 @@ export default function Question({ id }: { id: number }) {
           }
         });
 
-        localStorage.setItem("answers", JSON.stringify(parsed));
+        localStorage.setItem("questions", JSON.stringify(parsed));
       }
     }
 
@@ -119,12 +120,8 @@ export default function Question({ id }: { id: number }) {
   };
 
   const handleShowBoard = () => {
-    const answers = localStorage.getItem("answers");
-    const local = answers && JSON.parse(answers)[id];
-
-    if (!(isSaved || local)) {
-      return window.alert("Najpierw musisz zapisać planszę!");
-    }
+    if (!data)
+      return window.alert("Przed wyświetleniem musisz zapisać planszę!");
 
     window.open(
       `/familiada/board/${id + 1}`,
@@ -137,7 +134,7 @@ export default function Question({ id }: { id: number }) {
     <form className={styles.container} onSubmit={handleFormSubmit}>
       {/* custom question */}
       <div className={styles.question}>
-        <input type="text" defaultValue={`Plansza ${id + 1}`} />
+        <input id="title" type="text" defaultValue={`Plansza ${id + 1}`} />
         <hr />
       </div>
 
@@ -154,7 +151,7 @@ export default function Question({ id }: { id: number }) {
                   type="text"
                   autoComplete="off"
                   maxLength={17}
-                  onChange={answerInputFormat}
+                  onChange={handleAnswerChange}
                 />
               </div>
 
@@ -166,7 +163,7 @@ export default function Question({ id }: { id: number }) {
                   type="text"
                   autoComplete="off"
                   maxLength={2}
-                  onChange={pointsInputFormat}
+                  onChange={handlePointsChange}
                 />
               </div>
             </div>
@@ -176,7 +173,7 @@ export default function Question({ id }: { id: number }) {
         {/* preview board of answers */}
         <div className={`${dottedFont.className} ${styles.preview}`}>
           {data &&
-            data.map((el: any, i: number) => {
+            data.map((el: { answer: string; points: number }, i: number) => {
               const answer = el.answer.split("");
               const points = numberFormatter(el.points);
 
