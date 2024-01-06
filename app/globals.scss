@@ -27,16 +27,87 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-$header-link-height: 3.5rem;
-$header-width-padding: 0.5rem;
+section {
+  display: flex;
+  justify-content: center;
+}
+
+$header-height: 3.5rem;
+$header-padding: 0.5rem;
 
 main {
   padding: 2rem 3% 5rem;
-  min-height: calc(100svh - ($header-link-height + 2 * $header-width-padding));
+  min-height: calc(100svh - ($header-height + 2 * $header-padding));
+  width: min(100%, 1440px);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
+}
+
+header,
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--background);
+
+  section {
+    width: min(100%, 1440px);
+    justify-content: space-between;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+$section-padding: 2rem;
+
+header {
+  padding: $header-padding calc(3% - $section-padding);
+
+  .headerTitle {
+    display: flex;
+    font-weight: bold;
+
+    p {
+      font-size: 135%;
+    }
+  }
+
+  a {
+    position: relative;
+    bottom: 0;
+    padding: 0 $section-padding;
+    height: $header-height;
+    display: flex;
+    align-items: center;
+    border-radius: 0.6rem;
+    transition: 0.15s ease-in-out;
+
+    &:hover {
+      bottom: 1.5px;
+    }
+  }
+}
+
+footer {
+  padding: 1.5rem 0;
+
+  section {
+    padding: 0 $section-padding;
+  }
+
+  p {
+    opacity: 80%;
+    font-size: 90%;
+  }
+}
+
+h1 {
+  font-size: 150%;
+  font-weight: bold;
 }
 
 input,
@@ -70,80 +141,6 @@ button,
 
   &:hover {
     bottom: 2px;
-  }
-}
-
-header,
-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--background);
-}
-
-$link-padding: 2rem;
-
-header {
-  padding: $header-width-padding calc(3% - $link-padding);
-
-  .headerTitle {
-    display: flex;
-    font-weight: bold;
-
-    p {
-      font-size: 135%;
-    }
-  }
-
-  a {
-    position: relative;
-    bottom: 0;
-    padding: 1rem $link-padding;
-    height: $header-link-height;
-    display: flex;
-    align-items: center;
-    border-radius: 0.6rem;
-    transition: 0.15s ease-in-out;
-
-    &:hover {
-      bottom: 1.5px;
-      text-decoration: underline;
-    }
-  }
-}
-
-footer {
-  padding: 1.5rem 3%;
-
-  p {
-    opacity: 80%;
-    font-size: 90%;
-  }
-
-  span {
-    position: relative;
-    bottom: 1px;
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-}
-
-.notFound {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 3rem;
-
-  h1 {
-    font-size: 200%;
-  }
-
-  span {
-    opacity: 80%;
-    font-size: 90%;
   }
 }
 

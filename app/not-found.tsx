@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { Header, Footer } from "@/components/assets";
+import Layout from "@/components/pageLayout";
 
 export default function NotFound() {
   const router = useRouter();
@@ -20,18 +20,12 @@ export default function NotFound() {
   }, [router, seconds]);
 
   return (
-    <>
-      <Header />
+    <Layout>
+      <h1>Nie znaleziono strony!</h1>
 
-      <main className="notFound">
-        <h1>Nie znaleziono strony!</h1>
-
-        <Link className="button" href="/">
-          🏠 Powrót na stronę główną <span>[{seconds}]</span>
-        </Link>
-      </main>
-
-      <Footer />
-    </>
+      <Link className="button" href="/">
+        🏠 Powrót na stronę główną <span>[{seconds}]</span>
+      </Link>
+    </Layout>
   );
 }

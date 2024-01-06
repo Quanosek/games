@@ -7,10 +7,13 @@ const font = Roboto({
   display: "swap",
 });
 
-// /familiada metadata
+// familiada metadata
 export const metadata: Metadata = {
-  title: "Familiada - Pokój gier / klalo.pl",
-  description: "Rodzinna gra telewizyjna - Familiada",
+  title: `"Familiada" - Pokój gier / klalo.pl`,
+  description: `"Familiada" to teleturniej, w którym dwie drużyny rywalizują między sobą, odgadując najpopularniejsze odpowiedzi na pytania z ankiet, aby zdobyć punkty.`,
+  icons: {
+    icon: "/favicon/money_bag.svg",
+  },
 };
 
 export default function FamiliadaLayout({
