@@ -1,13 +1,12 @@
 "use client";
 
-import localFont from "next/font/local";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 
 import styles from "./page.module.scss";
+import Points from "@/functions/familiadaPoints";
 
-import numberFormatter from "@/functions/numberFormatter";
-
+import localFont from "next/font/local";
 const dottedFont = localFont({
   src: "../../../../fonts/familiada_regular.woff2",
   display: "swap",
@@ -138,7 +137,7 @@ export default function BoardID({ params }: { params: { id: number } }) {
     <div className={`${dottedFont.className} ${styles.container}`}>
       <div className={styles.summary}>
         <div>
-          {numberFormatter(mainScore.current).map((el: string, i: number) => {
+          {Points(mainScore.current).map((el: string, i: number) => {
             return <p key={i}>{el}</p>;
           })}
         </div>
@@ -150,7 +149,7 @@ export default function BoardID({ params }: { params: { id: number } }) {
         <div className={styles.main}>
           {answers.map((el: { answer: string; points: number }, i: number) => {
             const answer = el.answer.split("");
-            const points = numberFormatter(el.points);
+            const points = Points(el.points);
             const dots = Array(17).fill("...");
 
             return (
@@ -192,11 +191,9 @@ export default function BoardID({ params }: { params: { id: number } }) {
             </div>
 
             <div>
-              {numberFormatter(pointsAmount.current).map(
-                (el: string, i: number) => {
-                  return <p key={i}>{el}</p>;
-                }
-              )}
+              {Points(pointsAmount.current).map((el: string, i: number) => {
+                return <p key={i}>{el}</p>;
+              })}
             </div>
           </div>
         </div>

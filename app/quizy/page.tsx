@@ -3,7 +3,6 @@
 import { useState } from "react";
 
 import styles from "./page.module.scss";
-
 import Layout from "@/components/pageLayout";
 
 export default function QuizyPage() {

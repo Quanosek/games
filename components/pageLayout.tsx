@@ -1,13 +1,17 @@
-import { Roboto } from "next/font/google";
 import Link from "next/link";
 
+import { Roboto } from "next/font/google";
 const font = Roboto({
   weight: "400",
   subsets: ["latin"],
   display: "swap",
 });
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function PageLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <>
       <header>

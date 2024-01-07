@@ -1,3 +1,5 @@
+// PAGE
+
 .description {
   opacity: 80%;
   display: flex;
@@ -15,15 +17,137 @@
   }
 }
 
-.question {
-  padding: 1.5rem 2rem 2rem;
-  border-radius: 0.6rem;
-  background-color: var(--background);
-}
-
 .credits {
   opacity: 35%;
   position: absolute;
   bottom: 1rem;
   font-size: 80%;
+}
+
+// QUESTION
+
+.container {
+  padding: 1.5rem 2rem 2rem;
+  border-radius: 0.6rem;
+  background-color: var(--background);
+
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.65rem;
+}
+
+.question {
+  display: flex;
+  flex-direction: column;
+
+  input {
+    padding: 0.8rem 0.65rem;
+    font-size: 150%;
+    font-weight: bold;
+    border: none;
+    background-color: var(--background);
+
+    &:hover {
+      filter: contrast(0.95);
+    }
+    &:focus {
+      filter: contrast(0.9);
+    }
+  }
+
+  hr {
+    height: 1px;
+    background-color: var(--white);
+  }
+}
+
+.content {
+  display: flex;
+  gap: 2rem;
+}
+
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.list {
+  display: flex;
+  gap: 2rem;
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  .answer {
+    p {
+      width: 7rem;
+    }
+
+    input {
+      width: 16rem;
+    }
+  }
+
+  .points {
+    p {
+      width: 8rem;
+    }
+
+    input {
+      width: 4rem;
+    }
+  }
+}
+
+.preview {
+  scale: 1.2;
+  margin: 16px 46.5px;
+
+  $cell-width: 14.5px;
+  $cell-space: 5.5px;
+  $save-space: $cell-width + $cell-space;
+
+  padding-top: 30px;
+  padding-left: 20.5px;
+
+  width: calc(951px / 2);
+  height: calc(463px / 2);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  user-select: none;
+
+  color: var(--yellow);
+  font-size: 142%;
+  text-transform: uppercase;
+
+  background: no-repeat url("/images/board_mini.webp");
+  background-size: contain;
+
+  div {
+    display: flex;
+    gap: $cell-space;
+  }
+
+  p {
+    width: $cell-width;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    letter-spacing: 0;
+  }
+
+  .answer {
+    margin-left: $save-space;
+    width: calc(17 * ($save-space) - $cell-space);
+  }
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
 }

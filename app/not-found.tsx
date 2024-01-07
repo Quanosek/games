@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 import Layout from "@/components/pageLayout";
 
-export default function NotFound() {
+export default function NotFoundPage() {
   const router = useRouter();
   const [seconds, setSeconds] = useState(10); // 10 seconds
 

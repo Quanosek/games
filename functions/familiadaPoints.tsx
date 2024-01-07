@@ -1,4 +1,4 @@
-export default function numberFunction(number: number) {
+export default function FamiliadaPoints(number: number) {
   const size = number.toString().length;
 
   // reserve 3 cells for points
