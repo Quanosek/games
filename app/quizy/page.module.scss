@@ -1,0 +1,139 @@
+.header {
+  font-size: 500%;
+  user-select: none;
+
+  span {
+    opacity: 90%;
+    background-image: linear-gradient(45deg, #ffc800, #57bd4b);
+
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.question {
+  padding: 2rem;
+  width: 45rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  background-color: var(--background);
+  border-radius: 0.6rem;
+
+  input {
+    padding: 0.8rem 1rem;
+  }
+}
+
+.answers {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1rem;
+
+  input {
+    border: none;
+  }
+}
+
+.answer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: var(--white-border);
+
+  input {
+    width: 100%;
+  }
+}
+
+.container {
+  padding: 0.6rem 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  background-color: var(--secondary);
+  border-top: var(--white-border);
+}
+
+.correct {
+  display: flex;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  $color: #2aa8da;
+
+  &:hover {
+    color: $color;
+
+    .checkbox .text {
+      color: $color !important;
+    }
+
+    .checkbox svg {
+      stroke: $color !important;
+    }
+  }
+
+  input[type="checkbox"] {
+    display: none;
+
+    $color: #4ae05b;
+
+    &:checked + .checkbox .text {
+      color: $color;
+    }
+
+    &:checked + .checkbox svg {
+      stroke: $color;
+    }
+
+    &:checked + .checkbox svg path {
+      stroke-dashoffset: 60;
+      transition: all 0.3s;
+    }
+
+    &:checked + .checkbox svg polyline {
+      stroke-dashoffset: 42;
+      transition: stroke-dashoffset 0.3s 0.15s;
+    }
+  }
+
+  .checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    p {
+      opacity: 75%;
+      font-size: 85%;
+      user-select: none;
+    }
+
+    svg {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke: var(--white);
+      stroke-width: 1.5;
+      transition: all 0.2s ease;
+
+      path {
+        stroke-dasharray: 60;
+        stroke-dashoffset: 0;
+      }
+
+      polyline {
+        stroke-width: 2;
+        stroke-dasharray: 22;
+        stroke-dashoffset: 66;
+      }
+    }
+  }
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}

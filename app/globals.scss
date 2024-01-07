@@ -5,8 +5,12 @@
   --white: #f2f2f2;
   --black: #0a0b0d;
   --yellow: #d9c465;
-  --dark-blue: #13469d;
+
+  --primary: #303030;
+  --secondary: #242424;
   --background: #121212;
+
+  --white-border: 0.5px solid #707070;
 }
 
 // tab focus border
@@ -114,8 +118,8 @@ h1 {
 input,
 button,
 .button {
-  border: 1px solid #ffffff;
-  background-color: #303030;
+  border: var(--white-border);
+  background-color: var(--primary);
   transition: 0.1s filter ease-out;
 
   &:hover {
@@ -125,6 +129,7 @@ button,
 
 input {
   box-shadow: none !important;
+  padding: 0.5rem 1rem;
 
   &:focus {
     filter: contrast(0.7);
