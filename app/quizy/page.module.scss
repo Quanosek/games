@@ -1,4 +1,6 @@
-.header {
+// PAGE
+
+.title {
   font-size: 500%;
   user-select: none;
 
@@ -11,9 +13,11 @@
   }
 }
 
+// QUESTION
+
 .question {
   padding: 2rem;
-  width: 45rem;
+  width: 50rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;

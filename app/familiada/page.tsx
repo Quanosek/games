@@ -87,7 +87,7 @@ export default function FamiliadaPage() {
         <>
           {[...Array(counter)].map((_, i) => (
             <div key={i}>
-              <QuestionComponent id={i} />
+              <Question id={i} />
             </div>
           ))}
 
@@ -115,7 +115,7 @@ export default function FamiliadaPage() {
   );
 }
 
-function QuestionComponent({ id }: { id: number }) {
+function Question({ id }: { id: number }) {
   const [data, setData] = useState<any>();
 
   const defaultTitle = `Plansza ${id + 1}`;
