@@ -9,17 +9,17 @@ export default function HomePage() {
       <h1 className={styles.title}>Wybierz grę:</h1>
 
       <div className={styles.buttons}>
-        <Link className="button disabled" href="/quizy">
-          <p>❔ Quizy</p>
-        </Link>
-
         <Link className="button" href="/familiada">
           <p>{`💰 "Familiada"`}</p>
         </Link>
 
-        <Link className="button disabled" href="/milionerzy">
-          <p>{`💸 "Milionerzy"`}</p>
+        <Link className="button" href="/quizy">
+          <p>❔ Quizy</p>
         </Link>
+
+        {/* <Link className="button disabled" href="/milionerzy">
+          <p>{`💸 "Milionerzy"`}</p>
+        </Link> */}
       </div>
     </Layout>
   );

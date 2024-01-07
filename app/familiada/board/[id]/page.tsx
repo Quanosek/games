@@ -20,7 +20,7 @@ export default function BoardID({ params }: { params: { id: number } }) {
 
   // set answers
   useEffect(() => {
-    const local = localStorage.getItem("questions") || "{}";
+    const local = localStorage.getItem("familiada") || "{}";
     const question = JSON.parse(local)[id - 1];
     if (question) setAnswers(question.elements);
   }, [id]);

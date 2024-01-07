@@ -19,13 +19,13 @@ export default function FamiliadaPage() {
   const [counter, setCounter] = useState(1);
 
   useEffect(() => {
-    const local = localStorage.getItem("questions") || "{}";
+    const local = localStorage.getItem("familiada") || "{}";
     const questions = JSON.parse(local);
 
     // rewrite keys to be in order
     const newOrder = {} as any;
     Object.keys(questions).forEach((key, i) => (newOrder[i] = questions[key]));
-    localStorage.setItem("questions", JSON.stringify(newOrder));
+    localStorage.setItem("familiada", JSON.stringify(newOrder));
 
     setCounter(Object.keys(newOrder).length || 1);
     setLoading(false);
@@ -40,7 +40,7 @@ export default function FamiliadaPage() {
           width={595}
           height={170}
           draggable={false}
-          priority={true}
+          priority
         />
       </div>
 
@@ -126,7 +126,7 @@ function Question({ id }: { id: number }) {
 
   // setting up default values on load
   useEffect(() => {
-    const local = localStorage.getItem("questions") || "{}";
+    const local = localStorage.getItem("familiada") || "{}";
     const question = JSON.parse(local)[id];
 
     if (question) {
@@ -143,14 +143,14 @@ function Question({ id }: { id: number }) {
   const handleClearBoard = () => {
     if (!window.confirm("Czy na pewno chcesz wyczyścić całą planszę?")) return;
 
-    const local = localStorage.getItem("questions");
+    const local = localStorage.getItem("familiada");
 
     if (local) {
       const parsed = JSON.parse(local);
 
       if (parsed[id]) {
         delete parsed[id];
-        localStorage.setItem("questions", JSON.stringify(parsed));
+        localStorage.setItem("familiada", JSON.stringify(parsed));
       }
     }
 
@@ -170,7 +170,7 @@ function Question({ id }: { id: number }) {
     Array.from(e.target.elements).forEach((el: any) => {
       if (el.type !== "text") return;
 
-      const [index, type] = el.id.split("-");
+      const [index, type] = el.name.split("-");
       if (index === "title") return setTitle(el.value || defaultTitle);
 
       if (!Collection.has(index)) Collection.set(index, []);
@@ -196,7 +196,7 @@ function Question({ id }: { id: number }) {
     }
 
     // manage local storage data
-    const local = localStorage.getItem("questions");
+    const local = localStorage.getItem("familiada");
     let result = {};
 
     if (local) {
@@ -219,7 +219,7 @@ function Question({ id }: { id: number }) {
 
     // save data
     setData(elements);
-    localStorage.setItem("questions", JSON.stringify(result));
+    localStorage.setItem("familiada", JSON.stringify(result));
 
     window.alert(
       "Plansza została zapisana, możesz teraz ją wyświetlić w osobnym oknie."
@@ -244,8 +244,10 @@ function Question({ id }: { id: number }) {
       {/* custom question title */}
       <div className={styles.question}>
         <input
-          id="title"
+          name="title"
           type="text"
+          maxLength={128}
+          autoComplete="off"
           value={title}
           placeholder={defaultTitle}
           onChange={(e) => setTitle(e.target.value)}
@@ -262,10 +264,10 @@ function Question({ id }: { id: number }) {
                 <p>Odpowiedź {i + 1}:</p>
 
                 <input
-                  id={`${i}-answer`}
+                  name={`${i}-answer`}
                   type="text"
-                  autoComplete="off"
                   maxLength={17} // 17 characters board limit
+                  autoComplete="off"
                   value={answers[i] || ""}
                   onChange={(e) => {
                     // answer input
@@ -282,10 +284,10 @@ function Question({ id }: { id: number }) {
                 <p>Liczba punktów:</p>
 
                 <input
-                  id={`${i}-points`}
+                  name={`${i}-points`}
                   type="text"
-                  autoComplete="off"
                   maxLength={2} // 2 characters board limit
+                  autoComplete="off"
                   value={points[i] || ""}
                   onChange={(e) => {
                     // points input
