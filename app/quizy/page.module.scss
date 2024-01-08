@@ -1,6 +1,5 @@
-// PAGE
-
 .title {
+  margin-bottom: 1rem;
   font-size: 500%;
   user-select: none;
 
@@ -13,20 +12,51 @@
   }
 }
 
-// QUESTION
+.form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
 
-.question {
-  padding: 2rem;
+.container {
+  padding: 1.25rem 2rem 2rem;
   width: 50rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 
   background-color: var(--background);
   border-radius: 0.6rem;
 
   input {
     padding: 0.8rem 1rem;
+  }
+}
+
+.params {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    button {
+      opacity: 80%;
+      border: none;
+      padding: 5px;
+      aspect-ratio: 1/1;
+      background-color: transparent;
+
+      img {
+        filter: invert(1);
+      }
+    }
   }
 }
 
@@ -40,7 +70,7 @@
   }
 }
 
-.answer {
+.value {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -51,7 +81,7 @@
   }
 }
 
-.container {
+.checkboxHandler {
   padding: 0.6rem 1rem;
   width: 100%;
   display: flex;
@@ -60,7 +90,7 @@
   border-top: var(--white-border);
 }
 
-.correct {
+.checkbox {
   display: flex;
   transition: all 0.2s ease;
   cursor: pointer;
@@ -70,11 +100,11 @@
   &:hover {
     color: $color;
 
-    .checkbox .text {
+    .check .text {
       color: $color !important;
     }
 
-    .checkbox svg {
+    .check svg {
       stroke: $color !important;
     }
   }
@@ -84,26 +114,26 @@
 
     $color: #4ae05b;
 
-    &:checked + .checkbox .text {
+    &:checked + .check .text {
       color: $color;
     }
 
-    &:checked + .checkbox svg {
+    &:checked + .check svg {
       stroke: $color;
     }
 
-    &:checked + .checkbox svg path {
+    &:checked + .check svg path {
       stroke-dashoffset: 60;
       transition: all 0.3s;
     }
 
-    &:checked + .checkbox svg polyline {
+    &:checked + .check svg polyline {
       stroke-dashoffset: 42;
       transition: stroke-dashoffset 0.3s 0.15s;
     }
   }
 
-  .checkbox {
+  .check {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -136,8 +166,35 @@
   }
 }
 
-.buttons {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
+.playButton {
+  position: sticky;
+  bottom: min(10vh, 5rem);
+  width: 100%;
+  height: 100%;
+
+  button {
+    padding: 1.5rem;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: #003064;
+    border-radius: 30px;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      filter: brightness(4);
+      scale: 1.05;
+    }
+  }
+
+  img {
+    position: relative;
+    left: 2px;
+    filter: invert(1);
+  }
 }

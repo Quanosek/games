@@ -73,7 +73,7 @@ export default function FamiliadaPage() {
 
       <button
         onClick={() => {
-          window.open(
+          open(
             "/familiada/board/title",
             "familiada_tablica",
             "width=960, height=540"
@@ -141,7 +141,7 @@ function Question({ id }: { id: number }) {
   }, [id, defaultTitle]);
 
   const handleClearBoard = () => {
-    if (!window.confirm("Czy na pewno chcesz wyczyścić całą planszę?")) return;
+    if (!confirm("Czy na pewno chcesz wyczyścić całą planszę?")) return;
 
     const local = localStorage.getItem("familiada");
 
@@ -186,11 +186,9 @@ function Question({ id }: { id: number }) {
 
     // game rules error handling
     if (!elements.length) {
-      return window.alert(
-        "Przed zapisaniem, uzupełnij plansze o wymagane dane."
-      );
+      return alert("Przed zapisaniem, uzupełnij plansze o wymagane dane.");
     } else if (!(elements.length > 2)) {
-      return window.alert(
+      return alert(
         "Plansza musi zawierać co najmniej 3 odpowiedzi z podanymi wartościami punktowymi."
       );
     }
@@ -221,18 +219,18 @@ function Question({ id }: { id: number }) {
     setData(elements);
     localStorage.setItem("familiada", JSON.stringify(result));
 
-    window.alert(
+    alert(
       "Plansza została zapisana, możesz teraz ją wyświetlić w osobnym oknie."
     );
   };
 
   const handleShowBoard = () => {
     if (!data) {
-      return window.alert("Przed wyświetleniem musisz zapisać planszę!");
+      return alert("Przed wyświetleniem musisz zapisać planszę!");
     }
 
     // open new window with board
-    window.open(
+    open(
       `/familiada/board/${id + 1}`,
       "familiada_tablica",
       "width=960, height=540"

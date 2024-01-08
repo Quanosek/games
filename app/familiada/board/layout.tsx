@@ -12,7 +12,7 @@ export default function BoardLayout({
   // keyboard navigation
   useEffect(() => {
     const KeyupEvent = (event: KeyboardEvent) => {
-      if (event.key === "Escape") window.close();
+      if (event.key === "Escape") close();
     };
 
     document.addEventListener("keyup", KeyupEvent);
