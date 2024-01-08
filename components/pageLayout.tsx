@@ -22,7 +22,9 @@ export default function PageLayout({
             </Link>
           </div>
 
-          <Link href="https://www.klalo.pl/">www.klalo.pl</Link>
+          <Link href="https://www.klalo.pl/" target="_blank">
+            www.klalo.pl
+          </Link>
         </section>
       </header>
 
@@ -40,7 +42,7 @@ export default function PageLayout({
           </p>
 
           <p>
-            Wszelkie prawa zastrzeżone &#169; 2023 | domena{" "}
+            Wszelkie prawa zastrzeżone &#169; 2024 | domena{" "}
             <Link href="https://www.klalo.pl/" target="_blank">
               klalo.pl
             </Link>

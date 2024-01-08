@@ -37,7 +37,7 @@ export default function QuizyPage() {
           <div className={styles.container} key={index}>
             <div className={styles.params}>
               <p>
-                Pytanie {index + 1}/{data.length}
+                {index + 1}/{data.length}
               </p>
 
               {/* quick settings */}
@@ -120,7 +120,6 @@ export default function QuizyPage() {
               autoComplete="off"
               placeholder="Pytanie"
               maxLength={128}
-              required
               style={{ marginBottom: "1rem" }}
               value={data[index].question || ""}
               onChange={(e) => {
@@ -137,23 +136,26 @@ export default function QuizyPage() {
               {Array.from({ length: 4 }).map((_, i) => (
                 <div className={styles.value} key={i}>
                   {/* answer value input */}
-                  <input
-                    type="text"
-                    autoComplete="off"
-                    placeholder="Odpowiedź"
-                    maxLength={64}
-                    value={data[index].answers[i].value || ""}
-                    onChange={(e) => {
-                      setData((prev) => {
-                        const newData = [...prev];
-                        newData[index].answers[i] = {
-                          ...newData[index].answers[i],
-                          value: e.target.value,
-                        };
-                        return newData;
-                      });
-                    }}
-                  />
+                  <div className={styles.answer}>
+                    <p>{["A", "B", "C", "D"][i]}</p>
+                    <input
+                      type="text"
+                      autoComplete="off"
+                      placeholder="Odpowiedź"
+                      maxLength={64}
+                      value={data[index].answers[i].value || ""}
+                      onChange={(e) => {
+                        setData((prev) => {
+                          const newData = [...prev];
+                          newData[index].answers[i] = {
+                            ...newData[index].answers[i],
+                            value: e.target.value,
+                          };
+                          return newData;
+                        });
+                      }}
+                    />
+                  </div>
 
                   {/* correct answer checkbox */}
                   <div className={styles.checkboxHandler}>

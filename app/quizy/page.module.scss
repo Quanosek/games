@@ -55,6 +55,7 @@
 
       img {
         filter: invert(1);
+        user-select: none;
       }
     }
   }
@@ -73,10 +74,28 @@
 .value {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   border: var(--white-border);
+}
+
+.answer {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: var(--primary);
+
+  $padding-left: 1rem;
+
+  p {
+    z-index: 1;
+    position: absolute;
+    left: $padding-left;
+    user-select: none;
+    pointer-events: none;
+  }
 
   input {
+    padding-left: calc(2.5 * $padding-left);
     width: 100%;
   }
 }
@@ -196,5 +215,6 @@
     position: relative;
     left: 2px;
     filter: invert(1);
+    user-select: none;
   }
 }
