@@ -85,7 +85,7 @@ export default function QuizyPage() {
                     width={20}
                     height={20}
                     draggable={false}
-                    style={{ transform: "rotate(180deg)" }}
+                    style={{ rotate: "180deg" }}
                   />
                 </button>
 

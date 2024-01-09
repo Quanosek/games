@@ -2,14 +2,16 @@
 
 import { useEffect, useState } from "react";
 
+import styles from "./page.module.scss";
+
 export default function BoardID({ params }: { params: { id: number } }) {
   const { id } = params;
 
   const [data, setData] = useState<any>();
 
   useEffect(() => {
-    const local = localStorage.getItem("quizy") || "{}";
-    if (local) setData(JSON.parse(local)[id - 1]);
+    const storedData = localStorage.getItem("quizy");
+    if (storedData) setData(JSON.parse(storedData)[id - 1]);
   }, [id]);
 
   if (!data) return null;
@@ -17,12 +19,16 @@ export default function BoardID({ params }: { params: { id: number } }) {
   return (
     <>
       <h1>{data.question}</h1>
-      {data.answers.map((el: any, index: number) => (
-        <div style={{ display: "flex", gap: "1rem" }} key={index}>
-          <p>{el.answer}</p>
-          <p>{el.correct.toString()}</p>
-        </div>
-      ))}
+
+      <div className={styles.answers}>
+        {data.answers.map((el: any, i: number) => (
+          <div key={i}>
+            <button>
+              <p>{`${["A", "B", "C", "D"][i]}: ${el.value}`}</p>
+            </button>
+          </div>
+        ))}
+      </div>
     </>
   );
 }
