@@ -1,11 +1,14 @@
 "use client";
 
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import styles from "./page.module.scss";
+import styles from "./style.module.scss";
 
 export default function BoardID({ params }: { params: { id: number } }) {
   const { id } = params;
+  const router = useRouter();
 
   const [data, setData] = useState<any>();
 
@@ -14,20 +17,47 @@ export default function BoardID({ params }: { params: { id: number } }) {
     if (storedData) setData(JSON.parse(storedData)[id - 1]);
   }, [id]);
 
-  if (!data) return null;
+  if (!data)
+    return (
+      <button onClick={() => router.push("/quizy/board/1")}>
+        <p>Rozpocznij quiz!</p>
+      </button>
+    );
 
   return (
     <>
-      <h1>{data.question}</h1>
+      <h1 className={styles.question}>{`${id}. ${data.question}`}</h1>
 
       <div className={styles.answers}>
         {data.answers.map((el: any, i: number) => (
-          <div key={i}>
-            <button>
-              <p>{`${["A", "B", "C", "D"][i]}: ${el.value}`}</p>
-            </button>
-          </div>
+          <button key={i}>
+            <p>{`${["A", "B", "C", "D"][i]}: ${el.value}`}</p>
+          </button>
         ))}
+      </div>
+
+      <div className={styles.controls}>
+        <button onClick={() => router.push(`/quizy/board/${[Number(id) - 1]}`)}>
+          <Image
+            src="/icons/arrow.svg"
+            alt="arrow-left"
+            width={50}
+            height={50}
+            draggable={false}
+            style={{ rotate: "-90deg" }}
+          />
+        </button>
+
+        <button onClick={() => router.push(`/quizy/board/${[Number(id) + 1]}`)}>
+          <Image
+            src="/icons/arrow.svg"
+            alt="arrow-left"
+            width={50}
+            height={50}
+            draggable={false}
+            style={{ rotate: "90deg" }}
+          />
+        </button>
       </div>
     </>
   );

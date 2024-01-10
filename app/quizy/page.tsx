@@ -6,8 +6,13 @@ import { useEffect, useState } from "react";
 import styles from "./page.module.scss";
 import Layout from "@/components/pageLayout";
 
+interface Question {
+  question: string;
+  answers: { value: string; checked: boolean }[];
+}
+
 export default function QuizyPage() {
-  const emptyQuestion = {
+  const emptyQuestion: Question = {
     question: "",
     answers: new Array(4).fill({ value: "", checked: false }),
   };
@@ -17,7 +22,16 @@ export default function QuizyPage() {
   // load data from localStorage
   useEffect(() => {
     const storedData = localStorage.getItem("quizy");
-    if (storedData) setData(JSON.parse(storedData));
+    if (!storedData) return;
+
+    // filter empty arrays
+    const parsedData = JSON.parse(storedData).filter((question: Question) => {
+      return (
+        question.question && question.answers.some((answer) => answer.value)
+      );
+    });
+
+    setData(parsedData);
   }, []);
 
   return (
@@ -30,7 +44,9 @@ export default function QuizyPage() {
         className={styles.form}
         onSubmit={(e) => {
           e.preventDefault();
+
           localStorage.setItem("quizy", JSON.stringify(data));
+          open("/quizy/board/0", "quizy_tablica", "width=960, height=540");
         }}
       >
         {[...Array(data.length)].map((_, index) => (
@@ -163,7 +179,7 @@ export default function QuizyPage() {
                       <input
                         id={`${index}-${i}-checkbox`}
                         type="checkbox"
-                        checked={data[index].answers[i].checked || ""}
+                        checked={data[index].answers[i].checked || false}
                         onChange={(e) => {
                           setData((prev) => {
                             const newData = [...prev];
@@ -203,6 +219,8 @@ export default function QuizyPage() {
             setData([...data, emptyQuestion]);
 
             setTimeout(() => {
+              localStorage.setItem("quizy", JSON.stringify(data));
+
               scrollTo({
                 top: document.body.scrollHeight,
                 behavior: "smooth",
