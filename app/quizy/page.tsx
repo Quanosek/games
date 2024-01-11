@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import styles from "./page.module.scss";
 import Layout from "@/components/pageLayout";
 
-interface Question {
+export interface Question {
   question: string;
   answers: Array<{ value: string; checked: boolean }>;
 }
@@ -48,7 +48,9 @@ export default function QuizyPage() {
       </h1>
 
       {loading ? (
-        <p>Ładowanie...</p>
+        <div className={styles.loading}>
+          <p>Trwa ładowanie...</p>
+        </div>
       ) : (
         <form
           className={styles.form}
