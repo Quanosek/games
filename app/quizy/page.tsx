@@ -6,9 +6,14 @@ import { useEffect, useState } from "react";
 import styles from "./page.module.scss";
 import Layout from "@/components/pageLayout";
 
+interface Question {
+  question: string;
+  answers: Array<{ value: string; checked: boolean }>;
+}
+
 export default function QuizyPage() {
   // question object template
-  const emptyQuestion = {
+  const emptyQuestion: Question = {
     question: "",
     answers: new Array(4).fill({ value: "", checked: false }),
   };
@@ -30,6 +35,11 @@ export default function QuizyPage() {
     if (!loading) localStorage.setItem("quizy", JSON.stringify(data));
   }, [data, loading]);
 
+  // check if question is empty
+  const emptyQuestionCheck = (question: Question) => {
+    return JSON.stringify(question) === JSON.stringify(emptyQuestion);
+  };
+
   return (
     <Layout>
       {/* large title */}
@@ -44,6 +54,14 @@ export default function QuizyPage() {
           className={styles.form}
           onSubmit={(e) => {
             e.preventDefault();
+
+            // check if data includes empty question
+            if (data.some((question) => emptyQuestionCheck(question))) {
+              return alert(
+                "Usuń wszystkie puste pytania lub uzupełnij o niezbędne dane!"
+              );
+            }
+
             localStorage.setItem("quizy", JSON.stringify(data));
             open("/quizy/board/0", "quizy_tablica", "width=960, height=540");
           }}
@@ -108,8 +126,10 @@ export default function QuizyPage() {
                     type="button"
                     title="Usuń pytanie"
                     onClick={() => {
-                      if (!confirm("Czy na pewno chcesz usunąć pytanie?"))
-                        return;
+                      if (!emptyQuestionCheck(data[index])) {
+                        if (!confirm("Czy na pewno chcesz usunąć pytanie?"))
+                          return;
+                      }
 
                       setData((prev) => {
                         const newData = [...prev];
@@ -170,6 +190,19 @@ export default function QuizyPage() {
                             return newData;
                           });
                         }}
+                        onBlur={(e) => {
+                          // unchecked checkbox if answer is empty
+                          if (!e.target.value) {
+                            setData((prev) => {
+                              const newData = [...prev];
+                              newData[index].answers[i] = {
+                                ...newData[index].answers[i],
+                                checked: false,
+                              };
+                              return newData;
+                            });
+                          }
+                        }}
                       />
                     </div>
 
@@ -216,6 +249,10 @@ export default function QuizyPage() {
             type="button"
             style={{ marginTop: "1rem" }}
             onClick={() => {
+              if (emptyQuestionCheck(data[data.length - 1])) {
+                return alert("Nie możesz dodać kolejnego pustego pytania!");
+              }
+
               setData([...data, emptyQuestion]);
 
               setTimeout(() => {
