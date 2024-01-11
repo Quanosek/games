@@ -6,36 +6,30 @@ import { useEffect, useState } from "react";
 import styles from "./page.module.scss";
 import Layout from "@/components/pageLayout";
 
-interface Question {
-  question: string;
-  answers: { value: string; checked: boolean }[];
-}
-
 export default function QuizyPage() {
-  const emptyQuestion: Question = {
+  // question object template
+  const emptyQuestion = {
     question: "",
     answers: new Array(4).fill({ value: "", checked: false }),
   };
 
+  // data state
   const [data, setData] = useState([emptyQuestion]);
 
-  // load data from localStorage
+  // load data on start
   useEffect(() => {
     const storedData = localStorage.getItem("quizy");
-    if (!storedData) return;
-
-    // filter empty arrays
-    const parsedData = JSON.parse(storedData).filter((question: Question) => {
-      return (
-        question.question && question.answers.some((answer) => answer.value)
-      );
-    });
-
-    setData(parsedData);
+    if (storedData) setData(JSON.parse(storedData));
   }, []);
+
+  // save data on change
+  useEffect(() => {
+    if (data.length) localStorage.setItem("quizy", JSON.stringify(data));
+  }, [data]);
 
   return (
     <Layout>
+      {/* large title */}
       <h1 className={styles.title}>
         Zagraj w <span>Quizy</span>
       </h1>
@@ -44,7 +38,6 @@ export default function QuizyPage() {
         className={styles.form}
         onSubmit={(e) => {
           e.preventDefault();
-
           localStorage.setItem("quizy", JSON.stringify(data));
           open("/quizy/board/0", "quizy_tablica", "width=960, height=540");
         }}
@@ -219,8 +212,6 @@ export default function QuizyPage() {
             setData([...data, emptyQuestion]);
 
             setTimeout(() => {
-              localStorage.setItem("quizy", JSON.stringify(data));
-
               scrollTo({
                 top: document.body.scrollHeight,
                 behavior: "smooth",

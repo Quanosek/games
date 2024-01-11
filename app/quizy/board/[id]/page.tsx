@@ -17,12 +17,13 @@ export default function BoardID({ params }: { params: { id: number } }) {
     if (storedData) setData(JSON.parse(storedData)[id - 1]);
   }, [id]);
 
-  if (!data)
+  if (!data) {
     return (
       <button onClick={() => router.push("/quizy/board/1")}>
         <p>Rozpocznij quiz!</p>
       </button>
     );
+  }
 
   return (
     <>

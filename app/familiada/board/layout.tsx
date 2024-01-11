@@ -9,16 +9,14 @@ export default function BoardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // keyboard navigation
+  // keyboard interactions
   useEffect(() => {
     const KeyupEvent = (event: KeyboardEvent) => {
       if (event.key === "Escape") close();
     };
 
     document.addEventListener("keyup", KeyupEvent);
-    return () => {
-      document.removeEventListener("keyup", KeyupEvent);
-    };
+    return () => document.removeEventListener("keyup", KeyupEvent);
   }, []);
 
   return <div className={styles.container}>{children}</div>;
