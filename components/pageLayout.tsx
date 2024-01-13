@@ -29,6 +29,14 @@ export default function PageLayout({
       </header>
 
       <section>
+        <div className="mobileView">
+          <p>
+            Wybrana strona nie jest dostępna
+            <br />
+            dla urządzeń mobilnych
+          </p>
+        </div>
+
         <main className={font.className}>{children}</main>
       </section>
 
