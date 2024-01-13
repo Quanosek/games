@@ -170,8 +170,8 @@ button,
   bottom: 0;
   padding: 0.65rem 2rem;
   border-radius: 0.4rem;
+  transition: 0.15s ease-in-out;
   cursor: pointer;
-  transition: 0.1s bottom ease-in-out, 0.15s filter ease-in-out;
 
   &:hover {
     bottom: 2px;
