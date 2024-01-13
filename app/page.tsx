@@ -6,7 +6,7 @@ import Layout from "@/components/pageLayout";
 export default function HomePage() {
   return (
     <Layout>
-      <h1 className={styles.title}>Wybierz grę:</h1>
+      <h1>Wybierz grę:</h1>
 
       <div className={styles.buttons}>
         <Link className="button" href="/familiada">

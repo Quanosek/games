@@ -12,6 +12,10 @@ export default function BoardLayout({
   // keyboard interactions
   useEffect(() => {
     const KeyupEvent = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+        return;
+      }
+
       if (event.key === "Escape") close();
     };
 

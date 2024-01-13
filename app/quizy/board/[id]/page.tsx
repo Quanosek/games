@@ -2,10 +2,13 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
 import type { Question } from "@/app/quizy/page";
 import styles from "./style.module.scss";
+
+import { TConductorInstance } from "react-canvas-confetti/dist/types";
+import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
 export default function BoardID({ params }: { params: { id: number } }) {
   const id = Number(params.id);
@@ -14,11 +17,15 @@ export default function BoardID({ params }: { params: { id: number } }) {
   const [data, setData] = useState<Question>();
   const [loading, setLoading] = useState(true);
 
-  const selected = useRef<any>();
+  const [selected, setSelected] = useState(0); // id + 1
+
+  const [conductor, setConductor] = useState<TConductorInstance>();
+  const onInit = ({ conductor }: { conductor: TConductorInstance }) => {
+    setConductor(conductor);
+  };
 
   useEffect(() => {
     const storedData = localStorage.getItem("quizy");
-    // filter empty answers
     if (storedData) setData(JSON.parse(storedData)[id - 1]);
     setLoading(false);
   }, [id]);
@@ -26,14 +33,16 @@ export default function BoardID({ params }: { params: { id: number } }) {
   // keyboard interactions
   useEffect(() => {
     const KeyupEvent = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+        return;
+      }
+
       switch (event.key) {
         case "ArrowLeft":
           (id !== 0 || data) && router.push(`/quizy/board/${[id - 1]}`);
           break;
+        case " ": // Space
         case "ArrowRight":
-          (id === 0 || data) && router.push(`/quizy/board/${[id + 1]}`);
-          break;
-        case " ":
           (id === 0 || data) && router.push(`/quizy/board/${[id + 1]}`);
           break;
       }
@@ -43,7 +52,7 @@ export default function BoardID({ params }: { params: { id: number } }) {
     return () => document.removeEventListener("keyup", KeyupEvent);
   }, [data, router, id]);
 
-  if (loading) return <h1 className={styles.loading}>Trwa ładowanie...</h1>;
+  if (loading) return <h1 className="loading">Trwa ładowanie...</h1>;
 
   if (id === 0) {
     return (
@@ -57,7 +66,7 @@ export default function BoardID({ params }: { params: { id: number } }) {
     );
   }
 
-  if (!data)
+  if (!data) {
     return (
       <div className={styles.centerDiv}>
         <div>
@@ -65,20 +74,35 @@ export default function BoardID({ params }: { params: { id: number } }) {
         </div>
       </div>
     );
+  }
 
   return (
     <>
+      <Fireworks onInit={onInit} />
+
       <h1 className={styles.question}>{`${id}. ${data.question}`}</h1>
 
       <div className={styles.bottomHandler}>
-        <div className={styles.answers}>
+        <div
+          className={styles.answers}
+          style={{
+            // disable after choosing answer
+            pointerEvents: selected ? "none" : "unset",
+          }}
+        >
           {data.answers.map((el, i: number) => (
             <button
               key={i}
-              ref={selected}
-              onClick={(e) => {
-                //
+              onClick={() => {
+                if (data.answers[i].checked) conductor?.shoot();
+                setSelected(i + 1);
               }}
+              className={
+                // show selected and correct answers
+                selected && data.answers[i].checked
+                  ? styles.correct
+                  : (selected === i + 1 && styles.selected) || ""
+              }
             >
               <p>{`${["A", "B", "C", "D"][i]}: ${el.value}`}</p>
             </button>
@@ -96,6 +120,7 @@ export default function BoardID({ params }: { params: { id: number } }) {
               width={50}
               height={50}
               draggable={false}
+              className="icon"
               style={{ rotate: "-90deg" }}
             />
           </button>
@@ -110,6 +135,7 @@ export default function BoardID({ params }: { params: { id: number } }) {
               width={50}
               height={50}
               draggable={false}
+              className="icon"
               style={{ rotate: "90deg" }}
             />
           </button>

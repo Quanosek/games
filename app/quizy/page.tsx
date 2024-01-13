@@ -48,7 +48,7 @@ export default function QuizyPage() {
       </h1>
 
       {loading ? (
-        <div className={styles.loading}>
+        <div className="loading">
           <p>Trwa ładowanie...</p>
         </div>
       ) : (
@@ -57,7 +57,6 @@ export default function QuizyPage() {
           onSubmit={(e) => {
             e.preventDefault();
 
-            // check if data includes empty question
             if (data.some((question) => emptyQuestionCheck(question))) {
               return alert(
                 "Usuń wszystkie puste pytania lub uzupełnij o niezbędne dane!"
@@ -97,6 +96,7 @@ export default function QuizyPage() {
                       width={20}
                       height={20}
                       draggable={false}
+                      className="icon"
                     />
                   </button>
 
@@ -121,6 +121,7 @@ export default function QuizyPage() {
                       height={20}
                       draggable={false}
                       style={{ rotate: "180deg" }}
+                      className="icon"
                     />
                   </button>
 
@@ -147,6 +148,7 @@ export default function QuizyPage() {
                       width={20}
                       height={20}
                       draggable={false}
+                      className="icon"
                     />
                   </button>
                 </div>
@@ -174,7 +176,18 @@ export default function QuizyPage() {
                 {Array.from({ length: 4 }).map((_, i) => (
                   <div className={styles.value} key={i}>
                     {/* answer value input */}
-                    <div className={styles.answer}>
+                    <div
+                      className={styles.answer}
+                      style={{
+                        // disable if prev or curr answer is empty
+                        pointerEvents:
+                          i === 0 ||
+                          data[index].answers[i - 1].value ||
+                          data[index].answers[i].value
+                            ? "unset"
+                            : "none",
+                      }}
+                    >
                       <p>{["A", "B", "C", "D"][i]}</p>
                       <input
                         type="text"
@@ -193,7 +206,7 @@ export default function QuizyPage() {
                           });
                         }}
                         onBlur={(e) => {
-                          // unchecked checkbox if answer is empty
+                          // unchecked if answer is empty
                           if (!e.target.value) {
                             setData((prev) => {
                               const newData = [...prev];
@@ -210,7 +223,15 @@ export default function QuizyPage() {
 
                     {/* correct answer checkbox */}
                     <div className={styles.checkboxHandler}>
-                      <div className={styles.checkbox}>
+                      <div
+                        className={styles.checkbox}
+                        style={{
+                          // disable if answer is empty
+                          pointerEvents: data[index].answers[i].value
+                            ? "unset"
+                            : "none",
+                        }}
+                      >
                         <input
                           id={`${index}-${i}-checkbox`}
                           type="checkbox"
@@ -277,6 +298,7 @@ export default function QuizyPage() {
                 width={32}
                 height={32}
                 draggable={false}
+                className="icon"
               />
             </button>
           </div>
