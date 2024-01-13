@@ -73,6 +73,8 @@ main {
 
 header,
 footer {
+  display: flex;
+  justify-content: center;
   background-color: var(--background);
 
   section {

@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import styles from "./page.module.scss";
 import Layout from "@/components/pageLayout";
-import Points from "@/functions/familiadaPoints";
+import FormatPoints from "@/functions/formatPoints";
 
 import localFont from "next/font/local";
 const dottedFont = localFont({
@@ -14,22 +14,48 @@ const dottedFont = localFont({
   display: "swap",
 });
 
+// local object template
+interface Question {
+  question: string;
+  answers: Array<{ value: string; points: number }>;
+}
+
 export default function FamiliadaPage() {
+  // question object template
+  const emptyQuestion: Question = {
+    question: "",
+    answers: new Array(6).fill({ value: "", points: null }),
+  };
+
+  // data state
+  const [data, setData] = useState([emptyQuestion]);
   const [loading, setLoading] = useState(true);
-  const [counter, setCounter] = useState(1);
 
+  // load data on start
   useEffect(() => {
-    const local = localStorage.getItem("familiada") || "{}";
-    const questions = JSON.parse(local);
-
-    // rewrite keys to be in order
-    const newOrder = {} as any;
-    Object.keys(questions).forEach((key, i) => (newOrder[i] = questions[key]));
-    localStorage.setItem("familiada", JSON.stringify(newOrder));
-
-    setCounter(Object.keys(newOrder).length || 1);
+    const storedData = localStorage.getItem("familiada");
+    if (storedData) setData(JSON.parse(storedData));
     setLoading(false);
   }, []);
+
+  // save data on change
+  useEffect(() => {
+    if (!loading) localStorage.setItem("familiada", JSON.stringify(data));
+  }, [data, loading]);
+
+  // check if question is empty
+  const emptyQuestionCheck = (question: Question) => {
+    return JSON.stringify(question) === JSON.stringify(emptyQuestion);
+  };
+
+  // sort answers by points amount
+  const sortByPoints = (index: number) => {
+    setData((prev) => {
+      const newData = [...prev];
+      newData[index].answers.sort((a, b) => b.points - a.points);
+      return newData;
+    });
+  };
 
   return (
     <Layout>
@@ -37,8 +63,8 @@ export default function FamiliadaPage() {
         <Image
           alt="FAMILIADA"
           src="/images/title.png"
-          width={595}
-          height={170}
+          width={636}
+          height={151}
           draggable={false}
           priority
         />
@@ -74,8 +100,8 @@ export default function FamiliadaPage() {
       <button
         onClick={() => {
           open(
-            "/familiada/board/title",
-            "familiada_tablica",
+            "/familiada/board/0",
+            "familiada_window",
             "width=960, height=540"
           );
         }}
@@ -83,18 +109,219 @@ export default function FamiliadaPage() {
         <p>✨ Pokaż tablicę tytułową</p>
       </button>
 
-      {(loading && <p>Ładowanie...</p>) || (
-        <>
-          {[...Array(counter)].map((_, i) => (
-            <div key={i}>
-              <Question id={i} />
+      {loading ? (
+        <div className="loading">
+          <p>Trwa ładowanie...</p>
+        </div>
+      ) : (
+        <div className={styles.form}>
+          {[...Array(data.length)].map((_, index) => (
+            <div className={styles.container} key={index}>
+              {/* question input */}
+              <input
+                type="text"
+                autoComplete="off"
+                placeholder={`Pytanie ${index + 1}`}
+                value={data[index].question || ""}
+                maxLength={128}
+                className={styles.question}
+                onChange={(e) => {
+                  setData((prev) => {
+                    const newData = [...prev];
+                    newData[index].question = e.target.value;
+                    return newData;
+                  });
+                }}
+              />
+
+              <div className={styles.content}>
+                {/* input form */}
+                <div className={styles.answers}>
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div className={styles.list} key={i}>
+                      {/* answer value input */}
+                      <div className={styles.answer}>
+                        <p>Odpowiedź {i + 1}:</p>
+
+                        <input
+                          type="text"
+                          autoComplete="off"
+                          maxLength={17} // 17 characters board limit
+                          value={data[index].answers[i].value || ""}
+                          onChange={(e) => {
+                            setData((prev) => {
+                              const newData = [...prev];
+                              newData[index].answers[i] = {
+                                ...newData[index].answers[i],
+                                value: e.target.value,
+                              };
+                              return newData;
+                            });
+                          }}
+                        />
+                      </div>
+
+                      <div className={styles.points}>
+                        <p>Liczba punktów:</p>
+
+                        <input
+                          type="text"
+                          autoComplete="off"
+                          value={data[index].answers[i].points || ""}
+                          maxLength={2} // 2 characters board limit
+                          onChange={(e) => {
+                            setData((prev) => {
+                              const newData = [...prev];
+                              newData[index].answers[i] = {
+                                ...newData[index].answers[i],
+                                points: Number(e.target.value),
+                              };
+                              return newData;
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* preview board of answers */}
+                <div className={`${dottedFont.className} ${styles.preview}`}>
+                  {data &&
+                    data[index].answers.map((el, i: number) => {
+                      const answer = el.value.split("");
+                      const points = FormatPoints(el.points);
+
+                      // board layout
+                      return (
+                        <div key={i}>
+                          <p>{i + 1}</p>
+
+                          <div className={styles.answer}>
+                            {answer.map((value: string, i: number) => {
+                              return <p key={i}>{value}</p>;
+                            })}
+                          </div>
+
+                          <div className={styles.points}>
+                            {points.map((value: string, i: number) => {
+                              return <p key={i}>{value}</p>;
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+
+              {/* bottom buttons controls */}
+              <div className={styles.buttons}>
+                <div>
+                  <button
+                    className={index === 0 ? "disabled" : ""}
+                    onClick={() => {
+                      setData((prev) => {
+                        const newData = [...prev];
+                        const temp = newData[index];
+                        newData[index] = newData[index - 1];
+                        newData[index - 1] = temp;
+                        return newData;
+                      });
+                    }}
+                  >
+                    <p>⬆️ W górę</p>
+                  </button>
+
+                  <button
+                    className={index + 1 === data.length ? "disabled" : ""}
+                    onClick={() => {
+                      setData((prev) => {
+                        const newData = [...prev];
+                        const temp = newData[index];
+                        newData[index] = newData[index + 1];
+                        newData[index + 1] = temp;
+                        return newData;
+                      });
+                    }}
+                  >
+                    <p>⬇️ W dół</p>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      if (!emptyQuestionCheck(data[index])) {
+                        if (!confirm("Czy na pewno chcesz usunąć pytanie?"))
+                          return;
+                      }
+
+                      setData((prev) => {
+                        const newData = [...prev];
+                        newData.splice(index, 1);
+                        if (!newData.length) newData.push(emptyQuestion);
+                        return newData;
+                      });
+                    }}
+                  >
+                    <p>🧹 Usuń</p>
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => {
+                    sortByPoints(index);
+
+                    if (
+                      data[index].answers.filter((el) => {
+                        return el.value && el.points;
+                      }).length < 3
+                    ) {
+                      return alert(
+                        "Plansza musi mieć przynajmniej 3 wypełnione odpowiedzi z punktami!"
+                      );
+                    } else if (
+                      data[index].answers.some((el) => {
+                        return el.value && !el.points;
+                      })
+                    ) {
+                      return alert(
+                        "Niektóre odpowiedzi nie mają przydzielonych punktów!"
+                      );
+                    }
+
+                    open(
+                      `/familiada/board/${index + 1}`,
+                      "familiada_window",
+                      "width=960, height=540"
+                    );
+                  }}
+                >
+                  <p>🖥️ Pokaż</p>
+                </button>
+              </div>
             </div>
           ))}
 
-          <button onClick={() => setCounter(counter + 1)}>
+          {/* add question button */}
+          <button
+            style={{ marginTop: "1rem" }}
+            onClick={() => {
+              if (emptyQuestionCheck(data[data.length - 1])) {
+                return alert("Nie możesz dodać kolejnego pustego pytania!");
+              }
+
+              setData([...data, emptyQuestion]);
+
+              setTimeout(() => {
+                scrollTo({
+                  top: document.body.scrollHeight,
+                  behavior: "smooth",
+                });
+              }, 1);
+            }}
+          >
             <p>➕ Dodaj nową planszę</p>
           </button>
-        </>
+        </div>
       )}
 
       <div className={styles.credits}>
@@ -112,238 +339,5 @@ export default function FamiliadaPage() {
         </p>
       </div>
     </Layout>
-  );
-}
-
-function Question({ id }: { id: number }) {
-  const [data, setData] = useState<any>();
-
-  const defaultTitle = `Plansza ${id + 1}`;
-  const [title, setTitle] = useState(defaultTitle);
-
-  const [answers, setAnswers] = useState<string[]>([]);
-  const [points, setPoints] = useState<string[]>([]);
-
-  // setting up default values on load
-  useEffect(() => {
-    const local = localStorage.getItem("familiada") || "{}";
-    const question = JSON.parse(local)[id];
-
-    if (question) {
-      const { elements, title } = question;
-
-      setData(elements);
-      setTitle(title || defaultTitle);
-
-      setAnswers(elements.map((el: { answer: string }) => el.answer));
-      setPoints(elements.map((el: { points: number }) => el.points));
-    }
-  }, [id, defaultTitle]);
-
-  const handleClearBoard = () => {
-    if (!confirm("Czy na pewno chcesz wyczyścić całą planszę?")) return;
-
-    const local = localStorage.getItem("familiada");
-
-    if (local) {
-      const parsed = JSON.parse(local);
-
-      if (parsed[id]) {
-        delete parsed[id];
-        localStorage.setItem("familiada", JSON.stringify(parsed));
-      }
-    }
-
-    // restore to default values
-    setData(undefined);
-    setTitle(defaultTitle);
-    setAnswers([]);
-    setPoints([]);
-  };
-
-  const handleFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // parse form data
-    const Collection = new Map();
-
-    Array.from(e.target.elements).forEach((el: any) => {
-      if (el.type !== "text") return;
-
-      const [index, type] = el.name.split("-");
-      if (index === "title") return setTitle(el.value || defaultTitle);
-
-      if (!Collection.has(index)) Collection.set(index, []);
-
-      const parsedValue = type === "points" ? Number(el.value) : el.value;
-      Collection.get(index)[type] = parsedValue;
-    });
-
-    const elements = Array.from(Collection.values())
-      .filter((el) => el.answer && el.points)
-      .sort((a, b) => b.points - a.points)
-      .map(({ answer, points }) => ({ answer, points }));
-
-    // game rules error handling
-    if (!elements.length) {
-      return alert("Przed zapisaniem, uzupełnij plansze o wymagane dane.");
-    } else if (!(elements.length > 2)) {
-      return alert(
-        "Plansza musi zawierać co najmniej 3 odpowiedzi z podanymi wartościami punktowymi."
-      );
-    }
-
-    // manage local storage data
-    const local = localStorage.getItem("familiada");
-    let result = {};
-
-    if (local) {
-      const parsed = JSON.parse(local);
-
-      if (parsed[id]) {
-        parsed[id] = { title, elements };
-        result = parsed;
-      } else {
-        result = {
-          ...parsed,
-          [id]: { title, elements },
-        };
-      }
-    } else {
-      result = {
-        [id]: { title, elements },
-      };
-    }
-
-    // save data
-    setData(elements);
-    localStorage.setItem("familiada", JSON.stringify(result));
-
-    alert(
-      "Plansza została zapisana, możesz teraz ją wyświetlić w osobnym oknie."
-    );
-  };
-
-  const handleShowBoard = () => {
-    if (!data) {
-      return alert("Przed wyświetleniem musisz zapisać planszę!");
-    }
-
-    // open new window with board
-    open(
-      `/familiada/board/${id + 1}`,
-      "familiada_tablica",
-      "width=960, height=540"
-    );
-  };
-
-  return (
-    <form className={styles.container} onSubmit={handleFormSubmit}>
-      {/* custom question title */}
-      <div className={styles.question}>
-        <input
-          name="title"
-          type="text"
-          maxLength={128}
-          autoComplete="off"
-          value={title}
-          placeholder={defaultTitle}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <hr />
-      </div>
-
-      <div className={styles.content}>
-        {/* input form */}
-        <div className={styles.answers}>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div className={styles.list} key={i}>
-              <div className={styles.answer}>
-                <p>Odpowiedź {i + 1}:</p>
-
-                <input
-                  name={`${i}-answer`}
-                  type="text"
-                  maxLength={17} // 17 characters board limit
-                  autoComplete="off"
-                  value={answers[i] || ""}
-                  onChange={(e) => {
-                    // answer input
-                    setAnswers((prev) => {
-                      const copy = [...prev];
-                      copy[i] = e.target.value.replace(/[^a-zA-Z\s.]/g, "");
-                      return copy;
-                    });
-                  }}
-                />
-              </div>
-
-              <div className={styles.points}>
-                <p>Liczba punktów:</p>
-
-                <input
-                  name={`${i}-points`}
-                  type="text"
-                  maxLength={2} // 2 characters board limit
-                  autoComplete="off"
-                  value={points[i] || ""}
-                  onChange={(e) => {
-                    // points input
-                    setPoints((prev) => {
-                      const copy = [...prev];
-                      copy[i] = e.target.value.replace(/[^0-9]/g, "");
-                      return copy;
-                    });
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* preview board of answers */}
-        <div className={`${dottedFont.className} ${styles.preview}`}>
-          {data &&
-            data.map((el: { answer: string; points: number }, i: number) => {
-              const answer = el.answer.split("");
-              const points = Points(Number(el.points));
-
-              // board layout
-              return (
-                <div key={i}>
-                  <p>{i + 1}</p>
-
-                  <div className={styles.answer}>
-                    {answer.map((value: string, i: number) => {
-                      return <p key={i}>{value}</p>;
-                    })}
-                  </div>
-
-                  <div className={styles.points}>
-                    {points.map((value: string, i: number) => {
-                      return <p key={i}>{value}</p>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-        </div>
-      </div>
-
-      {/* bottom buttons controls */}
-      <div className={styles.buttons}>
-        <button type="button" onClick={handleClearBoard}>
-          <p>🧹 Wyczyść</p>
-        </button>
-
-        <button type="submit">
-          <p>💾 Zapisz</p>
-        </button>
-
-        <button type="button" onClick={handleShowBoard}>
-          <p>🖥️ Pokaż</p>
-        </button>
-      </div>
-    </form>
   );
 }

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import type { Question } from "@/app/quizy/page";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 
 import { TConductorInstance } from "react-canvas-confetti/dist/types";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
@@ -16,7 +16,6 @@ export default function BoardID({ params }: { params: { id: number } }) {
 
   const [data, setData] = useState<Question>();
   const [loading, setLoading] = useState(true);
-
   const [selected, setSelected] = useState(0); // id + 1
 
   const [conductor, setConductor] = useState<TConductorInstance>();
@@ -24,9 +23,20 @@ export default function BoardID({ params }: { params: { id: number } }) {
     setConductor(conductor);
   };
 
+  // get data on load
   useEffect(() => {
-    const storedData = localStorage.getItem("quizy");
-    if (storedData) setData(JSON.parse(storedData)[id - 1]);
+    const storedData = localStorage.getItem("quizy") || "[]";
+    const data = JSON.parse(storedData)[id - 1];
+
+    if (data) {
+      // filter empty answers
+      const answers = data.answers.filter(
+        (el: { value: string }) => el.value !== ""
+      );
+
+      setData({ ...data, answers });
+    }
+
     setLoading(false);
   }, [id]);
 
@@ -52,27 +62,35 @@ export default function BoardID({ params }: { params: { id: number } }) {
     return () => document.removeEventListener("keyup", KeyupEvent);
   }, [data, router, id]);
 
-  if (loading) return <h1 className="loading">Trwa ładowanie...</h1>;
+  const CenterDiv = ({ children }: { children: React.ReactNode }) => (
+    <div className={styles.centerDiv}>
+      <div>{children}</div>
+    </div>
+  );
+
+  if (loading) {
+    return (
+      <CenterDiv>
+        <h1 className="loading">Trwa ładowanie...</h1>
+      </CenterDiv>
+    );
+  }
 
   if (id === 0) {
     return (
-      <div className={styles.centerDiv}>
-        <div>
-          <button onClick={() => router.push("/quizy/board/1")}>
-            <p>Rozpocznij quiz!</p>
-          </button>
-        </div>
-      </div>
+      <CenterDiv>
+        <button onClick={() => router.push("/quizy/board/1")}>
+          <p>Rozpocznij quiz!</p>
+        </button>
+      </CenterDiv>
     );
   }
 
   if (!data) {
     return (
-      <div className={styles.centerDiv}>
-        <div>
-          <h1>Koniec.</h1>
-        </div>
-      </div>
+      <CenterDiv>
+        <h1>Koniec.</h1>
+      </CenterDiv>
     );
   }
 

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import styles from "./page.module.scss";
 import Layout from "@/components/pageLayout";
 
+// local object template
 export interface Question {
   question: string;
   answers: Array<{ value: string; checked: boolean }>;
@@ -26,7 +27,6 @@ export default function QuizyPage() {
   useEffect(() => {
     const storedData = localStorage.getItem("quizy");
     if (storedData) setData(JSON.parse(storedData));
-
     setLoading(false);
   }, []);
 
@@ -52,21 +52,7 @@ export default function QuizyPage() {
           <p>Trwa ładowanie...</p>
         </div>
       ) : (
-        <form
-          className={styles.form}
-          onSubmit={(e) => {
-            e.preventDefault();
-
-            if (data.some((question) => emptyQuestionCheck(question))) {
-              return alert(
-                "Usuń wszystkie puste pytania lub uzupełnij o niezbędne dane!"
-              );
-            }
-
-            localStorage.setItem("quizy", JSON.stringify(data));
-            open("/quizy/board/0", "quizy_tablica", "width=960, height=540");
-          }}
-        >
+        <div className={styles.form}>
           {[...Array(data.length)].map((_, index) => (
             <div className={styles.container} key={index}>
               <div className={styles.params}>
@@ -77,7 +63,6 @@ export default function QuizyPage() {
                 {/* quick settings */}
                 <div className={styles.controls}>
                   <button
-                    type="button"
                     title="Przenieś do góry"
                     className={index === 0 ? "disabled" : ""}
                     onClick={() => {
@@ -101,7 +86,6 @@ export default function QuizyPage() {
                   </button>
 
                   <button
-                    type="button"
                     title="Przenieś w dół"
                     className={index + 1 === data.length ? "disabled" : ""}
                     onClick={() => {
@@ -126,7 +110,6 @@ export default function QuizyPage() {
                   </button>
 
                   <button
-                    type="button"
                     title="Usuń pytanie"
                     onClick={() => {
                       if (!emptyQuestionCheck(data[index])) {
@@ -159,9 +142,9 @@ export default function QuizyPage() {
                 type="text"
                 autoComplete="off"
                 placeholder="Pytanie"
-                maxLength={128}
                 style={{ marginBottom: "1rem" }}
                 value={data[index].question || ""}
+                maxLength={128}
                 onChange={(e) => {
                   setData((prev) => {
                     const newData = [...prev];
@@ -193,8 +176,8 @@ export default function QuizyPage() {
                         type="text"
                         autoComplete="off"
                         placeholder="Odpowiedź"
-                        maxLength={64}
                         value={data[index].answers[i].value || ""}
+                        maxLength={64}
                         onChange={(e) => {
                           setData((prev) => {
                             const newData = [...prev];
@@ -269,7 +252,6 @@ export default function QuizyPage() {
 
           {/* add question button */}
           <button
-            type="button"
             style={{ marginTop: "1rem" }}
             onClick={() => {
               if (emptyQuestionCheck(data[data.length - 1])) {
@@ -291,7 +273,19 @@ export default function QuizyPage() {
 
           {/* floating play button */}
           <div className={styles.playButton}>
-            <button type="submit" title="Rozpocznij grę">
+            <button
+              title="Rozpocznij grę"
+              onClick={() => {
+                if (data.some((question) => emptyQuestionCheck(question))) {
+                  return alert(
+                    "Usuń wszystkie puste pytania lub uzupełnij o niezbędne dane!"
+                  );
+                }
+
+                localStorage.setItem("quizy", JSON.stringify(data));
+                open("/quizy/board/0", "quizy_window", "width=960, height=540");
+              }}
+            >
               <Image
                 src="/icons/play.svg"
                 alt="play"
@@ -302,7 +296,7 @@ export default function QuizyPage() {
               />
             </button>
           </div>
-        </form>
+        </div>
       )}
     </Layout>
   );

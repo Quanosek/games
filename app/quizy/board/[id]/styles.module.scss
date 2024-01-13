@@ -1,3 +1,13 @@
+.credits {
+  position: absolute;
+  bottom: 3vh;
+
+  opacity: 30%;
+  width: 100%;
+  text-align: center;
+  user-select: none;
+}
+
 .container {
   padding: 10vh 6vw 6vh;
   width: 100svw;
@@ -22,6 +32,7 @@
     border: none;
     background-color: rgba(#ffffff, 0.1);
     border-radius: 0.4vw;
+    cursor: pointer;
   }
 }
 

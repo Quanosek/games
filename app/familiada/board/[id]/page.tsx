@@ -3,27 +3,14 @@
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 
-import styles from "./page.module.scss";
-import Points from "@/functions/familiadaPoints";
-
-import localFont from "next/font/local";
-const dottedFont = localFont({
-  src: "../../../../fonts/familiada_regular.woff2",
-  display: "swap",
-});
+import styles from "./styles.module.scss";
+import FormatPoints from "@/functions/formatPoints";
 
 export default function BoardID({ params }: { params: { id: number } }) {
-  const { id } = params;
+  const id = Number(params.id);
 
   const [answers, setAnswers] = useState<any>();
   const [show, setShow] = useState<Array<number>>([]);
-
-  // set answers
-  useEffect(() => {
-    const local = localStorage.getItem("familiada") || "{}";
-    const question = JSON.parse(local)[id - 1];
-    if (question) setAnswers(question.elements);
-  }, [id]);
 
   const pointsAmount = useRef(0);
   const mainScore = useRef(0);
@@ -35,6 +22,21 @@ export default function BoardID({ params }: { params: { id: number } }) {
   // audio files support
   const audioGood = useRef<HTMLAudioElement>(null);
   const audioWrong = useRef<HTMLAudioElement>(null);
+
+  // get data on load
+  useEffect(() => {
+    const storedData = localStorage.getItem("familiada") || "[]";
+    const data = JSON.parse(storedData)[id - 1];
+
+    if (data) {
+      // filter empty answers
+      const answers = data.answers.filter(
+        (el: { value: string }) => el.value !== ""
+      );
+
+      setAnswers(answers);
+    }
+  }, [id]);
 
   // keyboard navigation
   useEffect(() => {
@@ -130,76 +132,89 @@ export default function BoardID({ params }: { params: { id: number } }) {
     );
   };
 
-  // render content only with answers loaded
-  if (!answers) return null;
+  if (id === 0) {
+    return (
+      <>
+        <div
+          className={styles.handler}
+          style={{ backgroundImage: `url("/images/background_title.webp")` }}
+        />
+        <audio src="/audio/soundtrack.mp3" autoPlay loop />
+      </>
+    );
+  }
 
   return (
-    <div className={`${dottedFont.className} ${styles.container}`}>
+    <div className={styles.handler}>
       <div className={styles.summary}>
         <div>
-          {Points(mainScore.current).map((el: string, i: number) => {
+          {FormatPoints(mainScore.current).map((el: string, i: number) => {
             return <p key={i}>{el}</p>;
           })}
         </div>
       </div>
 
-      <div className={styles.data}>
-        <div className={styles.mistakes}>{handleMistakes(redMistakes)}</div>
+      {answers && (
+        <div className={styles.data}>
+          <div className={styles.mistakes}>{handleMistakes(redMistakes)}</div>
 
-        <div className={styles.main}>
-          {answers.map((el: { answer: string; points: number }, i: number) => {
-            const answer = el.answer.split("");
-            const points = Points(el.points);
-            const dots = Array(17).fill("...");
+          <div className={styles.main}>
+            {answers.map((el: { value: string; points: number }, i: number) => {
+              const answer = el.value.split("");
+              const points = FormatPoints(el.points);
+              const dots = Array(17).fill("...");
 
-            return (
-              <div key={i}>
-                <p>{i + 1}</p>
+              return (
+                <div key={i}>
+                  <p>{i + 1}</p>
 
-                {(show.includes(i + 1) && (
-                  // show answer
-                  <>
-                    <div className={styles.answer}>
-                      {answer.map((word: string, i: number) => {
-                        return <p key={i}>{word}</p>;
+                  {(show.includes(i + 1) && (
+                    // show answer
+                    <>
+                      <div className={styles.answer}>
+                        {answer.map((word: string, i: number) => {
+                          return <p key={i}>{word}</p>;
+                        })}
+                      </div>
+
+                      <div className={styles.points}>
+                        {points.map((word: string, i: number) => {
+                          return <p key={i}>{word}</p>;
+                        })}
+                      </div>
+                    </>
+                  )) || (
+                    // show dots
+                    <div className={styles.dots}>
+                      {dots.map((cell: string, i: number) => {
+                        return <p key={i}>{cell}</p>;
                       })}
                     </div>
+                  )}
+                </div>
+              );
+            })}
 
-                    <div className={styles.points}>
-                      {points.map((word: string, i: number) => {
-                        return <p key={i}>{word}</p>;
-                      })}
-                    </div>
-                  </>
-                )) || (
-                  // show dots
-                  <div className={styles.dots}>
-                    {dots.map((cell: string, i: number) => {
-                      return <p key={i}>{cell}</p>;
-                    })}
-                  </div>
+            <div className={styles.pointsAmount}>
+              <div>
+                {"SUMA".split("").map((el: string, i: number) => {
+                  return <p key={i}>{el}</p>;
+                })}
+              </div>
+
+              <div>
+                {FormatPoints(pointsAmount.current).map(
+                  (el: string, i: number) => {
+                    return <p key={i}>{el}</p>;
+                  }
                 )}
               </div>
-            );
-          })}
-
-          <div className={styles.pointsAmount}>
-            <div>
-              {"SUMA".split("").map((el: string, i: number) => {
-                return <p key={i}>{el}</p>;
-              })}
-            </div>
-
-            <div>
-              {Points(pointsAmount.current).map((el: string, i: number) => {
-                return <p key={i}>{el}</p>;
-              })}
             </div>
           </div>
-        </div>
 
-        <div className={styles.mistakes}>{handleMistakes(blueMistakes)}</div>
-      </div>
+          <div className={styles.mistakes}>{handleMistakes(blueMistakes)}</div>
+        </div>
+      )}
 
       {/* audio effects */}
       <audio src="/audio/intro.mp3" autoPlay />
