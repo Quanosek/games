@@ -28,13 +28,18 @@ export default function FamiliadaPage() {
   };
 
   // data state
+  const [preview, setPreview] = useState<Question[]>([]);
   const [data, setData] = useState([emptyQuestion]);
   const [loading, setLoading] = useState(true);
 
   // load data on start
   useEffect(() => {
     const storedData = localStorage.getItem("familiada");
-    if (storedData) setData(JSON.parse(storedData));
+    if (!storedData) return;
+
+    const parsed = JSON.parse(storedData);
+    setPreview(Array.from({ length: parsed.length }));
+    setData(parsed);
     setLoading(false);
   }, []);
 
@@ -48,11 +53,11 @@ export default function FamiliadaPage() {
     return JSON.stringify(question) === JSON.stringify(emptyQuestion);
   };
 
-  // sort answers by points amount
-  const sortByPoints = (index: number) => {
-    setData((prev) => {
+  // clear preview
+  const clearPreview = (index: number) => {
+    setPreview((prev) => {
       const newData = [...prev];
-      newData[index].answers.sort((a, b) => b.points - a.points);
+      newData[index] = undefined as any;
       return newData;
     });
   };
@@ -149,11 +154,17 @@ export default function FamiliadaPage() {
                           maxLength={17} // 17 characters board limit
                           value={data[index].answers[i].value || ""}
                           onChange={(e) => {
+                            const value = e.target.value.replace(
+                              /[^a-zA-Z\s.]/g,
+                              ""
+                            );
+
+                            clearPreview(index);
                             setData((prev) => {
                               const newData = [...prev];
                               newData[index].answers[i] = {
                                 ...newData[index].answers[i],
-                                value: e.target.value,
+                                value,
                               };
                               return newData;
                             });
@@ -170,11 +181,16 @@ export default function FamiliadaPage() {
                           value={data[index].answers[i].points || ""}
                           maxLength={2} // 2 characters board limit
                           onChange={(e) => {
+                            const points = Number(
+                              e.target.value.replace(/[^0-9]/g, "")
+                            );
+
+                            clearPreview(index);
                             setData((prev) => {
                               const newData = [...prev];
                               newData[index].answers[i] = {
                                 ...newData[index].answers[i],
-                                points: Number(e.target.value),
+                                points,
                               };
                               return newData;
                             });
@@ -187,8 +203,9 @@ export default function FamiliadaPage() {
 
                 {/* preview board of answers */}
                 <div className={`${dottedFont.className} ${styles.preview}`}>
-                  {data &&
-                    data[index].answers.map((el, i: number) => {
+                  {preview[index]?.answers
+                    .filter((el) => el.value && el.points)
+                    .map((el, i: number) => {
                       const answer = el.value.split("");
                       const points = FormatPoints(el.points);
 
@@ -220,6 +237,9 @@ export default function FamiliadaPage() {
                   <button
                     className={index === 0 ? "disabled" : ""}
                     onClick={() => {
+                      clearPreview(index - 1);
+                      clearPreview(index);
+
                       setData((prev) => {
                         const newData = [...prev];
                         const temp = newData[index];
@@ -235,6 +255,9 @@ export default function FamiliadaPage() {
                   <button
                     className={index + 1 === data.length ? "disabled" : ""}
                     onClick={() => {
+                      clearPreview(index);
+                      clearPreview(index + 1);
+
                       setData((prev) => {
                         const newData = [...prev];
                         const temp = newData[index];
@@ -254,6 +277,7 @@ export default function FamiliadaPage() {
                           return;
                       }
 
+                      clearPreview(index);
                       setData((prev) => {
                         const newData = [...prev];
                         newData.splice(index, 1);
@@ -266,37 +290,66 @@ export default function FamiliadaPage() {
                   </button>
                 </div>
 
-                <button
-                  onClick={() => {
-                    sortByPoints(index);
+                <div>
+                  <button
+                    onClick={() => {
+                      const answers = data[index].answers;
 
-                    if (
-                      data[index].answers.filter((el) => {
-                        return el.value && el.points;
-                      }).length < 3
-                    ) {
-                      return alert(
-                        "Plansza musi mieć przynajmniej 3 wypełnione odpowiedzi z punktami!"
-                      );
-                    } else if (
-                      data[index].answers.some((el) => {
-                        return el.value && !el.points;
-                      })
-                    ) {
-                      return alert(
-                        "Niektóre odpowiedzi nie mają przydzielonych punktów!"
-                      );
-                    }
+                      if (
+                        answers.filter((el) => el.value && el.points).length < 3
+                      ) {
+                        return alert(
+                          "Plansza musi mieć przynajmniej 3 wypełnione odpowiedzi z punktami!"
+                        );
+                      } else if (answers.some((el) => el.value && !el.points)) {
+                        return alert(
+                          "Niektóre odpowiedzi nie mają przydzielonych punktów!"
+                        );
+                      } else if (answers.some((el) => !el.value && el.points)) {
+                        return alert(
+                          "Niektóre odpowiedzi nie mają wypełnionych odpowiedzi!"
+                        );
+                      }
 
-                    open(
-                      `/familiada/board/${index + 1}`,
-                      "familiada_window",
-                      "width=960, height=540"
-                    );
-                  }}
-                >
-                  <p>🖥️ Pokaż</p>
-                </button>
+                      // sort answers by points
+                      const sorted = answers.sort((a, b) => {
+                        return b.points - a.points;
+                      });
+
+                      setPreview((prev) => {
+                        const newData = [...prev];
+                        newData[index] = data[index];
+                        newData[index].answers = sorted;
+                        return newData;
+                      });
+
+                      setData((prev) => {
+                        const newData = [...prev];
+                        newData[index] = data[index];
+                        newData[index].answers = sorted;
+                        return newData;
+                      });
+                    }}
+                  >
+                    <p>🔎 Sprawdź</p>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      if (!preview[index]) {
+                        return alert("Nie sprawdzono danych!");
+                      }
+
+                      open(
+                        `/familiada/board/${index + 1}`,
+                        "familiada_window",
+                        "width=960, height=540"
+                      );
+                    }}
+                  >
+                    <p>🖥️ Prezentuj</p>
+                  </button>
+                </div>
               </div>
             </div>
           ))}
