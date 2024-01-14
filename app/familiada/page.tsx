@@ -41,6 +41,8 @@ export default function FamiliadaPage() {
       const storedData = localStorage.getItem("familiada");
       if (storedData) {
         const parsed = JSON.parse(storedData);
+        if (!parsed.length) throw new Error("No data");
+
         setPreview(Array.from({ length: parsed.length }));
         setData(parsed);
       }
