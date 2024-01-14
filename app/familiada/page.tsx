@@ -41,6 +41,7 @@ export default function FamiliadaPage() {
       setData(parsed);
     }
 
+    scrollTo({ top: 0 });
     setLoading(false);
   }, []);
 

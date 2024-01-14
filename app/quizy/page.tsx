@@ -27,6 +27,8 @@ export default function QuizyPage() {
   useEffect(() => {
     const storedData = localStorage.getItem("quizy");
     if (storedData) setData(JSON.parse(storedData));
+
+    scrollTo({ top: 0 });
     setLoading(false);
   }, []);
 
@@ -40,11 +42,21 @@ export default function QuizyPage() {
     return JSON.stringify(question) === JSON.stringify(emptyQuestion);
   };
 
+  // handle add buttons list show
+  const [showButtonsList, setShowButtonsList] = useState(false);
+
+  useEffect(() => {
+    const hideButtonsList = () => setShowButtonsList(false);
+
+    if (showButtonsList) document.addEventListener("click", hideButtonsList);
+    return () => document.removeEventListener("click", hideButtonsList);
+  }, [showButtonsList]);
+
   return (
     <Layout>
       {/* large title */}
       <h1 className={styles.title}>
-        Zagraj w <span>Quizy</span>
+        Stwórz własny <span>Quiz</span>
       </h1>
 
       {loading ? (
@@ -251,25 +263,56 @@ export default function QuizyPage() {
           ))}
 
           {/* add question button */}
-          <button
-            style={{ marginTop: "1rem" }}
-            onClick={() => {
-              if (emptyQuestionCheck(data[data.length - 1])) {
-                return alert("Nie możesz dodać kolejnego pustego pytania!");
-              }
+          <div className={styles.addButtons}>
+            <button
+              className={styles.defaultButton}
+              onClick={() => setShowButtonsList(true)}
+            >
+              <p>➕ Dodaj planszę</p>
+            </button>
 
-              setData([...data, emptyQuestion]);
+            <div
+              style={{ display: showButtonsList ? "block" : "none" }}
+              className={styles.buttonsList}
+            >
+              <button
+                onClick={() => {
+                  if (emptyQuestionCheck(data[data.length - 1])) {
+                    return alert("Nie możesz dodać kolejnego pustego pytania!");
+                  }
 
-              setTimeout(() => {
-                scrollTo({
-                  top: document.body.scrollHeight,
-                  behavior: "smooth",
-                });
-              }, 1);
-            }}
-          >
-            <p>➕ Dodaj pytanie</p>
-          </button>
+                  setData([...data, emptyQuestion]);
+
+                  setTimeout(() => {
+                    scrollTo({
+                      top: document.body.scrollHeight,
+                      behavior: "smooth",
+                    });
+                  }, 1);
+                }}
+              >
+                <p>Pytanie zamknięte</p>
+              </button>
+
+              <button
+                className="disabled"
+                onClick={() => {
+                  //
+                }}
+              >
+                <p>Uzupełnij lukę</p>
+              </button>
+
+              <button
+                className="disabled"
+                onClick={() => {
+                  //
+                }}
+              >
+                <p> Pytanie otwarte</p>
+              </button>
+            </div>
+          </div>
 
           {/* floating play button */}
           <div className={styles.playButton}>
