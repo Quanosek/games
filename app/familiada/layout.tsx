@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: `"Familiada" - Pokój gier / klalo.pl`,
   description: `"Familiada" to teleturniej, w którym dwie drużyny rywalizują między sobą, odgadując najpopularniejsze odpowiedzi na pytania z ankiet, aby zdobyć punkty.`,
   icons: {
-    icon: "/favicon/money_bag.svg",
+    icon: "/favicons/money_bag.svg",
   },
 };
 

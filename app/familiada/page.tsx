@@ -35,11 +35,12 @@ export default function FamiliadaPage() {
   // load data on start
   useEffect(() => {
     const storedData = localStorage.getItem("familiada");
-    if (!storedData) return;
+    if (storedData) {
+      const parsed = JSON.parse(storedData);
+      setPreview(Array.from({ length: parsed.length }));
+      setData(parsed);
+    }
 
-    const parsed = JSON.parse(storedData);
-    setPreview(Array.from({ length: parsed.length }));
-    setData(parsed);
     setLoading(false);
   }, []);
 
@@ -67,7 +68,7 @@ export default function FamiliadaPage() {
       <div style={{ userSelect: "none" }}>
         <Image
           alt="FAMILIADA"
-          src="/images/title.png"
+          src="/familiada/images/title.png"
           width={636}
           height={151}
           draggable={false}
@@ -337,7 +338,9 @@ export default function FamiliadaPage() {
                   <button
                     onClick={() => {
                       if (!preview[index]) {
-                        return alert("Nie sprawdzono danych!");
+                        return alert(
+                          "Nie sprawdzono danych dla wybranej planszy!"
+                        );
                       }
 
                       open(

@@ -24,9 +24,10 @@ export default function BoardLayout({
   }, []);
 
   return (
-    <>
+    <div className={styles.container}>
+      {children}
+
       <p className={styles.credits}>Stworzone na stronie games.klalo.pl</p>
-      <div className={styles.container}>{children}</div>
-    </>
+    </div>
   );
 }

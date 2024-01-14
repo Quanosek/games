@@ -1,15 +1,5 @@
-.credits {
-  position: absolute;
-  bottom: 3vh;
-
-  opacity: 25%;
-  width: 100%;
-  font-size: 1.1vw;
-  text-align: center;
-  user-select: none;
-}
-
 .container {
+  position: relative;
   padding: 10vh 6vw 6vh;
   width: 100svw;
   height: 100svh;
@@ -34,6 +24,17 @@
     background-color: rgba(#ffffff, 0.1);
     border-radius: 0.4vw;
   }
+}
+
+.credits {
+  position: absolute;
+  bottom: 3vh;
+
+  opacity: 25%;
+  width: 100%;
+  font-size: 1.1vw;
+  text-align: center;
+  user-select: none;
 }
 
 .centerDiv {

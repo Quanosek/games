@@ -104,8 +104,8 @@ export default function QuizyPage() {
                       width={20}
                       height={20}
                       draggable={false}
-                      style={{ rotate: "180deg" }}
                       className="icon"
+                      style={{ rotate: "180deg" }}
                     />
                   </button>
 

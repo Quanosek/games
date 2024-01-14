@@ -108,19 +108,19 @@ export default function BoardID({ params }: { params: { id: number } }) {
       <div className={styles.mistakes}>
         {(teamCounter > 3 && (
           <Image
-            className={styles.big}
-            src="/images/x_big.webp"
+            src="/familiada/images/x_big.webp"
             alt="X"
             width={111}
             height={283}
             draggable={false}
+            className={styles.big}
           />
         )) ||
           [...Array(teamCounter)].map((_, i) => {
             return (
               <Image
                 key={i}
-                src="/images/x_small.webp"
+                src="/familiada/images/x_small.webp"
                 alt="x"
                 width={111}
                 height={163}
@@ -134,13 +134,14 @@ export default function BoardID({ params }: { params: { id: number } }) {
 
   if (id === 0) {
     return (
-      <>
-        <div
-          className={styles.handler}
-          style={{ backgroundImage: `url("/images/background_title.webp")` }}
-        />
-        <audio src="/audio/soundtrack.mp3" autoPlay loop />
-      </>
+      <div
+        className={styles.handler}
+        style={{
+          backgroundImage: `url("/familiada/images/background_title.webp")`,
+        }}
+      >
+        <audio src="/familiada/audio/intro.mp3" autoPlay />
+      </div>
     );
   }
 
@@ -217,9 +218,9 @@ export default function BoardID({ params }: { params: { id: number } }) {
       )}
 
       {/* audio effects */}
-      <audio src="/audio/intro.mp3" autoPlay />
-      <audio ref={audioGood} src="/audio/good.mp3" />
-      <audio ref={audioWrong} src="/audio/wrong.mp3" />
+      <audio src="/familiada/audio/round.mp3" autoPlay />
+      <audio ref={audioGood} src="/familiada/audio/answer.mp3" />
+      <audio ref={audioWrong} src="/familiada/audio/wrong.mp3" />
     </div>
   );
 }

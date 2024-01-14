@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   description:
     "Przeglądarkowe wersje znanych gier towarzyskich i rodzinnych gier telewizyjnych przeznaczone do gry w większym gronie osób.",
   icons: {
-    icon: "/favicon/game_die.svg",
+    icon: "/favicons/game_die.svg",
   },
 };
 

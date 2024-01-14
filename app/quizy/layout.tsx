@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Quizy to forma konkursu, w którym uczestnicy odpowiadają na pytania z różnych dziedzin w celu zdobycia punktów, przy użyciu zazwyczaj krótkich odpowiedzi lub wyboru spośród kilku opcji.",
   icons: {
-    icon: "/favicon/white_question_mark.svg",
+    icon: "/favicons/white_question_mark.svg",
   },
 };
 
