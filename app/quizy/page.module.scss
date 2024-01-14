@@ -81,16 +81,19 @@
   }
 }
 
-.playButton {
+.stickyContainer {
   position: sticky;
-  bottom: min(10vh, 5rem);
-  left: 100%;
-  pointer-events: stroke;
+  bottom: min(12vh, 6rem);
+  width: 100%;
+}
+
+.playButton {
+  position: absolute;
+  bottom: 0;
+  right: 0;
 
   button {
     aspect-ratio: 1/1;
-    padding: 2rem;
-
     display: flex;
     justify-content: center;
     align-items: center;

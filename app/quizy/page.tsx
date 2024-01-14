@@ -395,23 +395,32 @@ export default function QuizyPage() {
           </div>
 
           {/* floating play button */}
-          <div className={styles.playButton}>
-            <button
-              title="Rozpocznij grę"
-              onClick={() => {
-                localStorage.setItem("quizy", JSON.stringify(data));
-                open("/quizy/board/0", "quizy_window", "width=960, height=540");
-              }}
-            >
-              <Image
-                src="/icons/play.svg"
-                alt="play"
-                width={32}
-                height={32}
-                draggable={false}
-                className="icon"
-              />
-            </button>
+          <div
+            style={{ display: data.length ? "" : "none" }}
+            className={styles.stickyContainer}
+          >
+            <div className={styles.playButton}>
+              <button
+                title="Rozpocznij grę"
+                onClick={() => {
+                  localStorage.setItem("quizy", JSON.stringify(data));
+                  open(
+                    "/quizy/board/0",
+                    "quizy_window",
+                    "width=960, height=540"
+                  );
+                }}
+              >
+                <Image
+                  src="/icons/play.svg"
+                  alt="play"
+                  width={40}
+                  height={40}
+                  draggable={false}
+                  className="icon"
+                />
+              </button>
+            </div>
           </div>
         </>
       )}
