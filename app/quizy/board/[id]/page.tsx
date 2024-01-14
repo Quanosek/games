@@ -94,70 +94,90 @@ export default function BoardID({ params }: { params: { id: number } }) {
     );
   }
 
+  const ClosedBoard = () => (
+    <>
+      <h1 className={styles.question}>{`${id}. ${data.question}`}</h1>
+
+      <div
+        className={styles.answers}
+        style={{
+          // disable after choosing answer
+          pointerEvents: selected ? "none" : "unset",
+        }}
+      >
+        {data.answers.map((el, i: number) => (
+          <button
+            key={i}
+            onClick={() => {
+              if (data.answers[i].checked) conductor?.shoot();
+              setSelected(i + 1);
+            }}
+            className={
+              // show selected and correct answers
+              selected && data.answers[i].checked
+                ? styles.correct
+                : (selected === i + 1 && styles.selected) || ""
+            }
+          >
+            <p>{`${["A", "B", "C", "D"][i]}: ${el.value}`}</p>
+          </button>
+        ))}
+      </div>
+    </>
+  );
+
+  const GapBoard = () => (
+    <>
+      <h1>{data.question}</h1>
+      <button>Odkryj odpowiedź</button>
+    </>
+  );
+
+  const OpenBoard = () => (
+    <>
+      <h1>{data.question}</h1>
+      <button>Pokaż odpowiedzi</button>
+    </>
+  );
+
   return (
     <>
       <Fireworks onInit={onInit} />
 
-      <h1 className={styles.question}>{`${id}. ${data.question}`}</h1>
+      {data.type === "closed" && ClosedBoard()}
+      {data.type === "gap" && GapBoard()}
+      {data.type === "open" && OpenBoard()}
 
-      <div className={styles.bottomHandler}>
-        <div
-          className={styles.answers}
-          style={{
-            // disable after choosing answer
-            pointerEvents: selected ? "none" : "unset",
-          }}
+      <div className={styles.controls}>
+        <button
+          title="Poprzednie pytanie [🡨]"
+          onClick={() => router.push(`/quizy/board/${[id - 1]}`)}
         >
-          {data.answers.map((el, i: number) => (
-            <button
-              key={i}
-              onClick={() => {
-                if (data.answers[i].checked) conductor?.shoot();
-                setSelected(i + 1);
-              }}
-              className={
-                // show selected and correct answers
-                selected && data.answers[i].checked
-                  ? styles.correct
-                  : (selected === i + 1 && styles.selected) || ""
-              }
-            >
-              <p>{`${["A", "B", "C", "D"][i]}: ${el.value}`}</p>
-            </button>
-          ))}
-        </div>
+          <Image
+            src="/icons/arrow.svg"
+            alt="arrow-left"
+            width={50}
+            height={50}
+            draggable={false}
+            className="icon"
+            style={{ rotate: "-90deg" }}
+          />
+        </button>
 
-        <div className={styles.controls}>
-          <button
-            title="Poprzednie pytanie [🡨]"
-            onClick={() => router.push(`/quizy/board/${[id - 1]}`)}
-          >
-            <Image
-              src="/icons/arrow.svg"
-              alt="arrow-left"
-              width={50}
-              height={50}
-              draggable={false}
-              className="icon"
-              style={{ rotate: "-90deg" }}
-            />
-          </button>
-
-          <button
-            title="Nastepne pytanie [🡪]"
-            onClick={() => router.push(`/quizy/board/${[id + 1]}`)}
-          >
-            <Image
-              src="/icons/arrow.svg"
-              alt="arrow-left"
-              width={50}
-              height={50}
-              draggable={false}
-              className="icon"
-              style={{ rotate: "90deg" }}
-            />
-          </button>
-        </div>
+        <button
+          title="Nastepne pytanie [🡪]"
+          onClick={() => router.push(`/quizy/board/${[id + 1]}`)}
+        >
+          <Image
+            src="/icons/arrow.svg"
+            alt="arrow-left"
+            width={50}
+            height={50}
+            draggable={false}
+            className="icon"
+            style={{ rotate: "90deg" }}
+          />
+        </button>
       </div>
     </>
   );

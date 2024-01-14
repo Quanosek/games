@@ -1,3 +1,5 @@
+// LAYOUT
+
 .container {
   position: relative;
   padding: 10vh 6vw 6vh;
@@ -37,6 +39,8 @@
   user-select: none;
 }
 
+// PAGE
+
 .centerDiv {
   height: 100%;
   display: flex;
@@ -52,12 +56,22 @@
   }
 }
 
-.bottomHandler {
+.controls {
   width: 100%;
   display: flex;
-  flex-direction: column;
-  gap: 2vh;
+  justify-content: space-between;
+
+  button {
+    padding: 1vw;
+    background-color: transparent;
+  }
+
+  img {
+    width: 3vw;
+  }
 }
+
+// type: "closed"
 
 .question {
   position: relative;
@@ -73,7 +87,8 @@
 .answers {
   $grid-gap: 0.5vw;
 
-  padding: 0 1vw;
+  width: 100%;
+  padding: 0 1.5vw;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -90,19 +105,5 @@
     &.selected {
       background-color: #965821;
     }
-  }
-}
-
-.controls {
-  display: flex;
-  justify-content: space-between;
-
-  button {
-    padding: 1vw;
-    background-color: transparent;
-  }
-
-  img {
-    width: 3vw;
   }
 }
