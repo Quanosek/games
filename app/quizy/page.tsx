@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import styles from "./page.module.scss";
@@ -14,18 +15,25 @@ export interface Question {
 }
 
 export default function QuizyPage() {
+  const router = useRouter();
+
   // data state
   const [data, setData] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
 
   // load data on start
   useEffect(() => {
-    const storedData = localStorage.getItem("quizy");
-    if (storedData) setData(JSON.parse(storedData));
+    try {
+      const storedData = localStorage.getItem("quizy");
+      if (storedData) setData(JSON.parse(storedData));
 
-    scrollTo({ top: 0 });
-    setLoading(false);
-  }, []);
+      scrollTo({ top: 0 });
+      setLoading(false);
+    } catch (err) {
+      localStorage.removeItem("quizy");
+      router.refresh();
+    }
+  }, [router]);
 
   // save data on change
   useEffect(() => {

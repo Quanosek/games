@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import styles from "./page.module.scss";
@@ -21,6 +22,8 @@ interface Question {
 }
 
 export default function FamiliadaPage() {
+  const router = useRouter();
+
   // question object template
   const emptyQuestion: Question = {
     question: "",
@@ -34,16 +37,21 @@ export default function FamiliadaPage() {
 
   // load data on start
   useEffect(() => {
-    const storedData = localStorage.getItem("familiada");
-    if (storedData) {
-      const parsed = JSON.parse(storedData);
-      setPreview(Array.from({ length: parsed.length }));
-      setData(parsed);
-    }
+    try {
+      const storedData = localStorage.getItem("familiada");
+      if (storedData) {
+        const parsed = JSON.parse(storedData);
+        setPreview(Array.from({ length: parsed.length }));
+        setData(parsed);
+      }
 
-    scrollTo({ top: 0 });
-    setLoading(false);
-  }, []);
+      scrollTo({ top: 0 });
+      setLoading(false);
+    } catch (err) {
+      localStorage.removeItem("familiada");
+      router.refresh();
+    }
+  }, [router]);
 
   // save data on change
   useEffect(() => {
