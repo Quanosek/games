@@ -25,12 +25,7 @@ export default function QuizyPage() {
   useEffect(() => {
     try {
       const storedData = localStorage.getItem("quizy");
-      if (storedData) {
-        const parsed = JSON.parse(storedData);
-        if (!parsed.length) throw new Error("No data");
-
-        setData(parsed);
-      }
+      if (storedData) setData(JSON.parse(storedData));
 
       scrollTo({ top: 0 });
       setLoading(false);
