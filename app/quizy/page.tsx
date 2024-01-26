@@ -83,6 +83,7 @@ export default function QuizyPage() {
               return newData;
             });
           }}
+          required
         />
       </div>
 
@@ -133,6 +134,7 @@ export default function QuizyPage() {
                     });
                   }
                 }}
+                required={[0, 1].includes(i)}
               />
             </div>
 
@@ -168,7 +170,6 @@ export default function QuizyPage() {
                   className={styles.check}
                 >
                   <p>poprawna odpowiedź</p>
-
                   <svg width="18px" height="18px" viewBox="0 0 18 18">
                     <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
                     <polyline points="1 9 7 14 15 4"></polyline>
@@ -199,6 +200,7 @@ export default function QuizyPage() {
             return newData;
           });
         }}
+        required
       />
 
       <p className={styles.howTo}>
@@ -227,6 +229,7 @@ export default function QuizyPage() {
               return newData;
             });
           }}
+          required
         />
       </div>
 
@@ -246,6 +249,7 @@ export default function QuizyPage() {
               return newData;
             });
           }}
+          required
         />
       </div>
     </>
@@ -265,7 +269,19 @@ export default function QuizyPage() {
           <p>Trwa ładowanie...</p>
         </div>
       ) : (
-        <>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            localStorage.setItem("quizy", JSON.stringify(data));
+            open("/quizy/board/0", "quizy_window", "width=960, height=540");
+          }}
+        >
+          {data.length > 0 && (
+            <button type="submit">
+              <p>▶️ Rozpocznij grę!</p>
+            </button>
+          )}
+
           <div className={styles.container}>
             {[...Array(data.length)].map((_, index) => {
               const type = data[index].type;
@@ -278,6 +294,7 @@ export default function QuizyPage() {
                     {/* quick settings */}
                     <div className={styles.controls}>
                       <button
+                        type="button"
                         title="Przenieś do góry"
                         className={index === 0 ? "disabled" : ""}
                         onClick={() => {
@@ -301,6 +318,7 @@ export default function QuizyPage() {
                       </button>
 
                       <button
+                        type="button"
                         title="Przenieś w dół"
                         className={index + 1 === data.length ? "disabled" : ""}
                         onClick={() => {
@@ -325,13 +343,41 @@ export default function QuizyPage() {
                       </button>
 
                       <button
-                        title="Usuń pytanie"
+                        type="button"
+                        title="Wyczyść/usuń pytanie"
                         onClick={() => {
-                          setData((prev) => {
-                            const newData = [...prev];
-                            newData.splice(index, 1);
-                            return newData;
-                          });
+                          // check if board is empty
+                          if (
+                            data[index].question ||
+                            data[index].answers[0]?.value
+                          ) {
+                            if (
+                              !confirm("Czy na pewno chcesz wyczyścić planszę?")
+                            ) {
+                              return;
+                            }
+
+                            // clear board
+                            setData((prev) => {
+                              const newData = [...prev];
+                              newData[index] = {
+                                type: data[index].type,
+                                question: "",
+                                answers: data[index].answers.map((_) => ({
+                                  value: "",
+                                  checked: false,
+                                })),
+                              };
+                              return newData;
+                            });
+                          } else {
+                            // delete board
+                            setData((prev) => {
+                              const newData = [...prev];
+                              newData.splice(index, 1);
+                              return newData;
+                            });
+                          }
                         }}
                       >
                         <Image
@@ -357,6 +403,7 @@ export default function QuizyPage() {
             {/* add question button */}
             <div className={styles.addButtons}>
               <button
+                type="button"
                 className={styles.defaultButton}
                 onClick={() => setShowButtonsList(true)}
               >
@@ -368,6 +415,7 @@ export default function QuizyPage() {
                 className={styles.buttonsList}
               >
                 <button
+                  type="button"
                   onClick={() => {
                     setData([
                       ...data,
@@ -386,6 +434,7 @@ export default function QuizyPage() {
                 </button>
 
                 <button
+                  type="button"
                   onClick={() => {
                     setData([
                       ...data,
@@ -397,6 +446,7 @@ export default function QuizyPage() {
                 </button>
 
                 <button
+                  type="button"
                   onClick={() => {
                     setData([
                       ...data,
@@ -413,36 +463,7 @@ export default function QuizyPage() {
               </div>
             </div>
           </div>
-
-          {/* floating play button */}
-          <div
-            style={{ display: data.length ? "" : "none" }}
-            className={styles.stickyContainer}
-          >
-            <div className={styles.playButton}>
-              <button
-                title="Rozpocznij grę"
-                onClick={() => {
-                  localStorage.setItem("quizy", JSON.stringify(data));
-                  open(
-                    "/quizy/board/0",
-                    "quizy_window",
-                    "width=960, height=540"
-                  );
-                }}
-              >
-                <Image
-                  src="/icons/play.svg"
-                  alt="play"
-                  width={40}
-                  height={40}
-                  draggable={false}
-                  className="icon"
-                />
-              </button>
-            </div>
-          </div>
-        </>
+        </form>
       )}
     </Layout>
   );

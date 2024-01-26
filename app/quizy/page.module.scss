@@ -1,3 +1,4 @@
+// default layout
 .title {
   font-size: 500%;
   user-select: none;
@@ -81,40 +82,7 @@
   }
 }
 
-.stickyContainer {
-  position: sticky;
-  bottom: min(12vh, 6rem);
-  width: 100%;
-}
-
-.playButton {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-
-  button {
-    aspect-ratio: 1/1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    background-color: #003064;
-    border-radius: 30px;
-
-    &:hover {
-      filter: brightness(4);
-      scale: 1.05;
-    }
-  }
-
-  img {
-    position: relative;
-    left: 2px;
-  }
-}
-
 // type: "closed"
-
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -247,7 +215,6 @@
 }
 
 // type: "gap"
-
 .howTo {
   opacity: 65%;
   font-size: 90%;
