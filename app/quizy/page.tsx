@@ -66,21 +66,25 @@ export default function QuizyPage() {
   const ClosedBoard = (index: number) => (
     <>
       {/* question input */}
-      <input
-        type="text"
-        autoComplete="off"
-        placeholder="Pytanie"
-        style={{ marginBottom: "1rem" }}
-        value={data[index].question || ""}
-        maxLength={128}
-        onChange={(e) => {
-          setData((prev) => {
-            const newData = [...prev];
-            newData[index].question = e.target.value;
-            return newData;
-          });
-        }}
-      />
+
+      <div className={styles.value}>
+        <p>Pyt:</p>
+        <input
+          type="text"
+          autoComplete="off"
+          placeholder="Treść pytania"
+          value={data[index].question || ""}
+          maxLength={128}
+          className={styles.question}
+          onChange={(e) => {
+            setData((prev) => {
+              const newData = [...prev];
+              newData[index].question = e.target.value;
+              return newData;
+            });
+          }}
+        />
+      </div>
 
       {/* answers grid */}
       <div className={styles.grid}>
@@ -99,7 +103,7 @@ export default function QuizyPage() {
                     : "none",
               }}
             >
-              <p>{["A", "B", "C", "D"][i]}</p>
+              <p>{`${["A", "B", "C", "D"][i]}:`}</p>
               <input
                 type="text"
                 autoComplete="off"
@@ -197,7 +201,7 @@ export default function QuizyPage() {
         }}
       />
 
-      <p>
+      <p className={styles.howTo}>
         Umieść ukryte fragmenty w kwadratowych nawiasach. Na przykład:{" "}
         {`"Ala ma [kota]"`}.
       </p>
@@ -207,37 +211,43 @@ export default function QuizyPage() {
   // "Pytanie otwarte" board
   const OpenBoard = (index: number) => (
     <>
-      <input
-        type="text"
-        autoComplete="off"
-        placeholder="Pytanie"
-        style={{ marginBottom: "1rem" }}
-        value={data[index].question || ""}
-        maxLength={128}
-        onChange={(e) => {
-          setData((prev) => {
-            const newData = [...prev];
-            newData[index].question = e.target.value;
-            return newData;
-          });
-        }}
-      />
+      <div className={styles.value}>
+        <p>Pyt:</p>
+        <input
+          type="text"
+          autoComplete="off"
+          placeholder="Treść pytania"
+          value={data[index].question || ""}
+          maxLength={128}
+          className={styles.question}
+          onChange={(e) => {
+            setData((prev) => {
+              const newData = [...prev];
+              newData[index].question = e.target.value;
+              return newData;
+            });
+          }}
+        />
+      </div>
 
-      <input
-        type="text"
-        autoComplete="off"
-        placeholder="Poprawna odpowiedź"
-        style={{ margin: "-1rem 0 0.25rem" }}
-        value={data[index].answers[0].value || ""}
-        maxLength={128}
-        onChange={(e) => {
-          setData((prev) => {
-            const newData = [...prev];
-            data[index].answers[0].value = e.target.value;
-            return newData;
-          });
-        }}
-      />
+      <div className={styles.value}>
+        <p>Odp:</p>
+        <input
+          type="text"
+          autoComplete="off"
+          placeholder="Poprawna odpowiedź"
+          value={data[index].answers[0].value || ""}
+          maxLength={128}
+          className={styles.answer}
+          onChange={(e) => {
+            setData((prev) => {
+              const newData = [...prev];
+              data[index].answers[0].value = e.target.value;
+              return newData;
+            });
+          }}
+        />
+      </div>
     </>
   );
 

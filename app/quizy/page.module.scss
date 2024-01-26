@@ -151,6 +151,13 @@
   input {
     padding-left: calc(2.5 * $padding-left);
     width: 100%;
+
+    &.question {
+      padding-left: calc(3.1 * $padding-left);
+    }
+    &.answer {
+      padding-left: calc(3.5 * $padding-left);
+    }
   }
 }
 
@@ -237,4 +244,11 @@
       }
     }
   }
+}
+
+// type: "gap"
+
+.howTo {
+  opacity: 65%;
+  font-size: 90%;
 }
