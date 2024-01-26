@@ -2,7 +2,7 @@
 
 .container {
   position: relative;
-  padding: 10vh 6vw 6vh;
+  padding: 10vh 6vw 5vh;
   width: 100svw;
   height: 100svh;
 
@@ -39,16 +39,46 @@
   user-select: none;
 }
 
-// PAGE
+// SPECIAL CASES
 
-.centerDiv {
+.center {
+  position: relative;
+  bottom: 5vh;
   height: 100%;
   display: flex;
+  justify-content: center;
   align-items: center;
 
-  div {
+  button {
+    padding: 4vh 10vw;
+  }
+}
+
+// PAGE
+
+.content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
     position: relative;
     bottom: 5vh;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 1vw;
+
+    span {
+      color: #8bf2ce;
+      font-size: 90%;
+    }
   }
 
   button {
@@ -71,20 +101,23 @@
   }
 }
 
-// type: "closed"
-
-.question {
-  position: relative;
-  bottom: 5vh;
+.bottomButtons {
+  position: absolute;
+  bottom: 10vh;
   width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
-  text-align: center;
+  gap: 1vw;
+
+  button {
+    font-size: 80%;
+    padding: 1vw 3vw;
+    border-radius: 50vw;
+  }
 }
 
-.answers {
+// type: "closed"
+.closedAnswers {
   $grid-gap: 0.5vw;
 
   width: 100%;
@@ -95,15 +128,37 @@
   grid-gap: $grid-gap;
 
   button {
-    font-size: 110%;
-    padding: 7.5vh 2vw;
+    padding: 7vh 2vw;
     flex: 0 0 calc(50% - $grid-gap);
 
     &.correct {
       background-color: #2c950f;
     }
     &.selected {
-      background-color: #965821;
+      background-color: #a23535;
     }
   }
+}
+
+// type: "gap"
+.gapHints {
+  position: relative;
+
+  p {
+    position: absolute;
+    bottom: 1vh;
+    left: 0.25vw;
+    width: 100%;
+    font-weight: normal;
+    text-align: start;
+  }
+}
+
+// type: "open"
+.openAnswer {
+  position: absolute;
+  top: 65%;
+  font-size: 110%;
+  width: 100%;
+  text-align: center;
 }

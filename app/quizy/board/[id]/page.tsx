@@ -16,12 +16,6 @@ export default function BoardID({ params }: { params: { id: number } }) {
 
   const [data, setData] = useState<Question>();
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(0); // id + 1
-
-  const [conductor, setConductor] = useState<TConductorInstance>();
-  const onInit = ({ conductor }: { conductor: TConductorInstance }) => {
-    setConductor(conductor);
-  };
 
   // get data on load
   useEffect(() => {
@@ -62,91 +56,173 @@ export default function BoardID({ params }: { params: { id: number } }) {
     return () => document.removeEventListener("keyup", KeyupEvent);
   }, [data, router, id]);
 
-  const CenterDiv = ({ children }: { children: React.ReactNode }) => (
-    <div className={styles.centerDiv}>
-      <div>{children}</div>
-    </div>
-  );
-
+  // special cases  handler
   if (loading) {
-    return (
-      <CenterDiv>
-        <h1 className="loading">Trwa ładowanie...</h1>
-      </CenterDiv>
-    );
+    return <h1 className="loading">Trwa ładowanie...</h1>;
   }
 
   if (id === 0) {
     return (
-      <CenterDiv>
+      <div className={styles.center}>
         <button onClick={() => router.push("/quizy/board/1")}>
           <p>Rozpocznij quiz!</p>
         </button>
-      </CenterDiv>
+      </div>
     );
   }
 
   if (!data) {
-    return (
-      <CenterDiv>
-        <h1>Koniec.</h1>
-      </CenterDiv>
-    );
+    return <h1>To już wszystko!</h1>;
   }
 
-  const ClosedBoard = () => (
-    <>
-      <h1 className={styles.question}>{`${id}. ${data.question}`}</h1>
+  // type: "closed"
+  const ClosedBoard = () => {
+    const [selected, setSelected] = useState(0); // id + 1
 
-      <div
-        className={styles.answers}
-        style={{
-          // disable after choosing answer
-          pointerEvents: selected ? "none" : "unset",
-        }}
-      >
-        {data.answers.map((el, i: number) => (
-          <button
-            key={i}
-            onClick={() => {
-              if (data.answers[i].checked) conductor?.shoot();
-              setSelected(i + 1);
-            }}
-            className={
-              // show selected and correct answers
-              selected && data.answers[i].checked
-                ? styles.correct
-                : (selected === i + 1 && styles.selected) || ""
+    const [conductor, setConductor] = useState<TConductorInstance>();
+    const onInit = ({ conductor }: { conductor: TConductorInstance }) => {
+      setConductor(conductor);
+    };
+
+    return (
+      <>
+        <Fireworks onInit={onInit} />
+
+        <h1>{`${data.question}`}</h1>
+
+        <div
+          className={styles.closedAnswers}
+          style={{
+            // disable after choosing answer
+            pointerEvents: selected ? "none" : "unset",
+          }}
+        >
+          {data.answers.map((el, i: number) => (
+            <button
+              key={i}
+              onClick={() => {
+                if (data.answers[i].checked) conductor?.shoot();
+                setSelected(i + 1);
+              }}
+              className={
+                // show selected and correct answers
+                selected && data.answers[i].checked
+                  ? styles.correct
+                  : (selected === i + 1 && styles.selected) || ""
+              }
+            >
+              <p>{`${["A", "B", "C", "D"][i]}: ${el.value}`}</p>
+            </button>
+          ))}
+        </div>
+      </>
+    );
+  };
+
+  // type: "gap"
+  const GapBoard = () => {
+    const [showHint, setShowHint] = useState(false);
+    const [reveal, setReveal] = useState(false);
+
+    const parseText = (text: string) => {
+      const regex = /\[([^\]]*)\]/g;
+      const parts = text.split(regex);
+      return parts;
+    };
+
+    return (
+      <>
+        <h1>
+          {parseText(data.question).map((part, index) => {
+            if (index % 2 === 0) return part;
+            else {
+              if (!reveal) {
+                if (!showHint) {
+                  // empty underlined space
+                  return (
+                    <span key={index}>
+                      {new String("_").repeat(part.length)}
+                    </span>
+                  );
+                } else {
+                  // show hint
+                  return (
+                    <span key={index} className={styles.gapHints}>
+                      {part.replace(/[^\s]/g, "_")}
+                      <p className={styles.hint}>{part[0]}</p>
+                    </span>
+                  );
+                }
+              } else {
+                // show answer
+                return (
+                  <span
+                    key={index}
+                    style={{
+                      fontWeight: "normal",
+                      textDecoration: "underline",
+                    }}
+                  >
+                    {part}
+                  </span>
+                );
+              }
             }
+          })}
+        </h1>
+
+        <div className={styles.bottomButtons}>
+          <button
+            className={showHint ? "disabled" : reveal ? "disabled" : ""}
+            onClick={() => setShowHint(true)}
           >
-            <p>{`${["A", "B", "C", "D"][i]}: ${el.value}`}</p>
+            <p>❔ Podpowiedź</p>
           </button>
-        ))}
-      </div>
-    </>
-  );
 
-  const GapBoard = () => (
-    <>
-      <h1>{data.question}</h1>
-      <button>Odkryj odpowiedź</button>
-    </>
-  );
+          <button
+            className={reveal ? "disabled" : ""}
+            onClick={() => setReveal(true)}
+          >
+            <p>🔍 Odkryj</p>
+          </button>
+        </div>
+      </>
+    );
+  };
 
-  const OpenBoard = () => (
-    <>
-      <h1>{data.question}</h1>
-      <button>Pokaż odpowiedzi</button>
-    </>
-  );
+  // type: "open"
+  const OpenBoard = () => {
+    const [showAnswer, setShowAnswer] = useState(false);
 
+    return (
+      <>
+        <h1>{data.question}</h1>
+        {showAnswer && (
+          <h2 className={styles.openAnswer}>{data.answers[0].value}</h2>
+        )}
+
+        <div className={styles.bottomButtons}>
+          <button
+            className={showAnswer ? "disabled" : ""}
+            onClick={() => {
+              setShowAnswer(true);
+            }}
+          >
+            <p>💬 Pokaż odpowiedź</p>
+          </button>
+        </div>
+      </>
+    );
+  };
+
+  // page main render
   return (
     <>
-      <Fireworks onInit={onInit} />
-
-      {data.type === "closed" && ClosedBoard()}
-      {data.type === "gap" && GapBoard()}
-      {data.type === "open" && OpenBoard()}
+      <div className={styles.content}>
+        {data.type === "closed" && <ClosedBoard />}
+        {data.type === "gap" && <GapBoard />}
+        {data.type === "open" && <OpenBoard />}
+      </div>
 
       <div className={styles.controls}>
         <button

@@ -44,11 +44,11 @@ export default function QuizyPage() {
   const boardType = (type: Question["type"]) => {
     switch (type) {
       case "closed":
-        return "Pytanie zamknięte";
+        return "🅰️ Pytanie zamknięte";
       case "gap":
-        return "Uzupełnij lukę";
+        return "🔍 Uzupełnij lukę";
       case "open":
-        return "Pytanie otwarte";
+        return "💬 Pytanie otwarte";
     }
   };
 
@@ -184,8 +184,8 @@ export default function QuizyPage() {
       <input
         type="text"
         autoComplete="off"
-        placeholder="Pytanie"
-        style={{ marginBottom: "1rem" }}
+        placeholder="Zdanie do uzupełnienia"
+        style={{ marginBottom: "0.5rem" }}
         value={data[index].question || ""}
         maxLength={128}
         onChange={(e) => {
@@ -226,8 +226,8 @@ export default function QuizyPage() {
       <input
         type="text"
         autoComplete="off"
-        placeholder="Odpowiedzi"
-        style={{ marginBottom: "1rem" }}
+        placeholder="Poprawna odpowiedź"
+        style={{ margin: "-1rem 0 0.25rem" }}
         value={data[index].answers[0].value || ""}
         maxLength={128}
         onChange={(e) => {
@@ -240,6 +240,8 @@ export default function QuizyPage() {
       />
     </>
   );
+
+  // main page render
 
   return (
     <Layout>
