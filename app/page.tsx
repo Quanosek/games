@@ -10,16 +10,16 @@ export default function HomePage() {
 
       <div className={styles.buttons}>
         <Link className="button" href="/quizy">
-          <p>❔ Quizy</p>
+          <p>{`❔ Quizy`}</p>
         </Link>
 
         <Link className="button" href="/familiada">
           <p>{`💰 "Familiada"`}</p>
         </Link>
 
-        {/* <Link className="button disabled" href="/milionerzy">
-          <p>{`💸 "Milionerzy"`}</p>
-        </Link> */}
+        <Link className="button disabled" href="/wisielec">
+          <p>{`🪢 Wisielec`}</p>
+        </Link>
       </div>
     </Layout>
   );
