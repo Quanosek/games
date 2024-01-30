@@ -116,11 +116,7 @@ export default function FamiliadaPage() {
 
       <button
         onClick={() => {
-          open(
-            "/familiada/board/0",
-            "familiada_window",
-            "width=960, height=540"
-          );
+          open("/familiada/board/0", "game_window", "width=960, height=540");
         }}
       >
         <p>✨ Pokaż tablicę tytułową</p>
@@ -356,7 +352,7 @@ export default function FamiliadaPage() {
 
                       open(
                         `/familiada/board/${index + 1}`,
-                        "familiada_window",
+                        "game_window",
                         "width=960, height=540"
                       );
                     }}

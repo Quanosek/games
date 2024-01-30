@@ -1,0 +1,50 @@
+.globalKeyboard {
+  position: absolute;
+  top: -100vh;
+}
+
+.board {
+  padding: 10vh 6vw;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  background: radial-gradient(at bottom right, #2e0117, #000000);
+}
+
+.content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.phrase {
+  position: relative;
+  bottom: 5vh;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.letters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1vh 0.5vw;
+
+  button {
+    padding: 2vh 0;
+    width: 4vw;
+    font-size: 110%;
+    background-color: rgba(#ffffff, 0.1);
+
+    &.vowel {
+      background-color: rgba(#ffffff, 0.15);
+    }
+  }
+}

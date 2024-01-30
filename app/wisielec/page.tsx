@@ -10,7 +10,10 @@ import Layout from "@/components/pageLayout";
 export interface Word {
   word: string;
   attempts: number;
+  time: string;
 }
+
+export const vowels = "aąeęioóuy";
 
 export default function QuizyPage() {
   const router = useRouter();
@@ -35,11 +38,13 @@ export default function QuizyPage() {
 
   // save data on change
   useEffect(() => {
-    if (!data) setData([{ word: "", attempts: 10 }]);
-    if (!loading) localStorage.setItem("wisielec", JSON.stringify(data));
+    if (!loading) {
+      if (!data.length) setData([{ word: "", attempts: 10, time: "1m" }]);
+      localStorage.setItem("wisielec", JSON.stringify(data));
+    }
   }, [data, loading]);
 
-  const vowels = ["a", "e", "i", "o", "u", "y"];
+  // word information functions
 
   const wordNaming = (string: string) => {
     const words = string.split(" ").filter((word) => word !== "");
@@ -50,13 +55,12 @@ export default function QuizyPage() {
       result = `${words.length} wyrazy`;
     } else result = `${words.length} wyrazów`;
 
-    return <p>{result}</p>;
+    return result;
   };
 
   // main page render
   return (
     <Layout>
-      {/* large title */}
       <h1 className={styles.title}>
         Gra w <span>wisielca</span>
       </h1>
@@ -66,11 +70,40 @@ export default function QuizyPage() {
           <p>Trwa ładowanie...</p>
         </div>
       ) : (
-        <div className={styles.container}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            open("/wisielec/board/0", "game_window", "width=960, height=540");
+          }}
+        >
           {[...Array(data.length)].map((_, index) => (
-            <div key={index} className={styles.board}>
-              {/* choosing */}
-              <div className={styles.inputs}>
+            <div key={index} className={styles.container}>
+              <div className={styles.content}>
+                <div className={styles.params}>
+                  <div>
+                    <label htmlFor="attempts">Dozwolone błędy:</label>
+
+                    <select id="attempts" defaultValue={data[index].attempts}>
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="15">15</option>
+                      <option value="20">20</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="time">Limit czasu:</label>
+
+                    <select id="time" defaultValue={data[index].time}>
+                      <option value="none">bez limitu</option>
+                      <option value="60s">60s</option>
+                      <option value="1m">1m</option>
+                      <option value="2m">2m</option>
+                      <option value="5m">5m</option>
+                    </select>
+                  </div>
+                </div>
+
                 <input
                   type="text"
                   autoComplete="off"
@@ -91,20 +124,10 @@ export default function QuizyPage() {
                   }}
                   required
                 />
-                <div>
-                  <label htmlFor="attempts">Dozwolone błędy:</label>
-                  <select id="attempts" defaultValue={data[index].attempts}>
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="20">20</option>
-                  </select>
-                </div>
               </div>
 
               <hr />
 
-              {/* useful information */}
               <div className={styles.wordInfo}>
                 <p>{wordNaming(data[index].word)}</p>
 
@@ -118,7 +141,7 @@ export default function QuizyPage() {
                         .filter((letter) => letter !== " ")
                     ).size
                   }{" "}
-                  różnych liter
+                  różnych liter, w tym:
                 </p>
 
                 <p>
@@ -128,9 +151,11 @@ export default function QuizyPage() {
                         .map((word) => word.word)
                         .join("")
                         .split("")
-                        .filter(
-                          (letter) => letter !== " " && !vowels.includes(letter)
-                        )
+                        .filter((letter) => {
+                          return (
+                            letter !== " " && !vowels.split("").includes(letter)
+                          );
+                        })
                     ).size
                   }{" "}
                   spółgłosek
@@ -143,7 +168,7 @@ export default function QuizyPage() {
                         .map((word) => word.word)
                         .join("")
                         .split("")
-                        .filter((letter) => vowels.includes(letter))
+                        .filter((letter) => vowels.split("").includes(letter))
                     ).size
                   }{" "}
                   samogłosek
@@ -151,7 +176,11 @@ export default function QuizyPage() {
               </div>
             </div>
           ))}
-        </div>
+
+          <button type="submit">
+            <p>▶️ Rozpocznij grę!</p>
+          </button>
+        </form>
       )}
     </Layout>
   );

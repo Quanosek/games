@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import type { Question } from "@/app/quizy/page";
-import styles from "./styles.module.scss";
+import styles from "./page.module.scss";
+import { Credits, BoardLayout } from "@/components/boardLayout";
 
 import { TConductorInstance } from "react-canvas-confetti/dist/types";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
@@ -56,27 +57,10 @@ export default function BoardID({ params }: { params: { id: number } }) {
     return () => document.removeEventListener("keyup", KeyupEvent);
   }, [data, router, id]);
 
-  // special cases  handler
-  if (loading) {
-    return <h1 className="loading">Trwa ładowanie...</h1>;
-  }
-
-  if (id === 0) {
-    return (
-      <div className={styles.center}>
-        <button onClick={() => router.push("/quizy/board/1")}>
-          <p>Rozpocznij quiz!</p>
-        </button>
-      </div>
-    );
-  }
-
-  if (!data) {
-    return <h1>To już wszystko!</h1>;
-  }
-
   // type: "closed"
-  const ClosedBoard = () => {
+  function ClosedBoard(params: { data: Question }) {
+    const data = params.data;
+
     const [selected, setSelected] = useState(0); // id + 1
 
     const [conductor, setConductor] = useState<TConductorInstance>();
@@ -117,10 +101,12 @@ export default function BoardID({ params }: { params: { id: number } }) {
         </div>
       </>
     );
-  };
+  }
 
   // type: "gap"
-  const GapBoard = () => {
+  function GapBoard(params: { data: Question }) {
+    const data = params.data;
+
     const [showHint, setShowHint] = useState(false);
     const [reveal, setReveal] = useState(false);
 
@@ -188,10 +174,12 @@ export default function BoardID({ params }: { params: { id: number } }) {
         </div>
       </>
     );
-  };
+  }
 
   // type: "open"
-  const OpenBoard = () => {
+  function OpenBoard(params: { data: Question }) {
+    const data = params.data;
+
     const [showAnswer, setShowAnswer] = useState(false);
 
     return (
@@ -213,48 +201,65 @@ export default function BoardID({ params }: { params: { id: number } }) {
         </div>
       </>
     );
-  };
+  }
 
   // page main render
   return (
-    <>
-      <div className={styles.content}>
-        {data.type === "closed" && <ClosedBoard />}
-        {data.type === "gap" && <GapBoard />}
-        {data.type === "open" && <OpenBoard />}
-      </div>
+    <BoardLayout>
+      <div className={styles.board}>
+        {(loading && <h1 className="loading">Trwa ładowanie...</h1>) ||
+          (id === 0 && (
+            <div className={styles.center}>
+              <button onClick={() => router.push("/quizy/board/1")}>
+                <p>Rozpocznij quiz!</p>
+              </button>
+            </div>
+          )) ||
+          (!data && <h1>To już wszystko!</h1>) ||
+          (data && (
+            <>
+              <div className={styles.content}>
+                {data.type === "closed" && <ClosedBoard data={data} />}
+                {data.type === "gap" && <GapBoard data={data} />}
+                {data.type === "open" && <OpenBoard data={data} />}
+              </div>
 
-      <div className={styles.controls}>
-        <button
-          title="Poprzednie pytanie [🡨]"
-          onClick={() => router.push(`/quizy/board/${[id - 1]}`)}
-        >
-          <Image
-            src="/icons/arrow.svg"
-            alt="arrow-left"
-            width={50}
-            height={50}
-            draggable={false}
-            className="icon"
-            style={{ rotate: "-90deg" }}
-          />
-        </button>
+              <div className={styles.controls}>
+                <button
+                  title="Poprzednie pytanie [🡨]"
+                  onClick={() => router.push(`/quizy/board/${[id - 1]}`)}
+                >
+                  <Image
+                    src="/icons/arrow.svg"
+                    alt="arrow-left"
+                    width={50}
+                    height={50}
+                    draggable={false}
+                    className="icon"
+                    style={{ rotate: "-90deg" }}
+                  />
+                </button>
 
-        <button
-          title="Nastepne pytanie [🡪]"
-          onClick={() => router.push(`/quizy/board/${[id + 1]}`)}
-        >
-          <Image
-            src="/icons/arrow.svg"
-            alt="arrow-left"
-            width={50}
-            height={50}
-            draggable={false}
-            className="icon"
-            style={{ rotate: "90deg" }}
-          />
-        </button>
+                <button
+                  title="Nastepne pytanie [🡪]"
+                  onClick={() => router.push(`/quizy/board/${[id + 1]}`)}
+                >
+                  <Image
+                    src="/icons/arrow.svg"
+                    alt="arrow-left"
+                    width={50}
+                    height={50}
+                    draggable={false}
+                    className="icon"
+                    style={{ rotate: "90deg" }}
+                  />
+                </button>
+              </div>
+            </>
+          ))}
+
+        <Credits />
       </div>
-    </>
+    </BoardLayout>
   );
 }

@@ -272,8 +272,7 @@ export default function QuizyPage() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            localStorage.setItem("quizy", JSON.stringify(data));
-            open("/quizy/board/0", "quizy_window", "width=960, height=540");
+            open("/quizy/board/0", "game_window", "width=960, height=540");
           }}
         >
           {data.length > 0 && (

@@ -152,7 +152,8 @@ h1 {
 
 input,
 button,
-.button {
+.button,
+select {
   border: var(--white-border);
   background-color: var(--primary);
   transition: 0.1s filter ease-out;
@@ -182,6 +183,49 @@ button,
 
   &:hover {
     bottom: 2px;
+  }
+}
+
+select {
+  border-radius: 0.4rem;
+  background-color: var(--secondary);
+  cursor: pointer;
+
+  &:hover {
+    filter: contrast(0.9);
+  }
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+// board layout component
+.board {
+  position: relative;
+  width: 100svw;
+  height: 100svh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-size: 2vw;
+  background-color: black;
+  overflow-x: hidden;
+  user-select: none;
+
+  button {
+    transition: none;
+    text-align: center;
+    border: none;
+  }
+
+  .credits {
+    opacity: 35%;
+    position: absolute;
+    bottom: 3vh;
+    font-size: 60%;
   }
 }
 

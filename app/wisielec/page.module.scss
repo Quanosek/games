@@ -4,22 +4,15 @@
 
   span {
     opacity: 90%;
-    background-image: linear-gradient(45deg, #e93838, #9b136e);
-
     background-clip: text;
+    background-image: linear-gradient(45deg, #e93838, #9b136e);
     -webkit-text-fill-color: transparent;
   }
 }
 
 .container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.board {
-  padding: 1rem;
-  width: 50%;
+  padding: 1.5rem 4rem;
+  min-width: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,25 +20,43 @@
   border-radius: 0.6rem;
   background-color: var(--primary);
 
-  input {
-    width: 200%;
-  }
-
   hr {
-    width: 85%;
+    width: 105%;
     height: 1px;
     background-color: var(--white);
   }
 }
 
-.inputs {
+.content {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+
+  .params {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    select {
+      padding: 5px 0.5rem;
+    }
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  input {
+    width: 100%;
+  }
 }
 
 .wordInfo {
+  opacity: 70%;
   display: flex;
   gap: 1.5rem;
 }
