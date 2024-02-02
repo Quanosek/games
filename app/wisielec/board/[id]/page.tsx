@@ -25,7 +25,7 @@ export default function WisielecBoardID({
   // get data on load
   useEffect(() => {
     const storedData = localStorage.getItem("wisielec") || "[]";
-    const data = JSON.parse(storedData)[id];
+    const data = JSON.parse(storedData)[id - 1];
 
     if (data) {
       setData(data);

@@ -17,7 +17,7 @@ export default function HomePage() {
           <p>{`💰 "Familiada"`}</p>
         </Link>
 
-        <Link className="button disabled" href="/wisielec">
+        <Link className="button" href="/wisielec">
           <p>{`🪢 Wisielec`}</p>
         </Link>
       </div>
