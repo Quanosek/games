@@ -24,7 +24,7 @@ interface Question {
 export default function FamiliadaPage() {
   const router = useRouter();
 
-  // question object template
+  // empty question template
   const emptyQuestion: Question = {
     question: "",
     answers: new Array(6).fill({ value: "", points: null }),
@@ -58,7 +58,7 @@ export default function FamiliadaPage() {
   // save data on change
   useEffect(() => {
     if (!loading) localStorage.setItem("familiada", JSON.stringify(data));
-  }, [data, loading]);
+  }, [loading, data]);
 
   // check if question is empty
   const emptyQuestionCheck = (question: Question) => {

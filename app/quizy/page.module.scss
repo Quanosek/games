@@ -1,13 +1,11 @@
-// default layout
 .title {
   font-size: 500%;
   user-select: none;
 
   span {
     opacity: 90%;
-    background-image: linear-gradient(45deg, #ffc800, #57bd4b);
-
     background-clip: text;
+    background-image: linear-gradient(45deg, #ffc800, #57bd4b);
     -webkit-text-fill-color: transparent;
   }
 }
@@ -36,12 +34,12 @@
   }
 }
 
-.params {
+.controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  .controls {
+  .buttons {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -56,17 +54,17 @@
   }
 }
 
-.addButtons {
+.addButton {
   margin: 1rem 0;
   position: relative;
   width: 16rem;
   text-align: center;
 
-  .defaultButton {
+  .default {
     width: 100%;
   }
 
-  .buttonsList {
+  .list {
     position: absolute;
     top: 95%;
     border: var(--white-border);

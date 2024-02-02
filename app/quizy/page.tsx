@@ -8,7 +8,7 @@ import styles from "./page.module.scss";
 import Layout from "@/components/pageLayout";
 
 // local object template
-export interface Question {
+export interface Data {
   type: "closed" | "gap" | "open";
   question: string;
   answers: Array<{ value: string; checked: boolean }>;
@@ -18,7 +18,7 @@ export default function QuizyPage() {
   const router = useRouter();
 
   // data state
-  const [data, setData] = useState<Question[]>([]);
+  const [data, setData] = useState<Data[]>([]);
   const [loading, setLoading] = useState(true);
 
   // load data on start
@@ -41,7 +41,7 @@ export default function QuizyPage() {
   }, [data, loading]);
 
   // board type to user-friendly string
-  const boardType = (type: Question["type"]) => {
+  const boardType = (type: Data["type"]) => {
     switch (type) {
       case "closed":
         return "🅰️ Pytanie zamknięte";
@@ -66,7 +66,6 @@ export default function QuizyPage() {
   const ClosedBoard = (index: number) => (
     <>
       {/* question input */}
-
       <div className={styles.value}>
         <p>Pyt:</p>
         <input
@@ -256,10 +255,8 @@ export default function QuizyPage() {
   );
 
   // main page render
-
   return (
     <Layout>
-      {/* large title */}
       <h1 className={styles.title}>
         Stwórz własny <span>Quiz</span>
       </h1>
@@ -277,7 +274,7 @@ export default function QuizyPage() {
         >
           {data.length > 0 && (
             <button type="submit">
-              <p>▶️ Rozpocznij grę!</p>
+              <p>{"▶️ Rozpocznij grę!"}</p>
             </button>
           )}
 
@@ -287,11 +284,12 @@ export default function QuizyPage() {
 
               return (
                 <div className={styles.board} key={index}>
-                  <div className={styles.params}>
+                  {/* board navbar */}
+                  <div className={styles.controls}>
                     <p>{`${index + 1}/${data.length} • ${boardType(type)}`}</p>
 
                     {/* quick settings */}
-                    <div className={styles.controls}>
+                    <div className={styles.buttons}>
                       <button
                         type="button"
                         title="Przenieś do góry"
@@ -345,7 +343,6 @@ export default function QuizyPage() {
                         type="button"
                         title="Wyczyść/usuń pytanie"
                         onClick={() => {
-                          // check if board is empty
                           if (
                             data[index].question ||
                             data[index].answers[0]?.value
@@ -356,7 +353,6 @@ export default function QuizyPage() {
                               return;
                             }
 
-                            // clear board
                             setData((prev) => {
                               const newData = [...prev];
                               newData[index] = {
@@ -370,7 +366,6 @@ export default function QuizyPage() {
                               return newData;
                             });
                           } else {
-                            // delete board
                             setData((prev) => {
                               const newData = [...prev];
                               newData.splice(index, 1);
@@ -391,7 +386,7 @@ export default function QuizyPage() {
                     </div>
                   </div>
 
-                  {/* boards by type */}
+                  {/* board content */}
                   {type === "closed" && ClosedBoard(index)}
                   {type === "gap" && GapBoard(index)}
                   {type === "open" && OpenBoard(index)}
@@ -400,10 +395,10 @@ export default function QuizyPage() {
             })}
 
             {/* add question button */}
-            <div className={styles.addButtons}>
+            <div className={styles.addButton}>
               <button
                 type="button"
-                className={styles.defaultButton}
+                className={styles.default}
                 onClick={() => setShowButtonsList(true)}
               >
                 <p>{data.length ? "➕ Dodaj planszę" : "✨ Rozpocznij!"}</p>
@@ -411,7 +406,7 @@ export default function QuizyPage() {
 
               <div
                 style={{ display: showButtonsList ? "block" : "none" }}
-                className={styles.buttonsList}
+                className={styles.list}
               >
                 <button
                   type="button"

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import type { Question } from "@/app/quizy/page";
+import type { Data } from "@/app/quizy/page";
 import styles from "./page.module.scss";
 import { Credits, BoardLayout } from "@/components/boardLayout";
 
@@ -15,7 +15,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
   const id = Number(params.id);
   const router = useRouter();
 
-  const [data, setData] = useState<Question>();
+  const [data, setData] = useState<Data>();
   const [loading, setLoading] = useState(true);
 
   // get data on load
@@ -58,7 +58,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
   }, [data, router, id]);
 
   // type: "closed"
-  function ClosedBoard(params: { data: Question }) {
+  function ClosedBoard(params: { data: Data }) {
     const data = params.data;
 
     const [selected, setSelected] = useState(0); // id + 1
@@ -104,7 +104,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
   }
 
   // type: "gap"
-  function GapBoard(params: { data: Question }) {
+  function GapBoard(params: { data: Data }) {
     const data = params.data;
 
     const [showHint, setShowHint] = useState(false);
@@ -177,7 +177,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
   }
 
   // type: "open"
-  function OpenBoard(params: { data: Question }) {
+  function OpenBoard(params: { data: Data }) {
     const data = params.data;
 
     const [showAnswer, setShowAnswer] = useState(false);

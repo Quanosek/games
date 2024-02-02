@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import ms from "ms";
 
-import type { Word } from "@/app/wisielec/page";
+import type { Data } from "@/app/wisielec/page";
 
 import styles from "./page.module.scss";
 import { Credits, BoardLayout } from "@/components/boardLayout";
@@ -16,7 +16,7 @@ export default function WisielecBoardID({
 }) {
   const id = Number(params.id);
 
-  const [data, setData] = useState<Word>();
+  const [data, setData] = useState<Data>();
   const [loading, setLoading] = useState(true);
 
   const [remainingTime, setRemainingTime] = useState<number>(0);
@@ -104,14 +104,14 @@ export default function WisielecBoardID({
               )}
 
               <div className={styles.phrase}>
-                <h1>{phraseFormat(data.word)}</h1>
+                <h1>{phraseFormat(data.phrase)}</h1>
               </div>
 
               <div className={styles.bottom}>
                 <p className={styles.mistakes}>
                   Błędy:{" "}
                   {
-                    letters.filter((letter) => !data.word.includes(letter))
+                    letters.filter((letter) => !data.phrase.includes(letter))
                       .length
                   }
                   /{data.attempts}
