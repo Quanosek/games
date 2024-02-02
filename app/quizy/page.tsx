@@ -68,6 +68,7 @@ export default function QuizyPage() {
       {/* question input */}
       <div className={styles.value}>
         <p>Pyt:</p>
+
         <input
           type="text"
           autoComplete="off"
@@ -211,13 +212,14 @@ export default function QuizyPage() {
 
   // "Pytanie otwarte" board
   const OpenBoard = (index: number) => (
-    <>
-      <div className={styles.value}>
-        <p>Pyt:</p>
+    <div className={styles.inputs}>
+      <div>
+        <p>Pytanie:</p>
+
         <input
           type="text"
           autoComplete="off"
-          placeholder="Treść pytania"
+          placeholder="Wpisz treść pytania"
           value={data[index].question || ""}
           maxLength={128}
           className={styles.question}
@@ -232,12 +234,13 @@ export default function QuizyPage() {
         />
       </div>
 
-      <div className={styles.value}>
-        <p>Odp:</p>
+      <div>
+        <p>Odpowiedź:</p>
+
         <input
           type="text"
           autoComplete="off"
-          placeholder="Poprawna odpowiedź"
+          placeholder="Wpisz poprawną odpowiedź"
           value={data[index].answers[0].value || ""}
           maxLength={128}
           className={styles.answer}
@@ -251,7 +254,7 @@ export default function QuizyPage() {
           required
         />
       </div>
-    </>
+    </div>
   );
 
   // main page render
@@ -290,55 +293,6 @@ export default function QuizyPage() {
 
                     {/* quick settings */}
                     <div className={styles.buttons}>
-                      <button
-                        type="button"
-                        title="Przenieś do góry"
-                        className={index === 0 ? "disabled" : ""}
-                        onClick={() => {
-                          setData((prev) => {
-                            const newData = [...prev];
-                            const temp = newData[index];
-                            newData[index] = newData[index - 1];
-                            newData[index - 1] = temp;
-                            return newData;
-                          });
-                        }}
-                      >
-                        <Image
-                          src="/icons/arrow.svg"
-                          alt="arrow"
-                          width={20}
-                          height={20}
-                          draggable={false}
-                          className="icon"
-                        />
-                      </button>
-
-                      <button
-                        type="button"
-                        title="Przenieś w dół"
-                        className={index + 1 === data.length ? "disabled" : ""}
-                        onClick={() => {
-                          setData((prev) => {
-                            const newData = [...prev];
-                            const temp = newData[index];
-                            newData[index] = newData[index + 1];
-                            newData[index + 1] = temp;
-                            return newData;
-                          });
-                        }}
-                      >
-                        <Image
-                          src="/icons/arrow.svg"
-                          alt="arrow"
-                          width={20}
-                          height={20}
-                          draggable={false}
-                          className="icon"
-                          style={{ rotate: "180deg" }}
-                        />
-                      </button>
-
                       <button
                         type="button"
                         title="Wyczyść/usuń pytanie"
@@ -383,19 +337,71 @@ export default function QuizyPage() {
                           className="icon"
                         />
                       </button>
+
+                      <button
+                        type="button"
+                        title="Przenieś w dół"
+                        className={index + 1 === data.length ? "disabled" : ""}
+                        tabIndex={index + 1 === data.length ? -1 : 0}
+                        onClick={() => {
+                          setData((prev) => {
+                            const newData = [...prev];
+                            const temp = newData[index];
+                            newData[index] = newData[index + 1];
+                            newData[index + 1] = temp;
+                            return newData;
+                          });
+                        }}
+                      >
+                        <Image
+                          src="/icons/arrow.svg"
+                          alt="arrow"
+                          width={20}
+                          height={20}
+                          draggable={false}
+                          className="icon"
+                          style={{ rotate: "180deg" }}
+                        />
+                      </button>
+
+                      <button
+                        type="button"
+                        title="Przenieś do góry"
+                        className={index === 0 ? "disabled" : ""}
+                        tabIndex={index === 0 ? -1 : 0}
+                        onClick={() => {
+                          setData((prev) => {
+                            const newData = [...prev];
+                            const temp = newData[index];
+                            newData[index] = newData[index - 1];
+                            newData[index - 1] = temp;
+                            return newData;
+                          });
+                        }}
+                      >
+                        <Image
+                          src="/icons/arrow.svg"
+                          alt="arrow"
+                          width={20}
+                          height={20}
+                          draggable={false}
+                          className="icon"
+                        />
+                      </button>
                     </div>
                   </div>
 
-                  {/* board content */}
-                  {type === "closed" && ClosedBoard(index)}
-                  {type === "gap" && GapBoard(index)}
-                  {type === "open" && OpenBoard(index)}
+                  <div className={styles.content}>
+                    {type === "closed" && ClosedBoard(index)}
+                    {type === "gap" && GapBoard(index)}
+                    {type === "open" && OpenBoard(index)}
+                  </div>
                 </div>
               );
             })}
 
-            {/* add question button */}
-            <div className={styles.addButton}>
+            {/* add new question button */}
+            <div className={styles.addQuestionButton}>
               <button
                 type="button"
                 className={styles.default}

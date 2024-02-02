@@ -83,7 +83,7 @@ $gradient: linear-gradient(45deg, #e93838, #9b136e);
 
 .content {
   padding: 0.25rem 2rem 2rem;
-  width: 95%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -97,6 +97,7 @@ $gradient: linear-gradient(45deg, #e93838, #9b136e);
   }
 }
 
+// custom content classes
 .params {
   display: flex;
   gap: 1rem;
@@ -114,6 +115,7 @@ $gradient: linear-gradient(45deg, #e93838, #9b136e);
 }
 
 .inputs {
+  // same as quizy/scss
   width: 100%;
   display: flex;
   flex-direction: column;
