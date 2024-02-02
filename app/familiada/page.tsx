@@ -39,13 +39,7 @@ export default function FamiliadaPage() {
   useEffect(() => {
     try {
       const storedData = localStorage.getItem("familiada");
-      if (storedData) {
-        const parsed = JSON.parse(storedData);
-        if (!parsed.length) throw new Error("No data");
-
-        setPreview(Array.from({ length: parsed.length }));
-        setData(parsed);
-      }
+      if (storedData) setData(JSON.parse(storedData));
 
       scrollTo({ top: 0 });
       setLoading(false);
@@ -74,6 +68,7 @@ export default function FamiliadaPage() {
     });
   };
 
+  // main page render
   return (
     <Layout>
       <div style={{ userSelect: "none" }}>
@@ -119,7 +114,7 @@ export default function FamiliadaPage() {
           open("/familiada/board/0", "game_window", "width=960, height=540");
         }}
       >
-        <p>✨ Pokaż tablicę tytułową</p>
+        <p>{"✨ Pokaż tablicę tytułową"}</p>
       </button>
 
       {loading ? (
@@ -127,9 +122,9 @@ export default function FamiliadaPage() {
           <p>Trwa ładowanie...</p>
         </div>
       ) : (
-        <div className={styles.form}>
+        <div className={styles.container}>
           {[...Array(data.length)].map((_, index) => (
-            <div className={styles.container} key={index}>
+            <div className={styles.board} key={index}>
               {/* question input */}
               <input
                 type="text"
@@ -244,6 +239,7 @@ export default function FamiliadaPage() {
                 <div>
                   <button
                     className={index === 0 ? "disabled" : ""}
+                    tabIndex={index === 0 ? -1 : 0}
                     onClick={() => {
                       clearPreview(index - 1);
                       clearPreview(index);
@@ -262,6 +258,7 @@ export default function FamiliadaPage() {
 
                   <button
                     className={index + 1 === data.length ? "disabled" : ""}
+                    tabIndex={index + 1 === data.length ? -1 : 0}
                     onClick={() => {
                       clearPreview(index);
                       clearPreview(index + 1);
@@ -389,7 +386,8 @@ export default function FamiliadaPage() {
 
       <div className={styles.credits}>
         <p>
-          Na podstawie i z wykorzystaniem zasad programu telewizyjnego{" "}
+          Gra została stworzona na podstawie oprawy audiowizualnej oraz zasad
+          programu telewizyjnego{" "}
           <Link href="https://pl.wikipedia.org/wiki/Familiada" target="_blank">
             {`"Familiada"`}
           </Link>{" "}

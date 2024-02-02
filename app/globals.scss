@@ -44,6 +44,7 @@ $header-padding: 0.5rem;
 main {
   $header-height: $header-height + 2 * $header-padding;
 
+  position: relative;
   padding: 2rem min(3%, 3rem) 6rem;
   min-height: calc(100svh - $header-height);
   width: $custom-width;

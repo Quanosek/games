@@ -13,12 +13,12 @@ export default function HomePage() {
           <p>{`❔ Quizy`}</p>
         </Link>
 
-        <Link className="button" href="/familiada">
-          <p>{`💰 "Familiada"`}</p>
-        </Link>
-
         <Link className="button" href="/wisielec">
           <p>{`🪢 Wisielec`}</p>
+        </Link>
+
+        <Link className="button" href="/familiada">
+          <p>{`💰 "Familiada"`}</p>
         </Link>
       </div>
     </Layout>
