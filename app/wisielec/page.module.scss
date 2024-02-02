@@ -77,6 +77,13 @@ $gradient: linear-gradient(45deg, #e93838, #9b136e);
       border: none;
       padding: 5px;
       background-color: transparent;
+
+      &[type="submit"] {
+        margin-left: 5px;
+        padding: 5px 10px;
+        border: 1px solid var(--white);
+        background-color: rgba(white, 0.06);
+      }
     }
   }
 }

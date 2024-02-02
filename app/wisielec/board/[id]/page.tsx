@@ -98,9 +98,20 @@ export default function WisielecBoardID({
       />
 
       <div className={styles.content}>
-        {remainingTime >= 0 && (
-          <p>Pozostały czas: {timeFormat(remainingTime)}</p>
-        )}
+        <div className={styles.topDiv}>
+          <p>
+            Kategoria: <span>{data.category}</span>
+          </p>
+
+          {remainingTime >= 0 && (
+            <>
+              <p className={styles.separator}>{"•"}</p>
+              <p>
+                Pozostały czas: <span>{timeFormat(remainingTime)}</span>
+              </p>
+            </>
+          )}
+        </div>
 
         <div className={styles.phrase}>
           <h1>{phraseFormat(data.phrase)}</h1>

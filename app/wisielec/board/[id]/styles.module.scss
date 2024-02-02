@@ -55,9 +55,25 @@
   align-items: center;
 }
 
+.topDiv {
+  display: flex;
+  gap: 1vw;
+  font-size: 90%;
+
+  span {
+    font-size: 110%;
+    font-weight: bold;
+  }
+
+  .separator {
+    position: relative;
+    top: 0.8vh;
+  }
+}
+
 .phrase {
   position: relative;
-  bottom: 5vh;
+  bottom: 3vh;
   height: 100%;
   display: flex;
   justify-content: center;
