@@ -13,7 +13,7 @@ export default function FamiliadaBoardID({
 }) {
   const id = Number(params.id);
 
-  const [answers, setAnswers] = useState<any>();
+  const [data, setData] = useState<any>();
   const [show, setShow] = useState<Array<number>>([]);
 
   const pointsAmount = useRef(0);
@@ -38,7 +38,7 @@ export default function FamiliadaBoardID({
         (el: { value: string }) => el.value !== ""
       );
 
-      setAnswers(answers);
+      setData(answers);
     }
   }, [id]);
 
@@ -54,19 +54,19 @@ export default function FamiliadaBoardID({
         event.preventDefault();
 
         const number = Number(event.key);
-        if (!answers[number - 1]) return;
+        if (!data[number - 1]) return;
 
         if (!show.includes(number)) {
           audioGood.current && audioGood.current.play();
           setShow([...show, number]);
 
           if (!event.ctrlKey) {
-            const points = answers[number - 1].points;
+            const points = data[number - 1].points;
             pointsAmount.current += points;
 
             let score = points;
-            if (answers.length === 5) score = points * 2;
-            if (answers.length < 5) score = points * 3;
+            if (data.length === 5) score = points * 2;
+            if (data.length < 5) score = points * 3;
             mainScore.current += score;
           }
         }
@@ -105,7 +105,7 @@ export default function FamiliadaBoardID({
 
     document.addEventListener("keyup", KeyupEvent);
     return () => document.removeEventListener("keyup", KeyupEvent);
-  }, [answers, show, blueMistakes, redMistakes]);
+  }, [data, show, blueMistakes, redMistakes]);
 
   const handleMistakes = (teamCounter: number) => {
     return (
@@ -150,8 +150,8 @@ export default function FamiliadaBoardID({
   }
 
   return (
-    <div className={styles.handler}>
-      <div className={styles.summary}>
+    <>
+      <div className={styles.totalPoints}>
         <div>
           {FormatPoints(mainScore.current).map((el: string, i: number) => {
             return <p key={i}>{el}</p>;
@@ -159,12 +159,12 @@ export default function FamiliadaBoardID({
         </div>
       </div>
 
-      {answers && (
+      {data && (
         <div className={styles.data}>
           <div className={styles.mistakes}>{handleMistakes(redMistakes)}</div>
 
           <div className={styles.main}>
-            {answers.map((el: { value: string; points: number }, i: number) => {
+            {data.map((el: { value: string; points: number }, i: number) => {
               const answer = el.value.split("");
               const points = FormatPoints(el.points);
               const dots = Array(17).fill("...");
@@ -225,6 +225,6 @@ export default function FamiliadaBoardID({
       <audio src="/familiada/audio/round.mp3" autoPlay />
       <audio ref={audioGood} src="/familiada/audio/answer.mp3" />
       <audio ref={audioWrong} src="/familiada/audio/wrong.mp3" />
-    </div>
+    </>
   );
 }

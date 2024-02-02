@@ -206,36 +206,7 @@ select {
   }
 }
 
-// board layout component
-.board {
-  position: relative;
-  width: 100svw;
-  height: 100svh;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  font-size: 2vw;
-  background-color: black;
-  overflow-x: hidden;
-  user-select: none;
-
-  button {
-    transition: none;
-    text-align: center;
-    border: none;
-  }
-
-  .credits {
-    opacity: 35%;
-    position: absolute;
-    bottom: 3vh;
-    font-size: 60%;
-  }
-}
-
-// universal classes
+// loading reveal animation on start
 .loading {
   animation: loading 1s ease-out;
 
@@ -252,11 +223,13 @@ select {
   }
 }
 
+// icon styling
 .icon {
   filter: invert(1);
   user-select: none;
 }
 
+// disabled from interaction
 .disabled {
   opacity: 35% !important;
   user-select: none !important;

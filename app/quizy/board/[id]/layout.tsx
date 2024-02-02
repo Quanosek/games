@@ -2,7 +2,14 @@
 
 import { useEffect } from "react";
 
-export function BoardLayout({ children }: { children: React.ReactNode }) {
+import styles from "./styles.module.scss";
+
+export default function BoardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  // keyboard interactions
   useEffect(() => {
     const KeyupEvent = (event: KeyboardEvent) => {
       if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
@@ -16,9 +23,11 @@ export function BoardLayout({ children }: { children: React.ReactNode }) {
     return () => document.removeEventListener("keyup", KeyupEvent);
   }, []);
 
-  return <div className="board">{children}</div>;
-}
+  return (
+    <div className={styles.container}>
+      <div className={styles.board}>{children}</div>
 
-export function Credits() {
-  return <p className="credits">Stworzone na stronie games.klalo.pl</p>;
+      <p className={styles.credits}>Stworzone na stronie games.klalo.pl</p>
+    </div>
+  );
 }

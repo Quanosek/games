@@ -5,9 +5,7 @@ import { useEffect, useState } from "react";
 import ms from "ms";
 
 import type { Data } from "@/app/wisielec/page";
-
-import styles from "./page.module.scss";
-import { Credits, BoardLayout } from "@/components/boardLayout";
+import styles from "./styles.module.scss";
 
 export default function WisielecBoardID({
   params,
@@ -79,8 +77,13 @@ export default function WisielecBoardID({
   const polishAlphabet = "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż";
   const vowels = "aąeęioóuy";
 
+  if (loading) {
+    return <h1 className="loading">Trwa ładowanie...</h1>;
+  } else if (!data) return;
+
+  // page main render
   return (
-    <BoardLayout>
+    <>
       {/* hidden input for keyboard interactions */}
       <input
         type="text"
@@ -94,48 +97,37 @@ export default function WisielecBoardID({
         }}
       />
 
-      <div className={styles.board}>
-        {(loading && <h1 className="loading">Trwa ładowanie...</h1>) ||
-          (data && (
-            // board content
-            <div className={styles.content}>
-              {remainingTime >= 0 && (
-                <p>Pozostały czas: {timeFormat(remainingTime)}</p>
-              )}
+      <div className={styles.content}>
+        {remainingTime >= 0 && (
+          <p>Pozostały czas: {timeFormat(remainingTime)}</p>
+        )}
 
-              <div className={styles.phrase}>
-                <h1>{phraseFormat(data.phrase)}</h1>
-              </div>
+        <div className={styles.phrase}>
+          <h1>{phraseFormat(data.phrase)}</h1>
+        </div>
 
-              <div className={styles.bottom}>
-                <p className={styles.mistakes}>
-                  Błędy:{" "}
-                  {
-                    letters.filter((letter) => !data.phrase.includes(letter))
-                      .length
-                  }
-                  /{data.attempts}
-                </p>
+        <div className={styles.bottomDiv}>
+          <p className={styles.mistakes}>
+            Błędy:{" "}
+            {letters.filter((letter) => !data.phrase.includes(letter)).length}/
+            {data.attempts}
+          </p>
 
-                <div className={styles.letters}>
-                  {polishAlphabet.split("").map((letter) => (
-                    <button
-                      key={letter}
-                      className={`${styles.letter} ${
-                        vowels.includes(letter) && styles.vowel
-                      } ${letters.includes(letter) && "disabled"}`}
-                      onClick={() => setLetters([...letters, letter])}
-                    >
-                      <p>{letter.toUpperCase()}</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
-
-        <Credits />
+          <div className={styles.letters}>
+            {polishAlphabet.split("").map((letter) => (
+              <button
+                key={letter}
+                className={`${styles.letter} ${
+                  vowels.includes(letter) && styles.vowel
+                } ${letters.includes(letter) && "disabled"}`}
+                onClick={() => setLetters([...letters, letter])}
+              >
+                <p>{letter.toUpperCase()}</p>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
-    </BoardLayout>
+    </>
   );
 }
