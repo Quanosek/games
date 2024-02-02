@@ -13,9 +13,7 @@ export interface Word {
   time: string;
 }
 
-export const vowels = "aąeęioóuy";
-
-export default function QuizyPage() {
+export default function WisielecPage() {
   const router = useRouter();
 
   // data state
@@ -44,14 +42,15 @@ export default function QuizyPage() {
     }
   }, [data, loading]);
 
-  // word information functions
+  const vowels = "aąeęioóuy";
 
-  const wordNaming = (string: string) => {
+  // word information functions
+  const wordsName = (string: string) => {
     const words = string.split(" ").filter((word) => word !== "");
     let result = "";
 
     if (words.length === 1) result = "1 wyraz";
-    else if (wordNaming.length > 1 && words.length < 5) {
+    else if (words.length > 1 && words.length < 5) {
       result = `${words.length} wyrazy`;
     } else result = `${words.length} wyrazów`;
 
@@ -81,9 +80,22 @@ export default function QuizyPage() {
               <div className={styles.content}>
                 <div className={styles.params}>
                   <div>
-                    <label htmlFor="attempts">Dozwolone błędy:</label>
+                    <label htmlFor={`${index}-attempts`}>
+                      <p>Dozwolone błędy:</p>
+                    </label>
 
-                    <select id="attempts" defaultValue={data[index].attempts}>
+                    <select
+                      id={`${index}-attempts`}
+                      defaultValue={data[index].attempts}
+                      onChange={(e) => {
+                        setData((prev) => {
+                          const newData = [...prev];
+                          newData[index].attempts = parseInt(e.target.value);
+                          return newData;
+                        });
+                      }}
+                    >
+                      <option value="3">3</option>
                       <option value="5">5</option>
                       <option value="10">10</option>
                       <option value="15">15</option>
@@ -92,11 +104,24 @@ export default function QuizyPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="time">Limit czasu:</label>
+                    <label htmlFor={`${index}-time`}>
+                      <p>Limit czasu:</p>
+                    </label>
 
-                    <select id="time" defaultValue={data[index].time}>
-                      <option value="none">bez limitu</option>
-                      <option value="60s">60s</option>
+                    <select
+                      id={`${index}-time`}
+                      defaultValue={data[index].time}
+                      onChange={(e) => {
+                        setData((prev) => {
+                          const newData = [...prev];
+                          newData[index].time = e.target.value;
+                          return newData;
+                        });
+                      }}
+                    >
+                      <option value="-1">bez limitu</option>
+                      <option value="30s">30s</option>
+                      <option value="45s">45s</option>
                       <option value="1m">1m</option>
                       <option value="2m">2m</option>
                       <option value="5m">5m</option>
@@ -129,13 +154,13 @@ export default function QuizyPage() {
               <hr />
 
               <div className={styles.wordInfo}>
-                <p>{wordNaming(data[index].word)}</p>
+                <p>{wordsName(data[index].word)}</p>
 
                 <p>
                   {
                     new Set(
                       data
-                        .map((word) => word.word)
+                        .map((phrase) => phrase.word)
                         .join("")
                         .split("")
                         .filter((letter) => letter !== " ")
@@ -148,7 +173,7 @@ export default function QuizyPage() {
                   {
                     new Set(
                       data
-                        .map((word) => word.word)
+                        .map((phrase) => phrase.word)
                         .join("")
                         .split("")
                         .filter((letter) => {
@@ -165,7 +190,7 @@ export default function QuizyPage() {
                   {
                     new Set(
                       data
-                        .map((word) => word.word)
+                        .map((phrase) => phrase.word)
                         .join("")
                         .split("")
                         .filter((letter) => vowels.split("").includes(letter))

@@ -6,7 +6,11 @@ import { useEffect, useState, useRef } from "react";
 import styles from "./styles.module.scss";
 import FormatPoints from "@/functions/formatPoints";
 
-export default function BoardID({ params }: { params: { id: number } }) {
+export default function FamiliadaBoardID({
+  params,
+}: {
+  params: { id: number };
+}) {
   const id = Number(params.id);
 
   const [answers, setAnswers] = useState<any>();

@@ -29,6 +29,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
+  font-size: 150%;
+  font-weight: bold;
+  letter-spacing: 0.5vw;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+
+.mistakes {
+  opacity: 80%;
+  font-size: 85%;
 }
 
 .letters {

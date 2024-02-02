@@ -143,6 +143,11 @@ form {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+
+  button,
+  .button {
+    cursor: pointer;
+  }
 }
 
 h1 {

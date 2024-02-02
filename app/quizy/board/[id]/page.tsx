@@ -11,7 +11,7 @@ import { Credits, BoardLayout } from "@/components/boardLayout";
 import { TConductorInstance } from "react-canvas-confetti/dist/types";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
-export default function BoardID({ params }: { params: { id: number } }) {
+export default function QuizyBoardID({ params }: { params: { id: number } }) {
   const id = Number(params.id);
   const router = useRouter();
 
