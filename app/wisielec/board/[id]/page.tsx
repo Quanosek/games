@@ -66,6 +66,9 @@ export default function WisielecBoardID({
           return word
             .split("")
             .map((letter) => {
+              // if letter is not in polishAlphabet, return it
+              if (!/[a-zA-ZąĄćĆęĘłŁńŃóÓśŚźŹżZ]/.test(letter)) return letter;
+              // hide letters
               return letters.includes(letter) || endGame ? letter : "_";
             })
             .join("");
@@ -123,8 +126,10 @@ export default function WisielecBoardID({
         onBlur={(e) => e.target.focus()}
         onChange={(e) => {
           if (endGame) return;
-
-          const key = e.target.value;
+          const key = e.target.value.toLowerCase();
+          // if key is not a letter, return it
+          if (key.length !== 1 || !/[a-ząćęłńóśźż]/.test(key)) return;
+          // add letter to letters array
           if (!letters.includes(key)) setLetters([...letters, key]);
           e.target.value = "";
         }}
