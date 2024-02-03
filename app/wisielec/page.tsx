@@ -255,13 +255,8 @@ export default function WisielecPage() {
                       autoComplete="off"
                       placeholder="Wpisz kategorię"
                       value={data[index].category || ""}
-                      maxLength={128}
+                      maxLength={64}
                       onChange={(e) => {
-                        // prevent double space
-                        if (e.target.value.includes("  ")) {
-                          return e.target.value.replace("  ", " ");
-                        }
-
                         setData((prev) => {
                           const newData = [...prev];
                           newData[index].category = e.target.value;

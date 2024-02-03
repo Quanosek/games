@@ -126,11 +126,15 @@ export default function WisielecBoardID({
         onBlur={(e) => e.target.focus()}
         onChange={(e) => {
           if (endGame) return;
+
           const key = e.target.value.toLowerCase();
           // if key is not a letter, return it
           if (key.length !== 1 || !/[a-ząćęłńóśźż]/.test(key)) return;
           // add letter to letters array
-          if (!letters.includes(key)) setLetters([...letters, key]);
+          if (!letters.includes(key)) {
+            setLetters([...letters, key, key.toUpperCase()]);
+          }
+
           e.target.value = "";
         }}
       />
@@ -189,7 +193,9 @@ export default function WisielecBoardID({
                 className={`${styles.letter} ${
                   vowels.includes(letter) && styles.vowel
                 } ${(letters.includes(letter) || endGame) && "disabled"}`}
-                onClick={() => setLetters([...letters, letter])}
+                onClick={() => {
+                  return setLetters([...letters, letter, letter.toUpperCase()]);
+                }}
               >
                 <p>{letter.toUpperCase()}</p>
               </button>
