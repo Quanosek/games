@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import ms from "ms";
 
 import type { Data } from "@/app/wisielec/page";
 import styles from "./styles.module.scss";
+
+import { TConductorInstance } from "react-canvas-confetti/dist/types";
+import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
 export default function WisielecBoardID({
   params,
@@ -33,50 +36,78 @@ export default function WisielecBoardID({
     setLoading(false);
   }, [id]);
 
+  // end of the game handler
+  const [endGame, setEndGame] = useState<"win" | "lose">();
+
   // set time counter
   useEffect(() => {
     const interval = setInterval(() => {
       setRemainingTime((prevTime) => {
-        prevTime -= 1_000;
-        if (prevTime <= 0) clearInterval(interval);
+        if (!endGame) prevTime -= 1_000;
+
+        if (prevTime === 0) {
+          clearInterval(interval);
+          setEndGame("lose");
+        }
+
         return prevTime;
       });
     }, 1_000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [endGame]);
 
-  // display time in format mm:ss
-  const timeFormat = (time: number) => {
-    const minutes = Math.floor(time / 60000)
-      .toString()
-      .padStart(2, "0");
+  // phrase completion
+  const phraseCompletion = useCallback(
+    (data: Data) => {
+      return data.phrase
+        .split(" ")
+        .map((word) => {
+          return word
+            .split("")
+            .map((letter) => {
+              return letters.includes(letter) || endGame ? letter : "_";
+            })
+            .join("");
+        })
+        .join(" ");
+    },
+    [letters, endGame]
+  );
 
-    const seconds = Math.floor((time % 60000) / 1000)
-      .toString()
-      .padStart(2, "0");
+  // count mistakes
+  const mistakesAmount = useCallback(
+    (data: Data) => {
+      return letters.filter((letter) => !data.phrase.includes(letter)).length;
+    },
+    [letters]
+  );
 
-    return `${minutes}:${seconds}`;
+  const [conductor, setConductor] = useState<TConductorInstance>();
+  const onInit = ({ conductor }: { conductor: TConductorInstance }) => {
+    setConductor(conductor);
   };
 
-  // display phrase
-  const phraseFormat = (phrase: string) => {
-    const words = phrase.split(" ");
+  useEffect(() => {
+    if (!data || endGame) return;
 
-    return words
-      .map((word) => {
-        return word
-          .split("")
-          .map((letter) => (letters.includes(letter) ? letter : "_"))
-          .join("");
-      })
-      .join(" ");
-  };
+    // all attempts used
+    if (data && mistakesAmount(data) === data.attempts) {
+      return setEndGame("lose");
+    }
+
+    // no more letters to guess
+    if (!phraseCompletion(data).includes("_")) {
+      conductor?.shoot();
+      return setEndGame("win");
+    }
+  }, [data, endGame, mistakesAmount, conductor, phraseCompletion]);
 
   // letters of alphabet
   const polishAlphabet = "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż";
   const vowels = "aąeęioóuy";
 
+  // loading data handler
   if (loading) {
     return <h1 className="loading">Trwa ładowanie...</h1>;
   } else if (!data) return;
@@ -91,12 +122,18 @@ export default function WisielecBoardID({
         ref={(input) => input && input.focus()}
         onBlur={(e) => e.target.focus()}
         onChange={(e) => {
+          if (endGame) return;
+
           const key = e.target.value;
           if (!letters.includes(key)) setLetters([...letters, key]);
           e.target.value = "";
         }}
       />
 
+      {/* complete confetti */}
+      <Fireworks onInit={onInit} />
+
+      {/* board content  */}
       <div className={styles.content}>
         <div className={styles.topDiv}>
           <p>
@@ -107,21 +144,37 @@ export default function WisielecBoardID({
             <>
               <p className={styles.separator}>{"•"}</p>
               <p>
-                Pozostały czas: <span>{timeFormat(remainingTime)}</span>
+                Pozostały czas:{" "}
+                <span
+                  style={{
+                    color: remainingTime === 0 ? "red" : "",
+                  }}
+                >{`${Math.floor(remainingTime / 60000)
+                  .toString()
+                  .padStart(2, "0")}:${Math.floor(
+                  (remainingTime % 60000) / 1000
+                )
+                  .toString()
+                  .padStart(2, "0")}`}</span>
               </p>
             </>
           )}
         </div>
 
         <div className={styles.phrase}>
-          <h1>{phraseFormat(data.phrase)}</h1>
+          <h1>{phraseCompletion(data)}</h1>
         </div>
 
         <div className={styles.bottomDiv}>
           <p className={styles.mistakes}>
             Błędy:{" "}
-            {letters.filter((letter) => !data.phrase.includes(letter)).length}/
-            {data.attempts}
+            <span
+              style={{
+                color: mistakesAmount(data) === data.attempts ? "red" : "",
+              }}
+            >
+              {mistakesAmount(data)}/{data.attempts}
+            </span>
           </p>
 
           <div className={styles.letters}>
@@ -130,7 +183,7 @@ export default function WisielecBoardID({
                 key={letter}
                 className={`${styles.letter} ${
                   vowels.includes(letter) && styles.vowel
-                } ${letters.includes(letter) && "disabled"}`}
+                } ${(letters.includes(letter) || endGame) && "disabled"}`}
                 onClick={() => setLetters([...letters, letter])}
               >
                 <p>{letter.toUpperCase()}</p>

@@ -69,6 +69,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
 
     return (
       <>
+        {/* complete confetti */}
         <Fireworks onInit={onInit} />
 
         <h1>{`${data.question}`}</h1>
@@ -202,9 +203,11 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
     );
   }
 
+  // loading data handler
   if (loading) {
     return <h1 className="loading">Trwa ładowanie...</h1>;
   } else if (id === 0) {
+    // start page
     return (
       <div className={styles.center}>
         <button onClick={() => router.push("/quizy/board/1")}>
@@ -213,6 +216,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
       </div>
     );
   } else if (!data) {
+    // end page
     return <h1>To już wszystko!</h1>;
   }
 
