@@ -84,26 +84,22 @@ footer {
     align-items: center;
   }
 
-  a:hover {
-    text-decoration: underline;
+  @media (max-width: 768px) {
+    font-size: min(1.1rem, 3.5vw);
   }
 }
 
-$section-padding: 2rem;
+$section-padding: 1.5rem;
 
 header {
   padding: $header-padding calc(3% - $section-padding);
 
-  .headerTitle {
-    display: flex;
-    font-weight: bold;
-
-    p {
-      font-size: 135%;
-    }
+  @media (max-width: 768px) {
+    padding: min(1.5rem, 4vw) 2vw;
   }
 
   a {
+    opacity: 85%;
     position: relative;
     bottom: 0;
     padding: 0 $section-padding;
@@ -114,18 +110,39 @@ header {
     transition: 0.15s ease-in-out;
 
     &:hover {
+      opacity: 100%;
       bottom: 1.5px;
     }
+
+    @media (max-width: 768px) {
+      padding: 0 min($section-padding, 3vw);
+      height: 2rem;
+    }
+  }
+
+  .headerTitle {
+    display: flex;
+    font-weight: bold;
+
+    p {
+      font-size: 135%;
+    }
+  }
+
+  div {
+    display: flex;
+    align-items: center;
   }
 }
 
 footer {
-  padding: 1.5rem 0;
+  padding: min(1.5rem, 4vw);
 
   section {
     padding: 0 $section-padding;
 
     @media (max-width: 768px) {
+      padding: 0 3vw;
       flex-direction: column;
       gap: 0.5rem;
       font-size: 90%;
@@ -136,6 +153,10 @@ footer {
   p {
     opacity: 80%;
     font-size: 90%;
+  }
+
+  a:hover {
+    text-decoration: underline;
   }
 }
 

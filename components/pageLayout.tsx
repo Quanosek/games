@@ -22,9 +22,15 @@ export default function PageLayout({
             </Link>
           </div>
 
-          <Link href="https://www.klalo.pl/" target="_blank">
-            www.klalo.pl
-          </Link>
+          <div>
+            <Link href="https://buycoffee.to/kubaklalo/" target="_blank">
+              Wesprzyj
+            </Link>
+
+            <Link href="https://www.klalo.pl/" target="_blank">
+              www.klalo.pl
+            </Link>
+          </div>
         </section>
       </header>
 
@@ -33,7 +39,7 @@ export default function PageLayout({
           <p>
             Wybrana strona nie jest dostępna
             <br />
-            dla urządzeń mobilnych
+            dla urządzeń mobilnych.
           </p>
         </div>
 
