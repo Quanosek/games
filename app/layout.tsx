@@ -4,8 +4,6 @@ import type { Metadata, Viewport } from "next";
 import "the-new-css-reset/css/reset.css";
 import "./globals.scss";
 
-import Analytics from "@/components/analytics";
-
 // global font-face
 const Nexa = localFont({
   src: [
@@ -52,7 +50,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pl" className={Nexa.className}>
-      {process.env.NODE_ENV !== "development" && <Analytics />}
       <body>{children}</body>
     </html>
   );

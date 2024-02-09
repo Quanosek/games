@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import Analytics from "@/components/analytics";
+
 import { Roboto } from "next/font/google";
 const font = Roboto({
   weight: "400",
@@ -14,6 +16,8 @@ export default function PageLayout({
 }) {
   return (
     <>
+      {process.env.NODE_ENV !== "development" && <Analytics />}
+
       <header>
         <section>
           <div>

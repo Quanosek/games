@@ -63,13 +63,19 @@ export default function WisielecBoardID({
       return data.phrase
         .split(" ")
         .map((word) => {
+          // add uppercase letters to array
+          const allLetters = [
+            ...letters,
+            ...letters.map((l) => l.toUpperCase()),
+          ];
+
           return word
             .split("")
             .map((letter) => {
               // if letter is not in polishAlphabet, return it
-              if (!/[a-zA-ZąĄćĆęĘłŁńŃóÓśŚźŹżZ]/.test(letter)) return letter;
+              if (!/[a-zA-ZąĄćĆęĘłŁńŃóÓśŚźŹżŻ]/.test(letter)) return letter;
               // hide letters
-              return letters.includes(letter) || endGame ? letter : "_";
+              return allLetters.includes(letter) || endGame ? letter : "_";
             })
             .join("");
         })
@@ -131,9 +137,7 @@ export default function WisielecBoardID({
           // if key is not a letter, return it
           if (key.length !== 1 || !/[a-ząćęłńóśźż]/.test(key)) return;
           // add letter to letters array
-          if (!letters.includes(key)) {
-            setLetters([...letters, key, key.toUpperCase()]);
-          }
+          if (!letters.includes(key)) setLetters([...letters, key]);
 
           e.target.value = "";
         }}
@@ -193,9 +197,7 @@ export default function WisielecBoardID({
                 className={`${styles.letter} ${
                   vowels.includes(letter) && styles.vowel
                 } ${(letters.includes(letter) || endGame) && "disabled"}`}
-                onClick={() => {
-                  return setLetters([...letters, letter, letter.toUpperCase()]);
-                }}
+                onClick={() => setLetters([...letters, letter])}
               >
                 <p>{letter.toUpperCase()}</p>
               </button>
