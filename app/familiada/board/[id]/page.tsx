@@ -138,14 +138,18 @@ export default function FamiliadaBoardID({
 
   if (id === 0) {
     return (
-      <div
-        className={styles.handler}
-        style={{
-          backgroundImage: `url("/familiada/images/background_title.webp")`,
-        }}
-      >
+      <>
+        <Image
+          className={styles.titleBoard}
+          src="/familiada/images/background_title.webp"
+          alt="FAMILIADA"
+          width={1920}
+          height={1080}
+          draggable={false}
+        />
+
         <audio src="/familiada/audio/intro.mp3" autoPlay />
-      </div>
+      </>
     );
   }
 
