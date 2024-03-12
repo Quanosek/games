@@ -253,7 +253,7 @@ export default function FamiliadaPage() {
                       });
                     }}
                   >
-                    <p>⬆️ W górę</p>
+                    <p>{"⬆️ W górę"}</p>
                   </button>
 
                   <button
@@ -272,7 +272,7 @@ export default function FamiliadaPage() {
                       });
                     }}
                   >
-                    <p>⬇️ W dół</p>
+                    <p>{"⬇️ W dół"}</p>
                   </button>
 
                   <button
@@ -285,13 +285,12 @@ export default function FamiliadaPage() {
                       clearPreview(index);
                       setData((prev) => {
                         const newData = [...prev];
-                        newData.splice(index, 1);
-                        if (!newData.length) newData.push(emptyQuestion);
+                        if (newData.length > 1) newData.splice(index, 1);
                         return newData;
                       });
                     }}
                   >
-                    <p>🧹 Usuń</p>
+                    <p>{"🧹 Usuń"}</p>
                   </button>
                 </div>
 
@@ -336,7 +335,7 @@ export default function FamiliadaPage() {
                       });
                     }}
                   >
-                    <p>🔎 Sprawdź</p>
+                    <p>{"🔎 Sprawdź"}</p>
                   </button>
 
                   <button
@@ -354,7 +353,7 @@ export default function FamiliadaPage() {
                       );
                     }}
                   >
-                    <p>🖥️ Prezentuj</p>
+                    <p>{"🖥️ Prezentuj"}</p>
                   </button>
                 </div>
               </div>
@@ -379,26 +378,24 @@ export default function FamiliadaPage() {
               }, 1);
             }}
           >
-            <p>➕ Dodaj nową planszę</p>
+            <p>{"➕ Dodaj planszę"}</p>
           </button>
         </div>
       )}
 
-      <div className={styles.credits}>
-        <p>
-          Gra została stworzona na podstawie oprawy audiowizualnej oraz zasad
-          programu telewizyjnego{" "}
-          <Link href="https://pl.wikipedia.org/wiki/Familiada" target="_blank">
-            {`"Familiada"`}
-          </Link>{" "}
-          emitowana na kanale{" "}
-          <Link href="https://pl.wikipedia.org/wiki/TVP2" target="_blank">
-            TVP2
-          </Link>
-          . Wszystkie grafiki i znaki towarowe należą do ich prawnych
-          właścicieli.
-        </p>
-      </div>
+      <p className={styles.credits}>
+        Gra została stworzona na podstawie polskiego teleturnieju{" "}
+        <Link
+          href="https://pl.wikipedia.org/wiki/Familiada"
+          target="_blank"
+        >{`"Familiada"`}</Link>
+        , emitowanego na antenie{" "}
+        <Link href="https://pl.wikipedia.org/wiki/TVP2" target="_blank">
+          TVP2
+        </Link>
+        . Wszystkie prawa do emisji oraz znaki towarowe należą do ich prawnych
+        właścicieli.
+      </p>
     </Layout>
   );
 }

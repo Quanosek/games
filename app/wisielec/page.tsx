@@ -72,11 +72,13 @@ export default function WisielecPage() {
       </h1>
 
       {loading ? (
+        // loading indicator
         <div className="loading">
           <p>Trwa ładowanie...</p>
         </div>
       ) : (
         <div className={styles.container}>
+          {/* board handle */}
           {[...Array(data.length)].map((_, index) => (
             <form
               key={index}
@@ -90,11 +92,9 @@ export default function WisielecPage() {
                 );
               }}
             >
-              {/* board navbar */}
               <div className={styles.controls}>
                 <p>{`Plansza: ${index + 1}/${data.length}`}</p>
 
-                {/* quick settings */}
                 <div className={styles.buttons}>
                   <button
                     type="button"
@@ -115,8 +115,7 @@ export default function WisielecPage() {
                       } else {
                         setData((prev) => {
                           const newData = [...prev];
-                          newData.splice(index, 1);
-                          if (!newData.length) newData.push(emptyData);
+                          if (newData.length > 1) newData.splice(index, 1);
                           return newData;
                         });
                       }
@@ -360,7 +359,7 @@ export default function WisielecPage() {
               }, 1);
             }}
           >
-            <p>{"➕ Dodaj planszę"}</p>
+            <p>{"➕ Dodaj hasło"}</p>
           </button>
         </div>
       )}

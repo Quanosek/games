@@ -20,6 +20,10 @@ export default function HomePage() {
         <Link className="button" href="/familiada">
           <p>{`💰 "Familiada"`}</p>
         </Link>
+
+        <Link className="button disabled" href="/postaw-na-milion">
+          <p>{`💵 "Postaw na milion"`}</p>
+        </Link>
       </div>
     </Layout>
   );

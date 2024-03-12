@@ -38,7 +38,7 @@ export default function QuizyPage() {
   // save data on change
   useEffect(() => {
     if (!loading) localStorage.setItem("quizy", JSON.stringify(data));
-  }, [data, loading]);
+  }, [loading, data]);
 
   // board type to user-friendly string
   const boardType = (type: Data["type"]) => {
@@ -134,7 +134,7 @@ export default function QuizyPage() {
                     });
                   }
                 }}
-                required={[0, 1].includes(i)}
+                required={i < 2}
               />
             </div>
 
@@ -265,6 +265,7 @@ export default function QuizyPage() {
       </h1>
 
       {loading ? (
+        // loading indicator
         <div className="loading">
           <p>Trwa ładowanie...</p>
         </div>
@@ -275,6 +276,7 @@ export default function QuizyPage() {
             open("/quizy/board/0", "game_window", "width=960, height=540");
           }}
         >
+          {/* start game button */}
           {data.length > 0 && (
             <button type="submit">
               <p>{"▶️ Rozpocznij grę!"}</p>
@@ -282,16 +284,15 @@ export default function QuizyPage() {
           )}
 
           <div className={styles.container}>
+            {/* board handle */}
             {[...Array(data.length)].map((_, index) => {
               const type = data[index].type;
 
               return (
                 <div className={styles.board} key={index}>
-                  {/* board navbar */}
                   <div className={styles.controls}>
                     <p>{`${index + 1}/${data.length} • ${boardType(type)}`}</p>
 
-                    {/* quick settings */}
                     <div className={styles.buttons}>
                       <button
                         type="button"
@@ -400,14 +401,14 @@ export default function QuizyPage() {
               );
             })}
 
-            {/* add new question button */}
+            {/* add new board button */}
             <div className={styles.addQuestionButton}>
               <button
                 type="button"
                 className={styles.default}
                 onClick={() => setShowButtonsList(true)}
               >
-                <p>{data.length ? "➕ Dodaj planszę" : "✨ Rozpocznij!"}</p>
+                <p>{data.length ? "➕ Dodaj..." : "✨ Rozpocznij!"}</p>
               </button>
 
               <div
@@ -417,6 +418,13 @@ export default function QuizyPage() {
                 <button
                   type="button"
                   onClick={() => {
+                    setTimeout(() => {
+                      scrollTo({
+                        top: document.body.scrollHeight,
+                        behavior: "smooth",
+                      });
+                    }, 1);
+
                     setData([
                       ...data,
                       {
@@ -430,24 +438,38 @@ export default function QuizyPage() {
                     ]);
                   }}
                 >
-                  <p>Pytanie zamknięte</p>
+                  <p>pytanie zamknięte</p>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => {
+                    setTimeout(() => {
+                      scrollTo({
+                        top: document.body.scrollHeight,
+                        behavior: "smooth",
+                      });
+                    }, 1);
+
                     setData([
                       ...data,
                       { type: "gap", question: "", answers: [] },
                     ]);
                   }}
                 >
-                  <p>Uzupełnij lukę</p>
+                  <p>uzupełnij lukę</p>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => {
+                    setTimeout(() => {
+                      scrollTo({
+                        top: document.body.scrollHeight,
+                        behavior: "smooth",
+                      });
+                    }, 1);
+
                     setData([
                       ...data,
                       {
@@ -458,7 +480,7 @@ export default function QuizyPage() {
                     ]);
                   }}
                 >
-                  <p> Pytanie otwarte</p>
+                  <p> pytanie otwarte</p>
                 </button>
               </div>
             </div>
