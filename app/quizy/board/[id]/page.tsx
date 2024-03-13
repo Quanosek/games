@@ -133,7 +133,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
                 } else {
                   // show hint
                   return (
-                    <span key={index} className={styles.gapHints}>
+                    <span className={styles.gapHints} key={index}>
                       {part.replace(/[^\s]/g, "_")}
                       <p className={styles.hint}>{part[0]}</p>
                     </span>

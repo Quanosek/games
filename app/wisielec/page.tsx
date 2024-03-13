@@ -249,7 +249,7 @@ export default function WisielecPage() {
                     <p>Kategoria:</p>
 
                     <input
-                      id={`${index}-category`}
+                      name={`${index}-category`}
                       type="text"
                       autoComplete="off"
                       placeholder="Wpisz kategorię"
@@ -270,7 +270,7 @@ export default function WisielecPage() {
                     <p>Hasło:</p>
 
                     <input
-                      id={`${index}-phrase`}
+                      name={`${index}-phrase`}
                       type="text"
                       autoComplete="off"
                       placeholder="Wpisz hasło do odgadnięcia"

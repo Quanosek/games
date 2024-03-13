@@ -22,10 +22,7 @@ export default function PnmPage() {
   const newStage: Data[] = new Array(2).fill({
     category: "",
     question: "",
-    answers: new Array(4).fill({
-      value: "",
-      checked: false,
-    }),
+    answers: new Array(4).fill({ value: "", checked: false }),
   });
 
   // data state
@@ -66,6 +63,7 @@ export default function PnmPage() {
       </div>
 
       {loading ? (
+        // loading indicator
         <div className="loading">
           <p>Trwa ładowanie...</p>
         </div>
@@ -80,15 +78,14 @@ export default function PnmPage() {
             );
           }}
         >
-          {data.length > 0 && (
-            <button className="disabled" type="submit">
-              <p>{"▶️ Rozpocznij grę!"}</p>
-            </button>
-          )}
+          {/* start game button */}
+          <button className="disabled" type="submit">
+            <p>{"▶️ Rozpocznij grę!"}</p>
+          </button>
 
           <div className={styles.container}>
             {[...Array(data.length)].map((_, i) => (
-              <div key={i} className={styles.board}>
+              <div className={styles.board} key={i}>
                 {/* board navbar */}
                 <div className={styles.controls}>
                   <p>{`Etap ${i + 1}/${data.length}`}</p>
@@ -190,64 +187,77 @@ export default function PnmPage() {
                     <React.Fragment key={j}>
                       <div className={styles.question}>
                         <input
-                          name={`category-${i}-${j}`}
+                          name={`${i}-${j}-category`}
                           type="text"
+                          autoComplete="off"
                           placeholder="Kategoria"
-                          // value={stage.category || ""}
+                          value={stage.category || ""}
                           maxLength={128}
-                          // onChange={(e) => {
-                          //   setData((prev) => {
-                          //     const newData = [...prev];
-                          //     newData[i][j].category = e.target.value;
-                          //     return newData;
-                          //   });
-                          // }}
+                          onChange={(e) => {
+                            setData((prev) => {
+                              const newData = [...prev];
+                              newData[i][j] = {
+                                ...newData[i][j],
+                                category: e.target.value,
+                              };
+                              return newData;
+                            });
+                          }}
                           required
                         />
 
                         <input
-                          name={`question-${i}-${j}`}
+                          name={`${i}-${j}-question`}
                           type="text"
+                          autoComplete="off"
                           placeholder="Treść pytania"
-                          // value={stage.question || ""}
+                          value={stage.question || ""}
                           maxLength={128}
-                          // onChange={(e) => {
-                          //   setData((prev) => {
-                          //     const newData = [...prev];
-                          //     newData[i][j].question = e.target.value;
-                          //     return newData;
-                          //   });
-                          // }}
+                          onChange={(e) => {
+                            setData((prev) => {
+                              const newData = [...prev];
+                              newData[i][j] = {
+                                ...newData[i][j],
+                                question: e.target.value,
+                              };
+                              return newData;
+                            });
+                          }}
                           required
                         />
 
                         {stage.answers.map((answer, k) => (
-                          <div key={k} className={styles.answers}>
+                          <div className={styles.answers} key={k}>
                             <input
-                              name={`check-${i}-${j}`}
+                              name={`${i}-${j}-check`}
                               type="radio"
                               // checked={answer.checked}
                               // onChange={(e) => {
                               //   setData((prev) => {
                               //     const newData = [...prev];
-                              //     newData[i][j].answers[k].checked =
-                              //       e.target.checked;
+                              //     newData[i][j].answers[k] = {
+                              //       ...newData[i][j].answers[k],
+                              //       checked: e.target.checked,
+                              //     };
                               //     return newData;
                               //   });
                               // }}
                             />
 
                             <input
-                              name={`answer-${i}-${j}`}
+                              name={`${i}-${j}-${k}-answer`}
                               type="text"
+                              autoComplete="off"
                               placeholder={`Odpowiedź ${k + 1}`}
-                              // value={stage.answers[k].value || ""}
+                              // value={answer.value || ""}
                               maxLength={64}
                               // onChange={(e) => {
                               //   setData((prev) => {
                               //     const newData = [...prev];
-                              //     newData[i][j].answers[k].value =
-                              //       e.target.value;
+                              //     newData[i][j].answers[k] = {
+                              //       ...newData[i][j].answers[k],
+                              //       value: e.target.value,
+                              //     };
                               //     return newData;
                               //   });
                               // }}

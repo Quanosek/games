@@ -1,17 +1,5 @@
 $gradient: linear-gradient(45deg, #ebdddd, #e44343);
 
-.title {
-  font-size: 500%;
-  user-select: none;
-
-  span {
-    opacity: 90%;
-    background-clip: text;
-    background-image: $gradient;
-    -webkit-text-fill-color: transparent;
-  }
-}
-
 .container {
   margin-top: 0.5rem;
   width: 100%;

@@ -70,6 +70,7 @@ export default function QuizyPage() {
         <p>Pyt:</p>
 
         <input
+          name={`${index}-question`}
           type="text"
           autoComplete="off"
           placeholder="Treść pytania"
@@ -89,7 +90,7 @@ export default function QuizyPage() {
 
       {/* answers grid */}
       <div className={styles.grid}>
-        {Array.from({ length: 4 }).map((_, i) => (
+        {data[index].answers.map((answer, i) => (
           <div className={styles.answers} key={i}>
             {/* answer value input */}
             <div
@@ -106,10 +107,11 @@ export default function QuizyPage() {
             >
               <p>{`${["A", "B", "C", "D"][i]}:`}</p>
               <input
+                name={`${index}=${i}-answer`}
                 type="text"
                 autoComplete="off"
                 placeholder="Odpowiedź"
-                value={data[index].answers[i].value || ""}
+                value={answer.value || ""}
                 maxLength={64}
                 onChange={(e) => {
                   setData((prev) => {
@@ -144,15 +146,13 @@ export default function QuizyPage() {
                 className={styles.checkbox}
                 style={{
                   // disable if answer is empty
-                  pointerEvents: data[index].answers[i].value
-                    ? "unset"
-                    : "none",
+                  pointerEvents: answer.value ? "unset" : "none",
                 }}
               >
                 <input
                   id={`${index}-${i}-checkbox`}
                   type="checkbox"
-                  checked={data[index].answers[i].checked || false}
+                  checked={answer.checked || false}
                   onChange={(e) => {
                     setData((prev) => {
                       const newData = [...prev];
@@ -187,6 +187,7 @@ export default function QuizyPage() {
   const GapBoard = (index: number) => (
     <>
       <input
+        name={`${index}-question`}
         type="text"
         autoComplete="off"
         placeholder="Zdanie do uzupełnienia"
@@ -217,6 +218,7 @@ export default function QuizyPage() {
         <p>Pytanie:</p>
 
         <input
+          name={`${index}-question`}
           type="text"
           autoComplete="off"
           placeholder="Wpisz treść pytania"
@@ -238,6 +240,7 @@ export default function QuizyPage() {
         <p>Odpowiedź:</p>
 
         <input
+          name={`${index}-answer`}
           type="text"
           autoComplete="off"
           placeholder="Wpisz poprawną odpowiedź"

@@ -16,7 +16,7 @@ const dottedFont = localFont({
 });
 
 // local object template
-interface Question {
+interface Data {
   question: string;
   answers: Array<{ value: string; points: number }>;
 }
@@ -24,15 +24,15 @@ interface Question {
 export default function FamiliadaPage() {
   const router = useRouter();
 
-  // empty question template
-  const emptyQuestion: Question = {
+  // empty data template
+  const emptyData: Data = {
     question: "",
     answers: new Array(6).fill({ value: "", points: null }),
   };
 
   // data state
-  const [preview, setPreview] = useState<Question[]>([]);
-  const [data, setData] = useState([emptyQuestion]);
+  const [preview, setPreview] = useState<Data[]>([]);
+  const [data, setData] = useState([emptyData]);
   const [loading, setLoading] = useState(true);
 
   // load data on start
@@ -55,8 +55,8 @@ export default function FamiliadaPage() {
   }, [loading, data]);
 
   // check if question is empty
-  const emptyQuestionCheck = (question: Question) => {
-    return JSON.stringify(question) === JSON.stringify(emptyQuestion);
+  const emptyQuestionCheck = (question: Data) => {
+    return JSON.stringify(question) === JSON.stringify(emptyData);
   };
 
   // clear preview
@@ -118,6 +118,7 @@ export default function FamiliadaPage() {
       </button>
 
       {loading ? (
+        // loading indicator
         <div className="loading">
           <p>Trwa ładowanie...</p>
         </div>
@@ -127,6 +128,7 @@ export default function FamiliadaPage() {
             <div className={styles.board} key={index}>
               {/* question input */}
               <input
+                name={`${index}-question`}
                 type="text"
                 autoComplete="off"
                 placeholder={`Pytanie ${index + 1}`}
@@ -145,17 +147,18 @@ export default function FamiliadaPage() {
               <div className={styles.content}>
                 {/* input form */}
                 <div className={styles.answers}>
-                  {Array.from({ length: 6 }).map((_, i) => (
+                  {data[index].answers.map((answer, i) => (
                     <div className={styles.list} key={i}>
                       {/* answer value input */}
                       <div className={styles.answer}>
                         <p>Odpowiedź {i + 1}:</p>
 
                         <input
+                          name={`${index}-${i}-answer`}
                           type="text"
                           autoComplete="off"
                           maxLength={17} // 17 characters board limit
-                          value={data[index].answers[i].value || ""}
+                          value={answer.value || ""}
                           onChange={(e) => {
                             const value = e.target.value.replace(
                               /[^a-zA-Z\s.]/g,
@@ -179,9 +182,10 @@ export default function FamiliadaPage() {
                         <p>Liczba punktów:</p>
 
                         <input
+                          name={`${index}-${i}-points`}
                           type="text"
                           autoComplete="off"
-                          value={data[index].answers[i].points || ""}
+                          value={answer.points || ""}
                           maxLength={2} // 2 characters board limit
                           onChange={(e) => {
                             const points = Number(
@@ -278,16 +282,24 @@ export default function FamiliadaPage() {
                   <button
                     onClick={() => {
                       if (!emptyQuestionCheck(data[index])) {
-                        if (!confirm("Czy na pewno chcesz usunąć pytanie?"))
+                        if (!confirm("Czy na pewno chcesz usunąć pytanie?")) {
                           return;
-                      }
+                        }
 
-                      clearPreview(index);
-                      setData((prev) => {
-                        const newData = [...prev];
-                        if (newData.length > 1) newData.splice(index, 1);
-                        return newData;
-                      });
+                        setData((prev) => {
+                          const newData = [...prev];
+                          newData[index] = emptyData;
+                          return newData;
+                        });
+                      } else {
+                        clearPreview(index);
+
+                        setData((prev) => {
+                          const newData = [...prev];
+                          if (newData.length > 1) newData.splice(index, 1);
+                          return newData;
+                        });
+                      }
                     }}
                   >
                     <p>{"🧹 Usuń"}</p>
@@ -368,7 +380,7 @@ export default function FamiliadaPage() {
                 return alert("Nie możesz dodać kolejnego pustego pytania!");
               }
 
-              setData([...data, emptyQuestion]);
+              setData([...data, emptyData]);
 
               setTimeout(() => {
                 scrollTo({
