@@ -1,0 +1,45 @@
+// LAYOUT STYLES
+
+.container {
+  position: relative;
+  width: 100svw;
+  height: auto;
+
+  background-color: black;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+.board {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16/9;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.credits {
+  opacity: 40%;
+  position: absolute;
+  bottom: min(1vw, 3vh);
+
+  width: 100%;
+  font-size: 1vw;
+  text-align: center;
+}
+
+// PAGE COMPONENT STYLES
+
+.startBackground {
+  width: 100%;
+  height: auto;
+}
+
+.startIntro {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}

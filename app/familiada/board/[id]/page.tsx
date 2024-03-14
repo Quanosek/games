@@ -136,6 +136,7 @@ export default function FamiliadaBoardID({
     );
   };
 
+  // start board view
   if (id === 0) {
     return (
       <>

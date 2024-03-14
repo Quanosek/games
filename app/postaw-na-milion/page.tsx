@@ -79,7 +79,7 @@ export default function PnmPage() {
           }}
         >
           {/* start game button */}
-          <button className="disabled" type="submit">
+          <button type="submit">
             <p>{"▶️ Rozpocznij grę!"}</p>
           </button>
 
@@ -238,28 +238,19 @@ export default function PnmPage() {
                           <p>Odpowiedzi (jedna poprawna):</p>
 
                           {stage.answers.map((answer, k) => (
-                            <div className={styles.answers} key={k}>
-                              <input
-                                name={`${i}-${j}-check`}
-                                type="radio"
-                                checked={answer.checked}
-                                onChange={() => {
-                                  setData((prev) => {
-                                    const newData = [...prev];
-                                    newData[i][j] = {
-                                      ...newData[i][j],
-                                      answers: newData[i][j].answers.map(
-                                        (a, l) => {
-                                          // find specific answer and check it
-                                          return { ...a, checked: l === k };
-                                        }
-                                      ),
-                                    };
-                                    return newData;
-                                  });
-                                }}
-                              />
-
+                            <div
+                              key={k}
+                              className={styles.answers}
+                              style={{
+                                // disable if prev or curr answer is empty
+                                pointerEvents:
+                                  k === 0 ||
+                                  data[i][j].answers[k - 1].value ||
+                                  data[i][j].answers[k].value
+                                    ? "unset"
+                                    : "none",
+                              }}
+                            >
                               <input
                                 name={`${i}-${j}-${k}-answer`}
                                 type="text"
@@ -285,14 +276,33 @@ export default function PnmPage() {
                                   });
                                 }}
                                 required={k < 2}
+                              />
+
+                              <input
+                                name={`${i}-${j}-check`}
+                                type="radio"
+                                checked={answer.checked}
+                                onChange={() => {
+                                  setData((prev) => {
+                                    const newData = [...prev];
+                                    newData[i][j] = {
+                                      ...newData[i][j],
+                                      answers: newData[i][j].answers.map(
+                                        (a, l) => {
+                                          // find specific answer and check it
+                                          return { ...a, checked: l === k };
+                                        }
+                                      ),
+                                    };
+                                    return newData;
+                                  });
+                                }}
+                                required
                                 style={{
-                                  // disable if prev or curr answer is empty
-                                  pointerEvents:
-                                    k === 0 ||
-                                    data[i][j].answers[k - 1].value ||
-                                    data[i][j].answers[k].value
-                                      ? "unset"
-                                      : "none",
+                                  // disable if answer is empty
+                                  pointerEvents: answer.value
+                                    ? "unset"
+                                    : "none",
                                 }}
                               />
                             </div>
