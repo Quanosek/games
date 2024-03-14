@@ -182,89 +182,122 @@ export default function PnmPage() {
                   </div>
                 </div>
 
-                <div className={styles.stage}>
+                <div className={styles.content}>
                   {data[i].map((stage, j) => (
                     <React.Fragment key={j}>
-                      <div className={styles.question}>
-                        <input
-                          name={`${i}-${j}-category`}
-                          type="text"
-                          autoComplete="off"
-                          placeholder="Kategoria"
-                          value={stage.category || ""}
-                          maxLength={128}
-                          onChange={(e) => {
-                            setData((prev) => {
-                              const newData = [...prev];
-                              newData[i][j] = {
-                                ...newData[i][j],
-                                category: e.target.value,
-                              };
-                              return newData;
-                            });
-                          }}
-                          required
-                        />
+                      <div className={styles.inputs}>
+                        <div>
+                          <p>Kategoria:</p>
 
-                        <input
-                          name={`${i}-${j}-question`}
-                          type="text"
-                          autoComplete="off"
-                          placeholder="Treść pytania"
-                          value={stage.question || ""}
-                          maxLength={128}
-                          onChange={(e) => {
-                            setData((prev) => {
-                              const newData = [...prev];
-                              newData[i][j] = {
-                                ...newData[i][j],
-                                question: e.target.value,
-                              };
-                              return newData;
-                            });
-                          }}
-                          required
-                        />
+                          <input
+                            name={`${i}-${j}-category`}
+                            type="text"
+                            autoComplete="off"
+                            placeholder="Wpisz kategorię"
+                            value={stage.category || ""}
+                            maxLength={128}
+                            onChange={(e) => {
+                              setData((prev) => {
+                                const newData = [...prev];
+                                newData[i][j] = {
+                                  ...newData[i][j],
+                                  category: e.target.value,
+                                };
+                                return newData;
+                              });
+                            }}
+                            required
+                          />
+                        </div>
 
-                        {stage.answers.map((answer, k) => (
-                          <div className={styles.answers} key={k}>
-                            <input
-                              name={`${i}-${j}-check`}
-                              type="radio"
-                              // checked={answer.checked}
-                              // onChange={(e) => {
-                              //   setData((prev) => {
-                              //     const newData = [...prev];
-                              //     newData[i][j].answers[k] = {
-                              //       ...newData[i][j].answers[k],
-                              //       checked: e.target.checked,
-                              //     };
-                              //     return newData;
-                              //   });
-                              // }}
-                            />
+                        <div>
+                          <p>Pytanie:</p>
 
-                            <input
-                              name={`${i}-${j}-${k}-answer`}
-                              type="text"
-                              autoComplete="off"
-                              placeholder={`Odpowiedź ${k + 1}`}
-                              // value={answer.value || ""}
-                              maxLength={64}
-                              // onChange={(e) => {
-                              //   setData((prev) => {
-                              //     const newData = [...prev];
-                              //     newData[i][j].answers[k] = {
-                              //       ...newData[i][j].answers[k],
-                              //       value: e.target.value,
-                              //     };
-                              //     return newData;
-                              //   });
-                              // }}
-                              required={k < 2}
-                            />
-                          </div>
-                        ))}
+                          <input
+                            name={`${i}-${j}-question`}
+                            type="text"
+                            autoComplete="off"
+                            placeholder="Wpisz pytanie"
+                            value={stage.question || ""}
+                            maxLength={128}
+                            onChange={(e) => {
+                              setData((prev) => {
+                                const newData = [...prev];
+                                newData[i][j] = {
+                                  ...newData[i][j],
+                                  question: e.target.value,
+                                };
+                                return newData;
+                              });
+                            }}
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <p>Odpowiedzi (jedna poprawna):</p>
+
+                          {stage.answers.map((answer, k) => (
+                            <div className={styles.answers} key={k}>
+                              <input
+                                name={`${i}-${j}-check`}
+                                type="radio"
+                                checked={answer.checked}
+                                onChange={() => {
+                                  setData((prev) => {
+                                    const newData = [...prev];
+                                    newData[i][j] = {
+                                      ...newData[i][j],
+                                      answers: newData[i][j].answers.map(
+                                        (a, l) => {
+                                          // find specific answer and check it
+                                          return { ...a, checked: l === k };
+                                        }
+                                      ),
+                                    };
+                                    return newData;
+                                  });
+                                }}
+                              />
+
+                              <input
+                                name={`${i}-${j}-${k}-answer`}
+                                type="text"
+                                autoComplete="off"
+                                placeholder={`Odpowiedź ${k + 1}`}
+                                value={answer.value || ""}
+                                maxLength={64}
+                                onChange={(e) => {
+                                  setData((prev) => {
+                                    const newData = [...prev];
+                                    newData[i][j] = {
+                                      ...newData[i][j],
+                                      answers: newData[i][j].answers.map(
+                                        (a, l) => {
+                                          // find specific answer and add value
+                                          return l === k
+                                            ? { ...a, value: e.target.value }
+                                            : a;
+                                        }
+                                      ),
+                                    };
+                                    return newData;
+                                  });
+                                }}
+                                required={k < 2}
+                                style={{
+                                  // disable if prev or curr answer is empty
+                                  pointerEvents:
+                                    k === 0 ||
+                                    data[i][j].answers[k - 1].value ||
+                                    data[i][j].answers[k].value
+                                      ? "unset"
+                                      : "none",
+                                }}
+                              />
+                            </div>
+                          ))}
+                        </div>
                       </div>
 
                       {j == 0 && <hr />}

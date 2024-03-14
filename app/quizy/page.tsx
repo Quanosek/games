@@ -63,24 +63,24 @@ export default function QuizyPage() {
   }, [showButtonsList]);
 
   // "Pytanie zamknięte" board
-  const ClosedBoard = (index: number) => (
+  const ClosedBoard = (i: number) => (
     <>
       {/* question input */}
       <div className={styles.value}>
         <p>Pyt:</p>
 
         <input
-          name={`${index}-question`}
+          name={`${i}-question`}
           type="text"
           autoComplete="off"
           placeholder="Treść pytania"
-          value={data[index].question || ""}
+          value={data[i].question || ""}
           maxLength={128}
           className={styles.question}
           onChange={(e) => {
             setData((prev) => {
               const newData = [...prev];
-              newData[index].question = e.target.value;
+              newData[i].question = e.target.value;
               return newData;
             });
           }}
@@ -90,24 +90,25 @@ export default function QuizyPage() {
 
       {/* answers grid */}
       <div className={styles.grid}>
-        {data[index].answers.map((answer, i) => (
-          <div className={styles.answers} key={i}>
+        {data[i].answers.map((answer, j) => (
+          <div className={styles.answers} key={j}>
             {/* answer value input */}
             <div
               className={styles.value}
               style={{
                 // disable if prev or curr answer is empty
                 pointerEvents:
-                  i === 0 ||
-                  data[index].answers[i - 1].value ||
-                  data[index].answers[i].value
+                  j === 0 ||
+                  data[i].answers[j - 1].value ||
+                  data[i].answers[j].value
                     ? "unset"
                     : "none",
               }}
             >
-              <p>{`${["A", "B", "C", "D"][i]}:`}</p>
+              <p>{`${["A", "B", "C", "D"][j]}:`}</p>
+
               <input
-                name={`${index}=${i}-answer`}
+                name={`${i}-${j}-answer`}
                 type="text"
                 autoComplete="off"
                 placeholder="Odpowiedź"
@@ -116,8 +117,8 @@ export default function QuizyPage() {
                 onChange={(e) => {
                   setData((prev) => {
                     const newData = [...prev];
-                    newData[index].answers[i] = {
-                      ...newData[index].answers[i],
+                    newData[i].answers[j] = {
+                      ...newData[i].answers[j],
                       value: e.target.value,
                     };
                     return newData;
@@ -128,15 +129,15 @@ export default function QuizyPage() {
                   if (!e.target.value) {
                     setData((prev) => {
                       const newData = [...prev];
-                      newData[index].answers[i] = {
-                        ...newData[index].answers[i],
+                      newData[i].answers[j] = {
+                        ...newData[i].answers[j],
                         checked: false,
                       };
                       return newData;
                     });
                   }
                 }}
-                required={i < 2}
+                required={j < 2}
               />
             </div>
 
@@ -150,14 +151,14 @@ export default function QuizyPage() {
                 }}
               >
                 <input
-                  id={`${index}-${i}-checkbox`}
+                  id={`${i}-${j}-checkbox`}
                   type="checkbox"
                   checked={answer.checked || false}
                   onChange={(e) => {
                     setData((prev) => {
                       const newData = [...prev];
-                      newData[index].answers[i] = {
-                        ...newData[index].answers[i],
+                      newData[i].answers[j] = {
+                        ...newData[i].answers[j],
                         checked: e.target.checked,
                       };
                       return newData;
@@ -165,11 +166,9 @@ export default function QuizyPage() {
                   }}
                 />
 
-                <label
-                  htmlFor={`${index}-${i}-checkbox`}
-                  className={styles.check}
-                >
+                <label htmlFor={`${i}-${j}-checkbox`} className={styles.check}>
                   <p>poprawna odpowiedź</p>
+
                   <svg width="18px" height="18px" viewBox="0 0 18 18">
                     <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
                     <polyline points="1 9 7 14 15 4"></polyline>
