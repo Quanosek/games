@@ -280,9 +280,11 @@ export default function PnmPage() {
               onClick={() => {
                 if (
                   JSON.stringify(data[data.length - 1]) ===
-                  JSON.stringify([newStage])
+                  JSON.stringify(newStage)
                 ) {
-                  return alert("Nie możesz dodać kolejnego pustego pytania!");
+                  return alert(
+                    "Uzupełnij poprzednią planszę przed dodaniem nowej."
+                  );
                 }
 
                 setData([...data, newStage]);

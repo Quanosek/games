@@ -377,7 +377,9 @@ export default function FamiliadaPage() {
             style={{ marginTop: "1rem" }}
             onClick={() => {
               if (emptyQuestionCheck(data[data.length - 1])) {
-                return alert("Nie możesz dodać kolejnego pustego pytania!");
+                return alert(
+                  "Uzupełnij poprzednią planszę przed dodaniem nowej."
+                );
               }
 
               setData([...data, emptyData]);

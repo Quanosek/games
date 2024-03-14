@@ -346,7 +346,9 @@ export default function WisielecPage() {
                 JSON.stringify(data[data.length - 1]) ===
                 JSON.stringify(emptyData)
               ) {
-                return alert("Nie możesz dodać kolejnego pustego pytania!");
+                return alert(
+                  "Uzupełnij poprzednią planszę przed dodaniem nowej."
+                );
               }
 
               setData([...data, emptyData]);
