@@ -9,8 +9,16 @@ export default function BoardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // keyboard interactions
   useEffect(() => {
+    // // local game props
+    // localStorage.setItem(
+    //   "game",
+    //   JSON.stringify({
+    //     money: 1_000_000,
+    //   })
+    // );
+
+    // keyboard interactions
     const KeyupEvent = (event: KeyboardEvent) => {
       if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
         return;
