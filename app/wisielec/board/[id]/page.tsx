@@ -20,7 +20,7 @@ export default function WisielecBoardID({
   const [data, setData] = useState<Data>();
   const [loading, setLoading] = useState(true);
 
-  const [remainingTime, setRemainingTime] = useState<number>(0);
+  const [remainingTime, setRemainingTime] = useState(0);
   const [letters, setLetters] = useState<string[]>([]);
 
   // get data on load

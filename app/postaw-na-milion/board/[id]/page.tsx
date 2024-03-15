@@ -12,6 +12,10 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
   const router = useRouter();
 
   const [data, setData] = useState<Data[]>();
+  const [gameData, setGameData] = useState({
+    packagesLeft: 40,
+    boxes: new Array(4).fill({ packages: 0 }),
+  });
 
   // get data on load
   useEffect(() => {
@@ -59,8 +63,26 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
     }
   };
 
-  // selected category content
+  // game params
   const [selectedQuestion, setQuestion] = useState<Data>();
+  const [remainingTime, setRemainingTime] = useState(60_000);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout>();
+
+  // set time counter
+  useEffect(() => {
+    if (!selectedQuestion) return;
+
+    const interval = setInterval(() => {
+      setRemainingTime((prevTime) => {
+        prevTime -= 1_000;
+
+        if (prevTime === 0) clearInterval(interval);
+        return prevTime;
+      });
+    }, 1_000);
+
+    return () => clearInterval(interval);
+  }, [selectedQuestion]);
 
   // game-start screen
   if (id === 0) {
@@ -97,9 +119,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
 
         <div
           className={styles.startLayout}
-          style={{
-            display: hiddenIntro ? "flex" : "none",
-          }}
+          style={{ display: hiddenIntro ? "flex" : "none" }}
         >
           <button onClick={() => router.push("/postaw-na-milion/board/1")}>
             <p>Start</p>
@@ -131,11 +151,115 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
       <div>
         <p>{selectedQuestion.question}</p>
 
+        <p>
+          {`${Math.floor(remainingTime / 60000)
+            .toString()
+            .padStart(2, "0")}:${Math.floor((remainingTime % 60000) / 1000)
+            .toString()
+            .padStart(2, "0")}`}
+        </p>
+
         <div>
           {selectedQuestion.answers.map((answer, index) => (
-            <p key={index}>{answer.value}</p>
+            <div className={styles.boxes} key={index}>
+              <p>{answer.value}</p>
+
+              <button
+                onMouseDown={() => {
+                  function removePackage() {
+                    setGameData((prev) => {
+                      if (
+                        prev.packagesLeft === 40 ||
+                        prev.boxes[index].packages === 0
+                      ) {
+                        return prev;
+                      }
+
+                      return {
+                        ...prev,
+                        packagesLeft: prev.packagesLeft + 1,
+                        boxes: prev.boxes.map((box, i) => {
+                          if (i === index) {
+                            return { packages: box.packages - 1 };
+                          }
+                          return box;
+                        }),
+                      };
+                    });
+                  }
+
+                  const id = setInterval(removePackage, 300);
+                  removePackage(), setIntervalId(id);
+                }}
+                onMouseUp={() => clearInterval(intervalId)}
+              >
+                <p>-</p>
+              </button>
+
+              <button
+                onMouseDown={() => {
+                  function addPackage() {
+                    setGameData((prev) => {
+                      if (
+                        prev.packagesLeft === 0 ||
+                        prev.boxes[index].packages === 40
+                      ) {
+                        return prev;
+                      }
+
+                      return {
+                        ...prev,
+                        packagesLeft: prev.packagesLeft - 1,
+                        boxes: prev.boxes.map((box, i) => {
+                          if (i === index) {
+                            return { packages: box.packages + 1 };
+                          }
+                          return box;
+                        }),
+                      };
+                    });
+                  }
+
+                  const id = setInterval(addPackage, 300);
+                  addPackage(), setIntervalId(id);
+                }}
+                onMouseUp={() => clearInterval(intervalId)}
+              >
+                <p>+</p>
+              </button>
+
+              <p>{gameData.boxes[index].packages}</p>
+            </div>
           ))}
+
+          <p>Pakiety: {gameData.packagesLeft}</p>
         </div>
+
+        <button
+          onClick={() => {
+            // if (confirm("Czy na pewno chcesz zakończyć wcześniej tę rundę?")) {
+            //   setRemainingTime(0);
+            // }
+          }}
+        >
+          <p>Zakończ wcześniej</p>
+        </button>
+
+        <button
+          onClick={() => {
+            // if (
+            //   confirm(
+            //     "Czy na pewno chcesz przedłużyć czas w tej rundzie o dodatkowe 30 sekund? Nie będziesz mógł użyć tej opcji ponownie."
+            //   )
+            // ) {
+            //   setRemainingTime((prev) => {
+            //     return prev + 30000;
+            //   });
+            // }
+          }}
+        >
+          <p>Przedłuż czas +30s</p>
+        </button>
       </div>
     );
   }
