@@ -12,6 +12,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
   const router = useRouter();
 
   const [data, setData] = useState<Data[]>();
+  const [selectedQuestion, setQuestion] = useState<Data>();
 
   // get data on load
   useEffect(() => {
@@ -21,23 +22,17 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
     if (data) setData(data);
   }, [id]);
 
-  // global views states
-  const [hiddenIntro, setHiddenIntro] = useState(false);
-  const [selectedQuestion, setQuestion] = useState<Data>();
-
   if (id === 0) {
+    // PLAY INTRO VIDEO
     const IntroLayout = () => {
       // video behavior
       const videoRef = useRef<HTMLVideoElement>(null);
+      const [hiddenIntro, setHiddenIntro] = useState(false);
       const [videoPlayed, setVideoPlayed] = useState<boolean>();
 
       const hideVideo = () => {
         setHiddenIntro(true);
-
-        if (videoRef.current) {
-          videoRef.current.pause();
-          videoRef.current.style.display = "none";
-        }
+        if (videoRef.current) videoRef.current.pause();
       };
 
       // mouse behavior
@@ -68,7 +63,10 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
       return (
         <div
           className={styles.introVideo}
-          style={{ cursor: showCursor ? "default" : "none" }}
+          style={{
+            display: hiddenIntro ? "none" : "block",
+            cursor: showCursor ? "default" : "none",
+          }}
         >
           <div className={styles.controls}>
             {!videoPlayed && (
@@ -113,23 +111,13 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
 
     return (
       <>
-        {/* PLAY INTRO VIDEO */}
-        {!hiddenIntro && <IntroLayout />}
+        <IntroLayout />
 
         {/* GAME START LAYOUT */}
         <div className={styles.startLayout}>
           <button onClick={() => router.push("/postaw-na-milion/board/1")}>
             <p>Start</p>
           </button>
-
-          <Image
-            className={styles.background}
-            src="/pnm/images/background.webp"
-            alt="Postaw na milion"
-            width={1920}
-            height={1080}
-            draggable={false}
-          />
         </div>
       </>
     );
@@ -138,6 +126,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
   // CATEGORY SELECT LAYOUT
   if (data && !selectedQuestion) {
     const CategoriesLayout = () => {
+      const [selected, setSelected] = useState<number>(-1);
       const audioCategory = useRef<HTMLAudioElement>(null);
 
       return (
@@ -147,10 +136,23 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
               <button
                 key={index}
                 onClick={() => {
-                  if (!audioCategory.current) return;
-
-                  audioCategory.current.play();
-                  setTimeout(() => setQuestion(question), 2_000);
+                  setSelected(index);
+                  audioCategory.current?.play();
+                  setTimeout(() => setQuestion(question), 1_500);
+                }}
+                style={{
+                  zIndex: index === selected ? 1 : 0,
+                  transform: index === selected ? "scale(1.1)" : "none",
+                  pointerEvents: [0, 1].includes(selected) ? "none" : "auto",
+                  top: [0, 1].includes(selected)
+                    ? index === selected
+                      ? index === 0
+                        ? "6vw"
+                        : "-7vw"
+                      : index === 1
+                      ? "-7vw"
+                      : "6vw"
+                    : "",
                 }}
               >
                 <p>{question.category}</p>
@@ -170,15 +172,16 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
   // GAME BOARD
   if (selectedQuestion) {
     const GameLayout = () => {
-      const [gameData, setGameData] = useState({
+      // current stage data
+      const [stageData, setStageData] = useState({
         packagesLeft: 40,
         boxes: new Array(4).fill({ packages: 0 }),
       });
 
+      // time counter
       const [remainingTime, setRemainingTime] = useState(60_000);
       const [intervalId, setIntervalId] = useState<NodeJS.Timeout>();
 
-      // set time counter
       useEffect(() => {
         if (!selectedQuestion) return;
 
@@ -196,117 +199,119 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
 
       return (
         <div>
-          <p>{selectedQuestion.question}</p>
-
-          <p>
-            {`${Math.floor(remainingTime / 60000)
-              .toString()
-              .padStart(2, "0")}:${Math.floor((remainingTime % 60000) / 1000)
-              .toString()
-              .padStart(2, "0")}`}
-          </p>
-
-          <div>
+          <div className={styles.boxes}>
             {selectedQuestion.answers.map((answer, index) => (
-              <div className={styles.boxes} key={index}>
-                <p>{answer.value}</p>
+              <div className={styles.box} key={index}>
+                <p className={styles.answer}>{answer.value}</p>
 
-                <button
-                  onMouseDown={() => {
-                    function removePackage() {
-                      setGameData((prev) => {
-                        if (
-                          prev.packagesLeft === 40 ||
-                          prev.boxes[index].packages === 0
-                        ) {
-                          return prev;
-                        }
+                <p>{`[${stageData.boxes[index].packages}]`}</p>
 
-                        return {
-                          ...prev,
-                          packagesLeft: prev.packagesLeft + 1,
-                          boxes: prev.boxes.map((box, i) => {
-                            if (i === index) {
-                              return { packages: box.packages - 1 };
-                            }
-                            return box;
-                          }),
-                        };
-                      });
-                    }
+                <div className={styles.buttons}>
+                  <button
+                    onMouseDown={() => {
+                      function removePackage() {
+                        setStageData((prev) => {
+                          if (
+                            prev.packagesLeft === 40 ||
+                            prev.boxes[index].packages === 0
+                          ) {
+                            return prev;
+                          }
 
-                    const id = setInterval(removePackage, 300);
-                    removePackage(), setIntervalId(id);
-                  }}
-                  onMouseUp={() => clearInterval(intervalId)}
-                >
-                  <p>-</p>
-                </button>
+                          return {
+                            ...prev,
+                            packagesLeft: prev.packagesLeft + 1,
+                            boxes: prev.boxes.map((box, i) => {
+                              if (i === index) {
+                                return { packages: box.packages - 1 };
+                              }
+                              return box;
+                            }),
+                          };
+                        });
+                      }
 
-                <button
-                  onMouseDown={() => {
-                    function addPackage() {
-                      setGameData((prev) => {
-                        if (
-                          prev.packagesLeft === 0 ||
-                          prev.boxes[index].packages === 40
-                        ) {
-                          return prev;
-                        }
+                      const id = setInterval(removePackage, 300);
+                      removePackage(), setIntervalId(id);
+                    }}
+                    onMouseUp={() => clearInterval(intervalId)}
+                  >
+                    <p>-</p>
+                  </button>
 
-                        return {
-                          ...prev,
-                          packagesLeft: prev.packagesLeft - 1,
-                          boxes: prev.boxes.map((box, i) => {
-                            if (i === index) {
-                              return { packages: box.packages + 1 };
-                            }
-                            return box;
-                          }),
-                        };
-                      });
-                    }
+                  <button
+                    onMouseDown={() => {
+                      function addPackage() {
+                        setStageData((prev) => {
+                          if (
+                            prev.packagesLeft === 0 ||
+                            prev.boxes[index].packages === 40
+                          ) {
+                            return prev;
+                          }
 
-                    const id = setInterval(addPackage, 300);
-                    addPackage(), setIntervalId(id);
-                  }}
-                  onMouseUp={() => clearInterval(intervalId)}
-                >
-                  <p>+</p>
-                </button>
+                          return {
+                            ...prev,
+                            packagesLeft: prev.packagesLeft - 1,
+                            boxes: prev.boxes.map((box, i) => {
+                              if (i === index) {
+                                return { packages: box.packages + 1 };
+                              }
+                              return box;
+                            }),
+                          };
+                        });
+                      }
 
-                <p>{gameData.boxes[index].packages}</p>
+                      const id = setInterval(addPackage, 300);
+                      addPackage(), setIntervalId(id);
+                    }}
+                    onMouseUp={() => clearInterval(intervalId)}
+                  >
+                    <p>+</p>
+                  </button>
+                </div>
               </div>
             ))}
-
-            <p>Pakiety: {gameData.packagesLeft}</p>
           </div>
 
-          <button
-            onClick={() => {
-              // if (confirm("Czy na pewno chcesz zakończyć wcześniej tę rundę?")) {
-              //   setRemainingTime(0);
-              // }
-            }}
-          >
-            <p>Zakończ wcześniej</p>
-          </button>
+          <p className={styles.packages}>
+            {`Pakiety: [${stageData.packagesLeft}]`}
+          </p>
 
-          <button
-            onClick={() => {
-              // if (
-              //   confirm(
-              //     "Czy na pewno chcesz przedłużyć czas w tej rundzie o dodatkowe 30 sekund? Nie będziesz mógł użyć tej opcji ponownie."
-              //   )
-              // ) {
-              //   setRemainingTime((prev) => {
-              //     return prev + 30000;
-              //   });
-              // }
-            }}
-          >
-            <p>Przedłuż czas +30s</p>
-          </button>
+          <div className={styles.info}>
+            <p>{selectedQuestion.question}</p>
+
+            <div>
+              <button
+                onClick={() => {
+                  if (
+                    confirm(
+                      "Czy na pewno chcesz przedłużyć czas w tej rundzie o dodatkowe 30 sekund? Nie będziesz mógł użyć tej opcji ponownie."
+                    )
+                  ) {
+                    // setRemainingTime((prev) => {
+                    //   return prev + 30000;
+                    // });
+                  }
+                }}
+              >
+                <p>+30s</p>
+              </button>
+
+              <p>
+                {`${Math.floor(remainingTime / 60000)
+                  .toString()
+                  .padStart(2, "0")}:${Math.floor(
+                  (remainingTime % 60000) / 1000
+                )
+                  .toString()
+                  .padStart(2, "0")}`}
+              </p>
+            </div>
+          </div>
+
+          <audio src="/pnm/audio/question_timer.mp3" autoPlay />
         </div>
       );
     };

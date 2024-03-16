@@ -43,7 +43,7 @@
   background-color: #000000;
 
   button {
-    transition: all 0s, filter 0.2s;
+    transition: all 0s, filter 200ms;
   }
 
   .controls {
@@ -98,6 +98,11 @@
 // GAME START LAYOUT
 
 .startLayout {
+  aspect-ratio: 16/9;
+  background-image: url("/pnm/images/background.webp");
+  background-size: contain;
+  background-repeat: no-repeat;
+
   button {
     position: absolute;
     bottom: 13vw;
@@ -109,7 +114,7 @@
     border-radius: 1.5vw;
     background-color: rgba(#1a1c49, 0.8);
     backdrop-filter: blur(0.8vw);
-    transition: all 0s, filter 0.2s;
+    transition: all 0s, filter 200ms;
   }
 
   .background {
@@ -121,14 +126,10 @@
 // CATEGORY SELECT LAYOUT
 
 .categorySelect {
-  width: 100%;
-  height: 100%;
   aspect-ratio: 16/9;
-
   background-image: url("/pnm/images/board.webp");
   background-size: contain;
   background-repeat: no-repeat;
-  overflow: hidden;
 
   .selectButtons {
     position: absolute;
@@ -141,13 +142,16 @@
     gap: 5.5vw;
 
     button {
+      position: relative;
+      top: 0;
       padding: 0.8vw 4.5vw;
       width: 56vw;
       text-align: center;
       font-weight: bold;
       border-radius: 1.5vw;
       background-color: #cdd0e2;
-      transition: all 0s, filter 0.2s, bottom 0.15s ease-in-out;
+      transition: all 0s, filter 200ms, bottom 150ms ease-in-out,
+        transform 250ms ease-in, top 300ms ease-in;
 
       p {
         color: #060512;
@@ -155,6 +159,7 @@
         text-transform: uppercase;
         transform: scale(1, 0.9);
         text-shadow: #f6f7fc 0 0 3vw;
+        pointer-events: none;
       }
     }
   }
@@ -164,6 +169,27 @@
 
 .boxes {
   display: flex;
+  font-size: 3vw;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 1rem;
+
+  .answer {
+    font-weight: bold;
+    text-transform: uppercase;
+    transform: scale(1, 0.9);
+  }
+}
+
+.packages {
+  font-size: 2.2vw;
+}
+
+.info {
+  display: flex;
+  font-size: 2.5vw;
 }

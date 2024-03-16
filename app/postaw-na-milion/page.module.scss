@@ -111,7 +111,7 @@ $gradient: linear-gradient(45deg, #ebdddd, #e44343);
 
   input[type="radio"] {
     $size: 20px;
-    $color: #5bafdc;
+    $color: #5bb4f0;
 
     padding: calc($size / 7);
     width: $size;
@@ -120,7 +120,7 @@ $gradient: linear-gradient(45deg, #ebdddd, #e44343);
       no-repeat content-box;
     border-radius: 30px;
     border: calc($size / 9) solid #939393;
-    transition: 0.3s ease-in-out;
+    transition: 300ms ease-in-out;
     cursor: pointer;
 
     &:checked {

@@ -177,7 +177,7 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
 
 .checkbox {
   display: flex;
-  transition: all 0.2s ease;
+  transition: all 200ms ease;
   cursor: pointer;
 
   $color: #72a1ff;
@@ -209,12 +209,12 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
 
     &:checked + .check svg path {
       stroke-dashoffset: 60;
-      transition: all 0.3s;
+      transition: all 300ms;
     }
 
     &:checked + .check svg polyline {
       stroke-dashoffset: 42;
-      transition: stroke-dashoffset 0.3s 0.15s;
+      transition: stroke-dashoffset 300ms 150ms;
     }
   }
 
@@ -235,7 +235,7 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
       stroke-linejoin: round;
       stroke: var(--white);
       stroke-width: 1.5;
-      transition: all 0.2s ease;
+      transition: all 200ms ease;
 
       path {
         stroke-dasharray: 60;

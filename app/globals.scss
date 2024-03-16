@@ -107,7 +107,7 @@ header {
     display: flex;
     align-items: center;
     border-radius: 0.6rem;
-    transition: 0.15s ease-in-out;
+    transition: 150ms ease-in-out;
 
     &:hover {
       opacity: 100%;
@@ -183,7 +183,7 @@ button,
 select {
   border: var(--white-border);
   background-color: var(--primary);
-  transition: 0.1s filter ease-out;
+  transition: 100ms filter ease-out;
 
   &:hover {
     filter: contrast(0.8);
@@ -205,7 +205,7 @@ button,
   bottom: 0;
   padding: 0.65rem 2rem;
   border-radius: 0.4rem;
-  transition: 0.15s ease-in-out;
+  transition: 150ms ease-in-out;
   cursor: pointer;
 
   &:hover {
