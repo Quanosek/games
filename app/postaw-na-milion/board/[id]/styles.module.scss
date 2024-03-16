@@ -31,7 +31,7 @@
   text-align: center;
 }
 
-// PAGE COMPONENT STYLES
+// PLAY INTRO VIDEO
 
 .introVideo {
   z-index: 1;
@@ -95,6 +95,8 @@
   }
 }
 
+// GAME START LAYOUT
+
 .startLayout {
   button {
     position: absolute;
@@ -116,12 +118,14 @@
   }
 }
 
+// CATEGORY SELECT LAYOUT
+
 .categorySelect {
   width: 100%;
   height: 100%;
   aspect-ratio: 16/9;
 
-  background-image: url("/pnm/board.webp");
+  background-image: url("/pnm/images/board.webp");
   background-size: contain;
   background-repeat: no-repeat;
   overflow: hidden;
@@ -155,6 +159,8 @@
     }
   }
 }
+
+// GAME BOARD
 
 .boxes {
   display: flex;

@@ -53,7 +53,7 @@ export default function PnmPage() {
     <Layout>
       <div style={{ userSelect: "none" }}>
         <Image
-          src="/pnm/logo.webp"
+          src="/pnm/images/logo.webp"
           alt="Postaw na milion"
           width={475}
           height={314}
