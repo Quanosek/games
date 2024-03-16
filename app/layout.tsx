@@ -1,10 +1,10 @@
-import localFont from "next/font/local";
 import type { Metadata, Viewport } from "next";
 
 import "the-new-css-reset/css/reset.css";
 import "./globals.scss";
 
 // global font-face
+import localFont from "next/font/local";
 const Nexa = localFont({
   src: [
     {

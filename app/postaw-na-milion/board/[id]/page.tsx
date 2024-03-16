@@ -159,11 +159,17 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
   }
 
   if (data && !selectedQuestion) {
-    return data.map((question, index) => (
-      <button key={index} onClick={() => setQuestion(question)}>
-        <p>{question.category}</p>
-      </button>
-    ));
+    return (
+      <div className={styles.categorySelect}>
+        <div className={styles.selectButtons}>
+          {data.map((question, index) => (
+            <button key={index} onClick={() => setQuestion(question)}>
+              <p>{question.category}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   if (selectedQuestion) {
