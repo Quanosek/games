@@ -12,6 +12,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
   const router = useRouter();
 
   const [data, setData] = useState<Data[]>();
+
   const [gameData, setGameData] = useState({
     packagesLeft: 40,
     boxes: new Array(4).fill({ packages: 0 }),
@@ -24,6 +25,20 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
 
     if (data) setData(data);
   }, [id]);
+
+  // video behavior
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoPlayed, setVideoPlayed] = useState<boolean>();
+  const [hiddenIntro, setHiddenIntro] = useState(false);
+
+  const hideVideo = () => {
+    setHiddenIntro(true);
+
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.style.display = "none";
+    }
+  };
 
   // mouse behavior
   const [alwaysShowCursor, setAlwaysShowCursor] = useState(false);
@@ -50,17 +65,8 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
     return () => document.removeEventListener("mousemove", mouseMoveEvent);
   }, [alwaysShowCursor]);
 
-  // video behavior
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [hiddenIntro, setHiddenIntro] = useState(false);
-
-  const hideVideo = () => {
-    setHiddenIntro(true);
-
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.style.display = "none";
-    }
+  const hideElement = (elem: HTMLElement) => {
+    elem.style.display = "none";
   };
 
   // game params
@@ -88,39 +94,53 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
   if (id === 0) {
     return (
       <>
-        <div
-          className={styles.startIntro}
-          style={{
-            display: hiddenIntro ? "none" : "block",
-            cursor: showCursor ? "default" : "none",
-          }}
-        >
+        {!hiddenIntro && (
           <div
-            className={styles.skipButton}
-            style={{ display: showCursor ? "block" : "none" }}
-            onMouseEnter={() => setAlwaysShowCursor(true)}
-            onMouseLeave={() => setAlwaysShowCursor(false)}
+            className={styles.introVideo}
+            style={{ cursor: showCursor ? "default" : "none" }}
           >
-            <button onClick={hideVideo}>
-              <p>Pomiń czołówkę</p>
-            </button>
+            <div className={styles.controls}>
+              {!videoPlayed && (
+                <button
+                  className={styles.playButton}
+                  onClick={() => videoRef.current?.play()}
+                >
+                  <Image
+                    className="icon"
+                    src="/icons/play.svg"
+                    alt="Odtwórz"
+                    width={100}
+                    height={100}
+                  />
+                </button>
+              )}
+
+              {(!videoPlayed || (videoPlayed && showCursor)) && (
+                <div
+                  className={styles.skipButton}
+                  onMouseEnter={() => setAlwaysShowCursor(true)}
+                  onMouseLeave={() => setAlwaysShowCursor(false)}
+                >
+                  <button onClick={hideVideo}>
+                    <p>Pomiń czołówkę</p>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <video
+              ref={videoRef}
+              src="/pnm/intro.mp4"
+              onEnded={hideVideo}
+              onPlay={() => setVideoPlayed(true)}
+            >
+              <source src="/pnm/intro.mp4" type="video/mp4" />
+              Twoja przeglądarka nie obsługuje odtwarzacza wideo.
+            </video>
           </div>
+        )}
 
-          <video
-            ref={videoRef}
-            src="/pnm/intro.mp4"
-            autoPlay
-            onEnded={hideVideo}
-          >
-            <source src="/pnm/intro.mp4" type="video/mp4" />
-            Twoja przeglądarka nie obsługuje odtwarzacza wideo.
-          </video>
-        </div>
-
-        <div
-          className={styles.startLayout}
-          style={{ display: hiddenIntro ? "flex" : "none" }}
-        >
+        <div className={styles.startLayout}>
           <button onClick={() => router.push("/postaw-na-milion/board/1")}>
             <p>Start</p>
           </button>
