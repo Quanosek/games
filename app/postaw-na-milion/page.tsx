@@ -320,6 +320,7 @@ export default function PnmPage() {
             {/* add new board button */}
             <button
               type="button"
+              className={styles.addButton}
               onClick={() => {
                 if (
                   JSON.stringify(data[data.length - 1]) ===
@@ -340,7 +341,8 @@ export default function PnmPage() {
                 }, 1);
               }}
             >
-              <p>{"➕ Kolejny etap"}</p>
+              <Image alt="+" src="/icons/plus.svg" width={18} height={18} />
+              <p>Kolejny etap</p>
             </button>
           </div>
         </form>

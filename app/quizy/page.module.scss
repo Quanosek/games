@@ -102,19 +102,27 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
   width: 16rem;
   text-align: center;
 
-  .default {
+  button {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+
+    img {
+      filter: invert(1);
+    }
   }
 
   .list {
     position: absolute;
     top: 95%;
+    width: 100%;
     border: var(--white-border);
     border-radius: 0 0 0.4rem 0.4rem;
     overflow: hidden;
 
     button {
-      width: 100%;
       border: none;
       border-radius: 0;
       position: static;

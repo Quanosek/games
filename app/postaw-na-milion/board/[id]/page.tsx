@@ -183,25 +183,35 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
       const [intervalId, setIntervalId] = useState<NodeJS.Timeout>();
 
       useEffect(() => {
-        if (!selectedQuestion) return;
-
         const interval = setInterval(() => {
           setRemainingTime((prevTime) => {
-            prevTime -= 1_000;
+            prevTime -= 100;
 
             if (prevTime === 0) clearInterval(interval);
             return prevTime;
           });
-        }, 1_000);
+        }, 100);
 
         return () => clearInterval(interval);
       }, []);
+
+      const timerRender = () => {
+        const minutes = Math.floor((remainingTime / (1000 * 60)) % 60);
+        const seconds = Math.floor((remainingTime / 1000) % 60);
+        const milliseconds = (remainingTime % 1000) / 100;
+
+        const showMinutes = minutes.toString().padStart(2, "0");
+        const showSeconds = seconds.toString().padStart(2, "0");
+        const showMilliseconds = milliseconds.toString().padStart(1, "0");
+
+        return `${showMinutes}:${showSeconds}.${showMilliseconds}`;
+      };
 
       return (
         <div>
           <div className={styles.boxes}>
             {selectedQuestion.answers.map((answer, index) => (
-              <div className={styles.box} key={index}>
+              <div key={index} className={styles.box}>
                 <p className={styles.answer}>{answer.value}</p>
 
                 <p>{`[${stageData.boxes[index].packages}]`}</p>
@@ -275,9 +285,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
             ))}
           </div>
 
-          <p className={styles.packages}>
-            {`Pakiety: [${stageData.packagesLeft}]`}
-          </p>
+          <p className={styles.packages}>{`[${stageData.packagesLeft}]`}</p>
 
           <div className={styles.info}>
             <p>{selectedQuestion.question}</p>
@@ -299,15 +307,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
                 <p>+30s</p>
               </button>
 
-              <p>
-                {`${Math.floor(remainingTime / 60000)
-                  .toString()
-                  .padStart(2, "0")}:${Math.floor(
-                  (remainingTime % 60000) / 1000
-                )
-                  .toString()
-                  .padStart(2, "0")}`}
-              </p>
+              <p>{timerRender()}</p>
             </div>
           </div>
 

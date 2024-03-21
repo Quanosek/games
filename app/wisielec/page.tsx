@@ -341,6 +341,7 @@ export default function WisielecPage() {
           {/* add new board button */}
           <button
             type="button"
+            className={styles.addButton}
             onClick={() => {
               if (
                 JSON.stringify(data[data.length - 1]) ===
@@ -361,7 +362,8 @@ export default function WisielecPage() {
               }, 1);
             }}
           >
-            <p>{"➕ Dodaj hasło"}</p>
+            <Image alt="+" src="/icons/plus.svg" width={18} height={18} />
+            <p>Dodaj hasło</p>
           </button>
         </div>
       )}

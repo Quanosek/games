@@ -162,10 +162,10 @@ export default function WisielecBoardID({
                   style={{
                     color: remainingTime === 0 ? "red" : "",
                   }}
-                >{`${Math.floor(remainingTime / 60000)
+                >{`${Math.floor(remainingTime / 60_000)
                   .toString()
                   .padStart(2, "0")}:${Math.floor(
-                  (remainingTime % 60000) / 1000
+                  (remainingTime % 60_000) / 1_000
                 )
                   .toString()
                   .padStart(2, "0")}`}</span>

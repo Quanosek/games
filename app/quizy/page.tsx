@@ -405,12 +405,20 @@ export default function QuizyPage() {
 
             {/* add new board button */}
             <div className={styles.addQuestionButton}>
-              <button
-                type="button"
-                className={styles.default}
-                onClick={() => setShowButtonsList(true)}
-              >
-                <p>{data.length ? "➕ Dodaj..." : "✨ Rozpocznij!"}</p>
+              <button type="button" onClick={() => setShowButtonsList(true)}>
+                {data.length ? (
+                  <>
+                    <Image
+                      alt="+"
+                      src="/icons/plus.svg"
+                      width={18}
+                      height={18}
+                    />
+                    <p>Dodaj...</p>
+                  </>
+                ) : (
+                  <p>{"✨ Rozpocznij!"}</p>
+                )}
               </button>
 
               <div
