@@ -43,7 +43,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
 
       useEffect(() => {
         const mouseMoveEvent = (e: MouseEvent) => {
-          if ((e.movementX && e.movementY) == 0) return;
+          if ((e.movementX && e.movementY) === 0) return;
 
           setShowCursor(true);
           clearTimeout(cursorHideTimeout.current);
@@ -51,7 +51,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
           if (!alwaysShowCursor) {
             cursorHideTimeout.current = setTimeout(
               () => setShowCursor(false),
-              1500
+              1_500
             );
           }
         };
@@ -172,30 +172,46 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
   // GAME BOARD
   if (selectedQuestion) {
     const GameLayout = () => {
-      // current stage data
+      // defining current stage data
       const [stageData, setStageData] = useState({
         packagesLeft: 40,
         boxes: new Array(4).fill({ packages: 0 }),
       });
 
-      // time counter
-      const [remainingTime, setRemainingTime] = useState(60_000);
-      const [intervalId, setIntervalId] = useState<NodeJS.Timeout>();
+      // control timer
+      const [counter, setCounter] = useState(0);
 
       useEffect(() => {
+        const timerInterval = setInterval(() => {
+          setCounter((prevTime) => {
+            prevTime += 1;
+            if (prevTime === 6) clearInterval(timerInterval);
+            return prevTime;
+          });
+        }, 1_250);
+
+        return () => clearInterval(timerInterval);
+      }, []);
+
+      // 60 seconds clock
+      const [remainingTime, setRemainingTime] = useState(60_000);
+
+      useEffect(() => {
+        if (counter !== 6) return;
+
         const interval = setInterval(() => {
           setRemainingTime((prevTime) => {
             prevTime -= 100;
-
             if (prevTime === 0) clearInterval(interval);
             return prevTime;
           });
         }, 100);
 
         return () => clearInterval(interval);
-      }, []);
+      }, [counter]);
 
-      const timerRender = () => {
+      // time counter display
+      const Clock = () => {
         const minutes = Math.floor((remainingTime / (1000 * 60)) % 60);
         const seconds = Math.floor((remainingTime / 1000) % 60);
         const milliseconds = (remainingTime % 1000) / 100;
@@ -204,15 +220,29 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
         const showSeconds = seconds.toString().padStart(2, "0");
         const showMilliseconds = milliseconds.toString().padStart(1, "0");
 
-        return `${showMinutes}:${showSeconds}.${showMilliseconds}`;
+        return (
+          <div style={{ color: remainingTime <= 10_000 ? "red" : "" }}>
+            <p>{`${showMinutes}:${showSeconds}.${showMilliseconds}`}</p>
+          </div>
+        );
       };
+
+      // money packages interval on button hold
+      const [intervalId, setIntervalId] = useState<NodeJS.Timeout>();
 
       return (
         <div>
           <div className={styles.boxes}>
             {selectedQuestion.answers.map((answer, index) => (
-              <div key={index} className={styles.box}>
-                <p className={styles.answer}>{answer.value}</p>
+              <div
+                key={index}
+                className={styles.box}
+                style={{
+                  opacity: counter >= index + 1 ? 1 : 0,
+                  transition: "opacity 0.3s ease-in-out",
+                }}
+              >
+                <h2 className={styles.answer}>{answer.value}</h2>
 
                 <p>{`[${stageData.boxes[index].packages}]`}</p>
 
@@ -287,27 +317,25 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
 
           <p className={styles.packages}>{`[${stageData.packagesLeft}]`}</p>
 
-          <div className={styles.info}>
+          <div
+            className={styles.info}
+            style={{
+              opacity: counter >= 5 ? 1 : 0,
+              transition: "opacity 0.3s ease-in-out",
+            }}
+          >
             <p>{selectedQuestion.question}</p>
 
             <div>
-              <button
-                onClick={() => {
-                  if (
-                    confirm(
-                      "Czy na pewno chcesz przedłużyć czas w tej rundzie o dodatkowe 30 sekund? Nie będziesz mógł użyć tej opcji ponownie."
-                    )
-                  ) {
-                    // setRemainingTime((prev) => {
-                    //   return prev + 30000;
-                    // });
-                  }
-                }}
-              >
+              <button onClick={() => {}}>
                 <p>+30s</p>
               </button>
 
-              <p>{timerRender()}</p>
+              <button onClick={() => {}}>
+                <p>stop</p>
+              </button>
+
+              <Clock />
             </div>
           </div>
 

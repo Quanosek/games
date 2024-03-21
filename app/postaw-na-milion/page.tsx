@@ -310,7 +310,7 @@ export default function PnmPage() {
                         </div>
                       </div>
 
-                      {j == 0 && <hr />}
+                      {j === 0 && <hr />}
                     </React.Fragment>
                   ))}
                 </div>
