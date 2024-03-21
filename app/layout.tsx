@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 
   icons: {
     icon: ["/favicons/game_die.ico", "/favicons/game_die.svg"],
-    apple: "/favicons/game_die-icon.png",
+    apple: "/favicons/game_die.png",
   },
 };
 
