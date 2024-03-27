@@ -128,7 +128,9 @@ export default function WisielecBoardID({
       <input
         type="text"
         className={styles.globalKeyboard}
-        ref={(input) => input && input.focus()}
+        ref={(input: HTMLInputElement) => {
+          if (input) input.focus();
+        }}
         onBlur={(e) => e.target.focus()}
         onChange={(e) => {
           if (endGame) return;

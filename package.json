@@ -1,5 +1,5 @@
 {
-  "version": "0.2.3",
+  "version": "0.2.4",
   "name": "games",
   "description": "Complex web-based library of party-games",
   "scripts": {
@@ -17,7 +17,7 @@
     "react-canvas-confetti": "^2.0.7",
     "react-dom": "^18",
     "sass": "^1.72.0",
-    "sharp": "^0.33.2",
+    "sharp": "^0.33.3",
     "the-new-css-reset": "^1.11.2"
   },
   "devDependencies": {
