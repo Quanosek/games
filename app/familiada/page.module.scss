@@ -16,12 +16,10 @@
 }
 
 .container {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .board {
@@ -142,8 +140,23 @@
 
   div {
     display: flex;
-    gap: 1rem;
+    gap: 0.8rem;
   }
+
+  .controls button {
+    padding: 6px 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+.addButton {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .credits {

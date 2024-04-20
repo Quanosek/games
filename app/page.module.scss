@@ -6,8 +6,11 @@
   gap: 1rem;
 
   a {
-    width: 14rem;
+    padding: 0.8rem;
+    width: 15rem;
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 5px;
   }
 }

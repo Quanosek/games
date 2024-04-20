@@ -118,23 +118,21 @@ export default function FamiliadaPage() {
       </button>
 
       {loading ? (
-        // loading indicator
         <div className="loading">
           <p>Trwa ładowanie...</p>
         </div>
       ) : (
         <div className={styles.container}>
           {[...Array(data.length)].map((_, index) => (
-            <div className={styles.board} key={index}>
+            <div key={index} className={styles.board}>
               {/* question input */}
               <input
                 name={`${index}-question`}
-                type="text"
-                autoComplete="off"
                 placeholder={`Pytanie ${index + 1}`}
-                value={data[index].question || ""}
+                autoComplete="off"
                 maxLength={128}
                 className={styles.question}
+                value={data[index].question || ""}
                 onChange={(e) => {
                   setData((prev) => {
                     const newData = [...prev];
@@ -148,14 +146,14 @@ export default function FamiliadaPage() {
                 {/* input form */}
                 <div className={styles.answers}>
                   {data[index].answers.map((answer, i) => (
-                    <div className={styles.list} key={i}>
+                    <div key={i} className={styles.list}>
                       {/* answer value input */}
                       <div className={styles.answer}>
                         <p>Odpowiedź {i + 1}:</p>
 
                         <input
-                          name={`${index}-${i}-answer`}
                           type="text"
+                          name={`${index}-${i}-answer`}
                           autoComplete="off"
                           maxLength={17} // 17 characters board limit
                           value={answer.value || ""}
@@ -182,11 +180,11 @@ export default function FamiliadaPage() {
                         <p>Liczba punktów:</p>
 
                         <input
-                          name={`${index}-${i}-points`}
                           type="text"
+                          name={`${index}-${i}-points`}
                           autoComplete="off"
-                          value={answer.points || ""}
                           maxLength={2} // 2 characters board limit
+                          value={answer.points || ""}
                           onChange={(e) => {
                             const points = Number(
                               e.target.value.replace(/[^0-9]/g, "")
@@ -208,7 +206,7 @@ export default function FamiliadaPage() {
                   ))}
                 </div>
 
-                {/* preview board of answers */}
+                {/* board preview */}
                 <div className={`${dottedFont.className} ${styles.preview}`}>
                   {preview[index]?.answers
                     .filter((el) => el.value && el.points)
@@ -216,7 +214,6 @@ export default function FamiliadaPage() {
                       const answer = el.value.split("");
                       const points = FormatPoints(el.points);
 
-                      // board layout
                       return (
                         <div key={i}>
                           <p>{i + 1}</p>
@@ -238,9 +235,9 @@ export default function FamiliadaPage() {
                 </div>
               </div>
 
-              {/* bottom buttons controls */}
+              {/* bottom buttons */}
               <div className={styles.buttons}>
-                <div>
+                <div className={styles.controls}>
                   <button
                     className={index === 0 ? "disabled" : ""}
                     tabIndex={index === 0 ? -1 : 0}
@@ -257,7 +254,15 @@ export default function FamiliadaPage() {
                       });
                     }}
                   >
-                    <p>{"⬆️ W górę"}</p>
+                    <Image
+                      className="icon"
+                      alt="arrow"
+                      src="/icons/arrow.svg"
+                      width={22}
+                      height={22}
+                      draggable={false}
+                    />
+                    <p>W górę</p>
                   </button>
 
                   <button
@@ -276,13 +281,24 @@ export default function FamiliadaPage() {
                       });
                     }}
                   >
-                    <p>{"⬇️ W dół"}</p>
+                    <Image
+                      style={{ rotate: "180deg" }}
+                      className="icon"
+                      alt="arrow"
+                      src="/icons/arrow.svg"
+                      width={22}
+                      height={22}
+                      draggable={false}
+                    />
+                    <p>W dół</p>
                   </button>
 
                   <button
                     onClick={() => {
                       if (!emptyQuestionCheck(data[index])) {
-                        if (!confirm("Czy na pewno chcesz usunąć pytanie?")) {
+                        if (
+                          !confirm("Czy na pewno chcesz wyczyścić pytanie?")
+                        ) {
                           return;
                         }
 
@@ -302,7 +318,15 @@ export default function FamiliadaPage() {
                       }
                     }}
                   >
-                    <p>{"🧹 Usuń"}</p>
+                    <Image
+                      className="icon"
+                      alt="delete"
+                      src="/icons/trashcan.svg"
+                      width={22}
+                      height={22}
+                      draggable={false}
+                    />
+                    <p>Usuń</p>
                   </button>
                 </div>
 
@@ -372,9 +396,9 @@ export default function FamiliadaPage() {
             </div>
           ))}
 
-          {/* add question button */}
+          {/* add new board button */}
           <button
-            style={{ marginTop: "1rem" }}
+            className={styles.addButton}
             onClick={() => {
               if (emptyQuestionCheck(data[data.length - 1])) {
                 return alert(
@@ -392,7 +416,15 @@ export default function FamiliadaPage() {
               }, 1);
             }}
           >
-            <p>{"➕ Dodaj planszę"}</p>
+            <Image
+              className="icon"
+              alt="+"
+              src="/icons/plus.svg"
+              width={18}
+              height={18}
+              draggable={false}
+            />
+            <p>Dodaj planszę</p>
           </button>
         </div>
       )}

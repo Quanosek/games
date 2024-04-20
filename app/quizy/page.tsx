@@ -40,15 +40,52 @@ export default function QuizyPage() {
     if (!loading) localStorage.setItem("quizy", JSON.stringify(data));
   }, [loading, data]);
 
-  // board type to user-friendly string
+  // board type description
   const boardType = (type: Data["type"]) => {
-    switch (type) {
-      case "closed":
-        return "🅰️ Pytanie zamknięte";
-      case "gap":
-        return "🔍 Uzupełnij lukę";
-      case "open":
-        return "💬 Pytanie otwarte";
+    if (type === "closed") {
+      return (
+        <>
+          <Image
+            className="icon"
+            alt="closed"
+            src="/icons/a_button.svg"
+            width={20}
+            height={20}
+            draggable={false}
+          />
+          <p>Pytanie zamknięte</p>
+        </>
+      );
+    }
+    if (type === "gap") {
+      return (
+        <>
+          <Image
+            className="icon"
+            alt="gap"
+            src="/icons/magnifying_glass.svg"
+            width={20}
+            height={20}
+            draggable={false}
+          />
+          <p>Uzupełnij lukę</p>
+        </>
+      );
+    }
+    if (type === "open") {
+      return (
+        <>
+          <Image
+            className="icon"
+            alt="open"
+            src="/icons/thought_balloon.svg"
+            width={20}
+            height={20}
+            draggable={false}
+          />
+          <p>Pytanie otwarte</p>
+        </>
+      );
     }
   };
 
@@ -64,19 +101,18 @@ export default function QuizyPage() {
 
   // "Pytanie zamknięte" board
   const ClosedBoard = (i: number) => (
-    <>
-      {/* question input */}
-      <div className={styles.value}>
-        <p>Pyt:</p>
+    <div className={styles.inputs}>
+      <div>
+        <p className={styles.name}>Pytanie:</p>
 
         <input
-          name={`${i}-question`}
           type="text"
+          name={`${i}-question`}
+          placeholder="Wpisz treść pytania"
           autoComplete="off"
-          placeholder="Treść pytania"
-          value={data[i].question || ""}
           maxLength={128}
           className={styles.question}
+          value={data[i].question || ""}
           onChange={(e) => {
             setData((prev) => {
               const newData = [...prev];
@@ -88,111 +124,117 @@ export default function QuizyPage() {
         />
       </div>
 
-      {/* answers grid */}
-      <div className={styles.grid}>
-        {data[i].answers.map((answer, j) => (
-          <div className={styles.answers} key={j}>
-            {/* answer value input */}
-            <div
-              className={styles.value}
-              style={{
-                // disable if prev or curr answer is empty
-                pointerEvents:
-                  j === 0 ||
-                  data[i].answers[j - 1].value ||
-                  data[i].answers[j].value
-                    ? "unset"
-                    : "none",
-              }}
-            >
-              <p>{`${["A", "B", "C", "D"][j]}:`}</p>
+      <div>
+        <p className={styles.name}>Odpowiedzi (co najmniej jedna poprawna):</p>
 
-              <input
-                name={`${i}-${j}-answer`}
-                type="text"
-                autoComplete="off"
-                placeholder="Odpowiedź"
-                value={answer.value || ""}
-                maxLength={64}
-                onChange={(e) => {
-                  setData((prev) => {
-                    const newData = [...prev];
-                    newData[i].answers[j] = {
-                      ...newData[i].answers[j],
-                      value: e.target.value,
-                    };
-                    return newData;
-                  });
-                }}
-                onBlur={(e) => {
-                  // unchecked if answer is empty
-                  if (!e.target.value) {
-                    setData((prev) => {
-                      const newData = [...prev];
-                      newData[i].answers[j] = {
-                        ...newData[i].answers[j],
-                        checked: false,
-                      };
-                      return newData;
-                    });
-                  }
-                }}
-                required={j < 2}
-              />
-            </div>
-
-            {/* correct answer checkbox */}
-            <div className={styles.checkboxHandler}>
+        <div className={styles.grid}>
+          {data[i].answers.map((answer, j) => (
+            <div key={j} className={styles.answers}>
+              {/* answer value input */}
               <div
-                className={styles.checkbox}
+                className={styles.value}
                 style={{
-                  // disable if answer is empty
-                  pointerEvents: answer.value ? "unset" : "none",
+                  // disable if prev or curr answer is empty
+                  pointerEvents:
+                    j === 0 ||
+                    data[i].answers[j - 1].value ||
+                    data[i].answers[j].value
+                      ? "unset"
+                      : "none",
                 }}
               >
+                <p>{`${["A", "B", "C", "D"][j]}:`}</p>
+
                 <input
-                  id={`${i}-${j}-checkbox`}
-                  type="checkbox"
-                  checked={answer.checked || false}
+                  name={`${i}-${j}-answer`}
+                  type="text"
+                  autoComplete="off"
+                  placeholder="Wpisz odpowiedź"
+                  value={answer.value || ""}
+                  maxLength={64}
                   onChange={(e) => {
                     setData((prev) => {
                       const newData = [...prev];
                       newData[i].answers[j] = {
                         ...newData[i].answers[j],
-                        checked: e.target.checked,
+                        value: e.target.value,
                       };
                       return newData;
                     });
                   }}
+                  onBlur={(e) => {
+                    // unchecked if answer is empty
+                    if (!e.target.value) {
+                      setData((prev) => {
+                        const newData = [...prev];
+                        newData[i].answers[j] = {
+                          ...newData[i].answers[j],
+                          checked: false,
+                        };
+                        return newData;
+                      });
+                    }
+                  }}
+                  required={j < 2}
                 />
+              </div>
 
-                <label htmlFor={`${i}-${j}-checkbox`} className={styles.check}>
-                  <p>poprawna odpowiedź</p>
+              {/* correct answer checkbox */}
+              <div className={styles.checkboxHandler}>
+                <div
+                  className={styles.checkbox}
+                  style={{
+                    // disable if answer is empty
+                    pointerEvents: answer.value ? "unset" : "none",
+                  }}
+                >
+                  <input
+                    id={`${i}-${j}-checkbox`}
+                    type="checkbox"
+                    checked={answer.checked || false}
+                    onChange={(e) => {
+                      setData((prev) => {
+                        const newData = [...prev];
+                        newData[i].answers[j] = {
+                          ...newData[i].answers[j],
+                          checked: e.target.checked,
+                        };
+                        return newData;
+                      });
+                    }}
+                  />
 
-                  <svg width="18px" height="18px" viewBox="0 0 18 18">
-                    <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
-                    <polyline points="1 9 7 14 15 4"></polyline>
-                  </svg>
-                </label>
+                  <label
+                    htmlFor={`${i}-${j}-checkbox`}
+                    className={styles.check}
+                  >
+                    <p>poprawna odpowiedź</p>
+
+                    <svg width="18px" height="18px" viewBox="0 0 18 18">
+                      <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
+                      <polyline points="1 9 7 14 15 4"></polyline>
+                    </svg>
+                  </label>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </>
+    </div>
   );
 
   // "Uzupełnij lukę" board
   const GapBoard = (index: number) => (
     <>
       <input
-        name={`${index}-question`}
         type="text"
+        name={`${index}-question`}
+        placeholder="Dodaj zdanie do uzupełnienia"
         autoComplete="off"
-        placeholder="Zdanie do uzupełnienia"
+        maxLength={128}
         style={{ marginBottom: "0.5rem" }}
         value={data[index].question || ""}
-        maxLength={128}
         onChange={(e) => {
           setData((prev) => {
             const newData = [...prev];
@@ -203,7 +245,7 @@ export default function QuizyPage() {
         required
       />
 
-      <p className={styles.howTo}>
+      <p className={styles.instruction}>
         Umieść ukryte fragmenty w kwadratowych nawiasach. Na przykład:{" "}
         {`"Ala ma [kota]"`}.
       </p>
@@ -214,16 +256,16 @@ export default function QuizyPage() {
   const OpenBoard = (index: number) => (
     <div className={styles.inputs}>
       <div>
-        <p>Pytanie:</p>
+        <p className={styles.name}>Pytanie:</p>
 
         <input
-          name={`${index}-question`}
           type="text"
-          autoComplete="off"
+          name={`${index}-question`}
           placeholder="Wpisz treść pytania"
-          value={data[index].question || ""}
+          autoComplete="off"
           maxLength={128}
           className={styles.question}
+          value={data[index].question || ""}
           onChange={(e) => {
             setData((prev) => {
               const newData = [...prev];
@@ -239,13 +281,13 @@ export default function QuizyPage() {
         <p>Odpowiedź:</p>
 
         <input
-          name={`${index}-answer`}
           type="text"
-          autoComplete="off"
+          name={`${index}-answer`}
           placeholder="Wpisz poprawną odpowiedź"
-          value={data[index].answers[0].value || ""}
+          autoComplete="off"
           maxLength={128}
           className={styles.answer}
+          value={data[index].answers[0].value || ""}
           onChange={(e) => {
             setData((prev) => {
               const newData = [...prev];
@@ -262,12 +304,11 @@ export default function QuizyPage() {
   // main page render
   return (
     <Layout>
-      <h1 className={styles.title}>
+      <h1 className={styles.pageTitle}>
         Stwórz własny <span>Quiz</span>
       </h1>
 
       {loading ? (
-        // loading indicator
         <div className="loading">
           <p>Trwa ładowanie...</p>
         </div>
@@ -280,8 +321,8 @@ export default function QuizyPage() {
         >
           {/* start game button */}
           {data.length > 0 && (
-            <button type="submit">
-              <p>{"▶️ Rozpocznij grę!"}</p>
+            <button type="submit" className={styles.defaultButton}>
+              <p>Uruchom grę</p>
             </button>
           )}
 
@@ -291,9 +332,12 @@ export default function QuizyPage() {
               const type = data[index].type;
 
               return (
-                <div className={styles.board} key={index}>
+                <div key={index} className={styles.board}>
                   <div className={styles.controls}>
-                    <p>{`${index + 1}/${data.length} • ${boardType(type)}`}</p>
+                    <div className={styles.description}>
+                      <p>{`${index + 1}/${data.length} •`}</p>
+                      <div>{boardType(type)}</div>
+                    </div>
 
                     <div className={styles.buttons}>
                       <button
@@ -332,12 +376,12 @@ export default function QuizyPage() {
                         }}
                       >
                         <Image
-                          src="/icons/trashcan.svg"
+                          className="icon"
                           alt="delete"
+                          src="/icons/trashcan.svg"
                           width={20}
                           height={20}
                           draggable={false}
-                          className="icon"
                         />
                       </button>
 
@@ -357,13 +401,13 @@ export default function QuizyPage() {
                         }}
                       >
                         <Image
-                          src="/icons/arrow.svg"
+                          style={{ rotate: "180deg" }}
+                          className="icon"
                           alt="arrow"
+                          src="/icons/arrow.svg"
                           width={20}
                           height={20}
                           draggable={false}
-                          className="icon"
-                          style={{ rotate: "180deg" }}
                         />
                       </button>
 
@@ -383,12 +427,12 @@ export default function QuizyPage() {
                         }}
                       >
                         <Image
-                          src="/icons/arrow.svg"
+                          className="icon"
                           alt="arrow"
+                          src="/icons/arrow.svg"
                           width={20}
                           height={20}
                           draggable={false}
-                          className="icon"
                         />
                       </button>
                     </div>
@@ -404,26 +448,32 @@ export default function QuizyPage() {
             })}
 
             {/* add new board button */}
-            <div className={styles.addQuestionButton}>
-              <button type="button" onClick={() => setShowButtonsList(true)}>
-                {data.length ? (
-                  <>
-                    <Image
-                      alt="+"
-                      src="/icons/plus.svg"
-                      width={18}
-                      height={18}
-                    />
-                    <p>Dodaj...</p>
-                  </>
-                ) : (
-                  <p>{"✨ Rozpocznij!"}</p>
-                )}
-              </button>
+            <div className={styles.addButton}>
+              {data.length ? (
+                <button type="button" onClick={() => setShowButtonsList(true)}>
+                  <Image
+                    className="icon"
+                    alt="+"
+                    src="/icons/plus.svg"
+                    width={18}
+                    height={18}
+                    draggable={false}
+                  />
+                  <p>Dodaj...</p>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.defaultButton}
+                  onClick={() => setShowButtonsList(true)}
+                >
+                  <p>Rozpocznij</p>
+                </button>
+              )}
 
               <div
-                style={{ display: showButtonsList ? "block" : "none" }}
                 className={styles.list}
+                style={{ display: showButtonsList ? "block" : "none" }}
               >
                 <button
                   type="button"

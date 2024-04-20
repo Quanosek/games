@@ -67,12 +67,11 @@ export default function WisielecPage() {
   // main page render
   return (
     <Layout>
-      <h1 className={styles.title}>
+      <h1 className={styles.pageTitle}>
         Gra w <span>wisielca</span>
       </h1>
 
       {loading ? (
-        // loading indicator
         <div className="loading">
           <p>Trwa ładowanie...</p>
         </div>
@@ -93,7 +92,7 @@ export default function WisielecPage() {
               }}
             >
               <div className={styles.controls}>
-                <p>{`Plansza: ${index + 1}/${data.length}`}</p>
+                <p>{`${index + 1}/${data.length}`}</p>
 
                 <div className={styles.buttons}>
                   <button
@@ -122,12 +121,12 @@ export default function WisielecPage() {
                     }}
                   >
                     <Image
-                      src="/icons/trashcan.svg"
+                      className="icon"
                       alt="delete"
+                      src="/icons/trashcan.svg"
                       width={20}
                       height={20}
                       draggable={false}
-                      className="icon"
                     />
                   </button>
 
@@ -147,13 +146,13 @@ export default function WisielecPage() {
                     }}
                   >
                     <Image
-                      src="/icons/arrow.svg"
+                      style={{ rotate: "180deg" }}
+                      className="icon"
                       alt="arrow"
+                      src="/icons/arrow.svg"
                       width={20}
                       height={20}
                       draggable={false}
-                      className="icon"
-                      style={{ rotate: "180deg" }}
                     />
                   </button>
 
@@ -173,19 +172,19 @@ export default function WisielecPage() {
                     }}
                   >
                     <Image
-                      src="/icons/arrow.svg"
+                      className="icon"
                       alt="arrow"
+                      src="/icons/arrow.svg"
                       width={20}
                       height={20}
                       draggable={false}
-                      className="icon"
                     />
                   </button>
 
                   <p>{"•"}</p>
 
                   <button type="submit">
-                    <p>Zagraj!</p>
+                    <p>Zagraj</p>
                   </button>
                 </div>
               </div>
@@ -246,15 +245,15 @@ export default function WisielecPage() {
                 {/* input values */}
                 <div className={styles.inputs}>
                   <div>
-                    <p>Kategoria:</p>
+                    <p className={styles.name}>Kategoria:</p>
 
                     <input
-                      name={`${index}-category`}
                       type="text"
-                      autoComplete="off"
+                      name={`${index}-category`}
                       placeholder="Wpisz kategorię"
-                      value={data[index].category || ""}
+                      autoComplete="off"
                       maxLength={64}
+                      value={data[index].category || ""}
                       onChange={(e) => {
                         setData((prev) => {
                           const newData = [...prev];
@@ -267,15 +266,15 @@ export default function WisielecPage() {
                   </div>
 
                   <div>
-                    <p>Hasło:</p>
+                    <p className={styles.name}>Hasło:</p>
 
                     <input
-                      name={`${index}-phrase`}
                       type="text"
-                      autoComplete="off"
+                      name={`${index}-phrase`}
                       placeholder="Wpisz hasło do odgadnięcia"
-                      value={data[index].phrase || ""}
+                      autoComplete="off"
                       maxLength={128}
+                      value={data[index].phrase || ""}
                       onChange={(e) => {
                         // prevent double space
                         if (e.target.value.includes("  ")) {
@@ -362,7 +361,14 @@ export default function WisielecPage() {
               }, 1);
             }}
           >
-            <Image alt="+" src="/icons/plus.svg" width={18} height={18} />
+            <Image
+              className="icon"
+              alt="+"
+              src="/icons/plus.svg"
+              width={18}
+              height={18}
+              draggable={false}
+            />
             <p>Dodaj hasło</p>
           </button>
         </div>

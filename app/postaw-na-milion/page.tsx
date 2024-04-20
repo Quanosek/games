@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 
 import styles from "./page.module.scss";
 import Layout from "@/components/pageLayout";
@@ -53,8 +53,8 @@ export default function PnmPage() {
     <Layout>
       <div style={{ userSelect: "none" }}>
         <Image
-          src="/pnm/images/logo.webp"
           alt="Postaw na milion"
+          src="/pnm/images/logo.webp"
           width={475}
           height={314}
           draggable={false}
@@ -63,7 +63,6 @@ export default function PnmPage() {
       </div>
 
       {loading ? (
-        // loading indicator
         <div className="loading">
           <p>Trwa ładowanie...</p>
         </div>
@@ -79,13 +78,13 @@ export default function PnmPage() {
           }}
         >
           {/* start game button */}
-          <button type="submit">
-            <p>{"▶️ Rozpocznij grę!"}</p>
+          <button type="submit" className={styles.defaultButton}>
+            <p>Uruchom grę</p>
           </button>
 
           <div className={styles.container}>
             {[...Array(data.length)].map((_, i) => (
-              <div className={styles.board} key={i}>
+              <div key={i} className={styles.board}>
                 {/* board navbar */}
                 <div className={styles.controls}>
                   <p>{`Etap ${i + 1}/${data.length}`}</p>
@@ -120,12 +119,12 @@ export default function PnmPage() {
                       }}
                     >
                       <Image
-                        src="/icons/trashcan.svg"
+                        className="icon"
                         alt="delete"
+                        src="/icons/trashcan.svg"
                         width={20}
                         height={20}
                         draggable={false}
-                        className="icon"
                       />
                     </button>
 
@@ -145,13 +144,13 @@ export default function PnmPage() {
                       }}
                     >
                       <Image
-                        src="/icons/arrow.svg"
+                        style={{ rotate: "180deg" }}
+                        className="icon"
                         alt="arrow"
+                        src="/icons/arrow.svg"
                         width={20}
                         height={20}
                         draggable={false}
-                        className="icon"
-                        style={{ rotate: "180deg" }}
                       />
                     </button>
 
@@ -171,12 +170,12 @@ export default function PnmPage() {
                       }}
                     >
                       <Image
-                        src="/icons/arrow.svg"
+                        className="icon"
                         alt="arrow"
+                        src="/icons/arrow.svg"
                         width={20}
                         height={20}
                         draggable={false}
-                        className="icon"
                       />
                     </button>
                   </div>
@@ -184,18 +183,18 @@ export default function PnmPage() {
 
                 <div className={styles.content}>
                   {data[i].map((stage, j) => (
-                    <React.Fragment key={j}>
+                    <Fragment key={j}>
                       <div className={styles.inputs}>
                         <div>
-                          <p>Kategoria:</p>
+                          <p className={styles.name}>Kategoria:</p>
 
                           <input
-                            name={`${i}-${j}-category`}
                             type="text"
-                            autoComplete="off"
+                            name={`${i}-${j}-category`}
                             placeholder="Wpisz kategorię"
-                            value={stage.category || ""}
+                            autoComplete="off"
                             maxLength={128}
+                            value={stage.category || ""}
                             onChange={(e) => {
                               setData((prev) => {
                                 const newData = [...prev];
@@ -211,15 +210,15 @@ export default function PnmPage() {
                         </div>
 
                         <div>
-                          <p>Pytanie:</p>
+                          <p className={styles.name}>Pytanie:</p>
 
                           <input
-                            name={`${i}-${j}-question`}
                             type="text"
-                            autoComplete="off"
+                            name={`${i}-${j}-question`}
                             placeholder="Wpisz pytanie"
-                            value={stage.question || ""}
+                            autoComplete="off"
                             maxLength={128}
+                            value={stage.question || ""}
                             onChange={(e) => {
                               setData((prev) => {
                                 const newData = [...prev];
@@ -235,7 +234,9 @@ export default function PnmPage() {
                         </div>
 
                         <div>
-                          <p>Odpowiedzi (jedna poprawna):</p>
+                          <p className={styles.name}>
+                            Odpowiedzi (jedna poprawna):
+                          </p>
 
                           {stage.answers.map((answer, k) => (
                             <div
@@ -252,12 +253,12 @@ export default function PnmPage() {
                               }}
                             >
                               <input
-                                name={`${i}-${j}-${k}-answer`}
                                 type="text"
-                                autoComplete="off"
+                                name={`${i}-${j}-${k}-answer`}
                                 placeholder={`Odpowiedź ${k + 1}`}
-                                value={answer.value || ""}
+                                autoComplete="off"
                                 maxLength={64}
+                                value={answer.value || ""}
                                 onChange={(e) => {
                                   setData((prev) => {
                                     const newData = [...prev];
@@ -279,8 +280,8 @@ export default function PnmPage() {
                               />
 
                               <input
-                                name={`${i}-${j}-check`}
                                 type="radio"
+                                name={`${i}-${j}-check`}
                                 checked={answer.checked}
                                 onChange={() => {
                                   setData((prev) => {
@@ -311,7 +312,7 @@ export default function PnmPage() {
                       </div>
 
                       {j === 0 && <hr />}
-                    </React.Fragment>
+                    </Fragment>
                   ))}
                 </div>
               </div>
@@ -341,7 +342,14 @@ export default function PnmPage() {
                 }, 1);
               }}
             >
-              <Image alt="+" src="/icons/plus.svg" width={18} height={18} />
+              <Image
+                className="icon"
+                alt="+"
+                src="/icons/plus.svg"
+                width={18}
+                height={18}
+                draggable={false}
+              />
               <p>Kolejny etap</p>
             </button>
           </div>
