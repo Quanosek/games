@@ -24,9 +24,9 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
 
     if (data) {
       // filter empty answers
-      const answers = data.answers.filter(
-        (el: { value: string }) => el.value !== ""
-      );
+      const answers = data.answers.filter((el: { value: string }) => {
+        return el.value !== "";
+      });
 
       setData({ ...data, answers });
     }
@@ -41,14 +41,11 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
         return;
       }
 
-      switch (event.key) {
-        case "ArrowLeft":
-          (id !== 0 || data) && router.push(`/quizy/board/${[id - 1]}`);
-          break;
-        case " ": // Space
-        case "ArrowRight":
-          (id === 0 || data) && router.push(`/quizy/board/${[id + 1]}`);
-          break;
+      if (event.key === "ArrowLeft" && id !== 0) {
+        router.push(`/quizy/board/${[id - 1]}`);
+      }
+      if (event.key === "ArrowRight" && (id === 0 || data)) {
+        router.push(`/quizy/board/${[id + 1]}`);
       }
     };
 
@@ -62,38 +59,35 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
 
     const [selected, setSelected] = useState(0); // id + 1
 
+    // init confetti animation
     const [conductor, setConductor] = useState<TConductorInstance>();
     const onInit = ({ conductor }: { conductor: TConductorInstance }) => {
-      setConductor(conductor);
+      return setConductor(conductor);
     };
 
     return (
       <>
-        {/* complete confetti */}
         <Fireworks onInit={onInit} />
 
-        <h1>{`${data.question}`}</h1>
+        <h1 className={styles.centerDiv}>{data.question}</h1>
 
         <div
-          className={styles.closedAnswers}
-          style={{
-            // disable after choosing answer
-            pointerEvents: selected ? "none" : "unset",
-          }}
+          style={{ pointerEvents: selected ? "none" : "unset" }}
+          className={styles.answersGrid}
         >
-          {data.answers.map((el, i: number) => (
+          {data.answers.map((el, i) => (
             <button
               key={i}
-              onClick={() => {
-                if (data.answers[i].checked) conductor?.shoot();
-                setSelected(i + 1);
-              }}
               className={
                 // show selected and correct answers
                 selected && data.answers[i].checked
                   ? styles.correct
                   : (selected === i + 1 && styles.selected) || ""
               }
+              onClick={() => {
+                if (data.answers[i].checked) conductor?.shoot();
+                setSelected(i + 1);
+              }}
             >
               <p>{`${["A", "B", "C", "D"][i]}: ${el.value}`}</p>
             </button>
@@ -118,58 +112,76 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
 
     return (
       <>
-        <h1>
-          {parseText(data.question).map((part, index) => {
-            if (index % 2 === 0) return part;
-            else {
-              if (!reveal) {
-                if (!showHint) {
-                  // empty underlined space
-                  return (
-                    <span key={index}>
-                      {new String("_").repeat(part.length)}
-                    </span>
-                  );
+        <div className={styles.centerDiv}>
+          <h1>
+            {parseText(data.question).map((part, index) => {
+              if (index % 2 === 0) return part;
+              else {
+                if (!reveal) {
+                  if (!showHint) {
+                    // empty underlined space
+                    return (
+                      <span key={index}>
+                        {new String("_").repeat(part.length)}
+                      </span>
+                    );
+                  } else {
+                    // show hint
+                    return (
+                      <span key={index} className={styles.gapHints}>
+                        {part.replace(/[^\s]/g, "_")}
+                        <p className={styles.hint}>{part[0]}</p>
+                      </span>
+                    );
+                  }
                 } else {
-                  // show hint
+                  // show answer
                   return (
-                    <span key={index} className={styles.gapHints}>
-                      {part.replace(/[^\s]/g, "_")}
-                      <p className={styles.hint}>{part[0]}</p>
+                    <span
+                      key={index}
+                      style={{
+                        fontWeight: "normal",
+                        textDecoration: "underline",
+                      }}
+                    >
+                      {part}
                     </span>
                   );
                 }
-              } else {
-                // show answer
-                return (
-                  <span
-                    key={index}
-                    style={{
-                      fontWeight: "normal",
-                      textDecoration: "underline",
-                    }}
-                  >
-                    {part}
-                  </span>
-                );
               }
-            }
-          })}
-        </h1>
+            })}
+          </h1>
+        </div>
 
-        <div className={styles.bottomButtons}>
+        <div className={styles.controls}>
           <button
             className={showHint ? "disabled" : reveal ? "disabled" : ""}
             onClick={() => setShowHint(true)}
           >
-            <p>❔ Podpowiedź</p>
+            <Image
+              className="icon"
+              alt="icon"
+              src="/icons/question_mark.svg"
+              width={20}
+              height={20}
+              draggable={false}
+            />
+            <p>Podpowiedź</p>
           </button>
 
           <button
             className={reveal ? "disabled" : ""}
             onClick={() => setReveal(true)}
           >
-            <p>🔍 Odkryj</p>
+            <Image
+              className="icon"
+              alt="icon"
+              src="/icons/magnifying_glass.svg"
+              width={20}
+              height={20}
+              draggable={false}
+            />
+            <p>Odkryj</p>
           </button>
         </div>
       </>
@@ -184,79 +196,109 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
 
     return (
       <>
-        <h1>{data.question}</h1>
+        <h1 className={styles.centerDiv}>{data.question}</h1>
+
         {showAnswer && (
           <h2 className={styles.openAnswer}>{data.answers[0].value}</h2>
         )}
 
-        <div className={styles.bottomButtons}>
+        <div className={styles.controls}>
           <button
             className={showAnswer ? "disabled" : ""}
-            onClick={() => {
-              setShowAnswer(true);
-            }}
+            onClick={() => setShowAnswer(true)}
           >
-            <p>💬 Pokaż odpowiedź</p>
+            <Image
+              className="icon"
+              alt="icon"
+              src="/icons/magnifying_glass.svg"
+              width={20}
+              height={20}
+              draggable={false}
+            />
+            <p>Pokaż odpowiedź</p>
           </button>
         </div>
       </>
     );
   }
 
-  // loading data handler
-  if (loading) {
-    return <h1 className="loading">Trwa ładowanie...</h1>;
-  } else if (id === 0) {
-    // start page
-    return (
-      <div className={styles.center}>
-        <button onClick={() => router.push("/quizy/board/1")}>
-          <p>Rozpocznij quiz!</p>
-        </button>
-      </div>
-    );
-  } else if (!data) {
-    // end page
-    return <h1>To już wszystko!</h1>;
+  function DynamicRender() {
+    if (loading) {
+      // loading screen
+      return (
+        <div className={styles.loading}>
+          <div className={styles.spinner} />
+        </div>
+      );
+    } else if (id === 0) {
+      // start screen
+      return (
+        <div className={styles.simpleLayout}>
+          <h1>Rozpocznij quiz</h1>
+
+          <button onClick={() => router.push("/quizy/board/1")}>
+            <p>Zagraj</p>
+          </button>
+        </div>
+      );
+    } else if (!data) {
+      // end screen
+      return (
+        <div className={styles.simpleLayout}>
+          <h1>Koniec quizu</h1>
+
+          <button onClick={() => window.close()}>
+            <p>Wyjdź</p>
+          </button>
+        </div>
+      );
+    } else {
+      return (
+        <div className={styles.content}>
+          {data.type === "closed" && <ClosedBoard data={data} />}
+          {data.type === "gap" && <GapBoard data={data} />}
+          {data.type === "open" && <OpenBoard data={data} />}
+        </div>
+      );
+    }
   }
 
-  // page main render
   return (
     <>
-      <div className={styles.content}>
-        {data.type === "closed" && <ClosedBoard data={data} />}
-        {data.type === "gap" && <GapBoard data={data} />}
-        {data.type === "open" && <OpenBoard data={data} />}
-      </div>
+      {/* Page content */}
+      <DynamicRender />
 
-      <div className={styles.controls}>
+      {/* Default navigation buttons */}
+      <div className={styles.navigation}>
         <button
-          title="Poprzednie pytanie [🡨]"
+          title="Poprzednia plansza [🡨]"
+          className={loading || id === 0 ? "disabled" : ""}
           onClick={() => router.push(`/quizy/board/${[id - 1]}`)}
         >
           <Image
-            src="/icons/arrow.svg"
+            style={{ rotate: "-90deg" }}
+            className="icon"
             alt="arrow-left"
+            src="/icons/arrow.svg"
             width={50}
             height={50}
             draggable={false}
-            className="icon"
-            style={{ rotate: "-90deg" }}
           />
         </button>
 
         <button
-          title="Nastepne pytanie [🡪]"
+          title="Następna plansza [🡪]"
+          className={loading || (id && !data) ? "disabled" : ""}
           onClick={() => router.push(`/quizy/board/${[id + 1]}`)}
         >
           <Image
-            src="/icons/arrow.svg"
+            style={{ rotate: "90deg" }}
+            className="icon"
             alt="arrow-left"
+            src="/icons/arrow.svg"
             width={50}
             height={50}
             draggable={false}
-            className="icon"
-            style={{ rotate: "90deg" }}
           />
         </button>
       </div>

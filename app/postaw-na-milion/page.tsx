@@ -350,7 +350,7 @@ export default function PnmPage() {
                 height={18}
                 draggable={false}
               />
-              <p>Kolejny etap</p>
+              <p>Dodaj etap</p>
             </button>
           </div>
         </form>
