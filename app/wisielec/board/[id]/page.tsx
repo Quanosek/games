@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
+import { useEffect, useState, useCallback } from "react";
 
 import ms from "ms";
 
@@ -22,6 +23,7 @@ export default function WisielecBoardID({
 
   const [remainingTime, setRemainingTime] = useState(0);
   const [letters, setLetters] = useState<string[]>([]);
+  const [endGame, setEndGame] = useState<"win" | "lose">();
 
   // get data on load
   useEffect(() => {
@@ -36,10 +38,7 @@ export default function WisielecBoardID({
     setLoading(false);
   }, [id]);
 
-  // end of the game handler
-  const [endGame, setEndGame] = useState<"win" | "lose">();
-
-  // set time counter
+  // timer counting down
   useEffect(() => {
     const interval = setInterval(() => {
       setRemainingTime((prevTime) => {
@@ -58,24 +57,21 @@ export default function WisielecBoardID({
   }, [endGame]);
 
   // phrase completion
-  const phraseCompletion = useCallback(
+  const Phrase = useCallback(
     (data: Data) => {
       return data.phrase
         .split(" ")
         .map((word) => {
           // add uppercase letters to array
-          const allLetters = [
-            ...letters,
-            ...letters.map((l) => l.toUpperCase()),
-          ];
+          const array = [...letters, ...letters.map((l) => l.toUpperCase())];
 
           return word
             .split("")
             .map((letter) => {
-              // if letter is not in polishAlphabet, return it
+              // if letter is not in polish alphabet, return it
               if (!/[a-zA-ZąĄćĆęĘłŁńŃóÓśŚźŹżŻ]/.test(letter)) return letter;
               // hide letters
-              return allLetters.includes(letter) || endGame ? letter : "_";
+              return array.includes(letter) || endGame ? letter : "_";
             })
             .join("");
         })
@@ -84,65 +80,75 @@ export default function WisielecBoardID({
     [letters, endGame]
   );
 
-  // count mistakes
-  const mistakesAmount = useCallback(
+  // mistakes counter
+  const Mistakes = useCallback(
     (data: Data) => {
-      return letters.filter((letter) => !data.phrase.includes(letter)).length;
+      return letters.filter((letter) => {
+        return !data.phrase.includes(letter);
+      }).length;
     },
     [letters]
   );
 
+  // init confetti animation
   const [conductor, setConductor] = useState<TConductorInstance>();
   const onInit = ({ conductor }: { conductor: TConductorInstance }) => {
-    setConductor(conductor);
+    return setConductor(conductor);
   };
 
+  // end of game detection
   useEffect(() => {
     if (!data || endGame) return;
 
     // all attempts used
-    if (data && mistakesAmount(data) === data.attempts) {
+    if (data && Mistakes(data) === data.attempts) {
       return setEndGame("lose");
     }
 
     // no more letters to guess
-    if (!phraseCompletion(data).includes("_")) {
+    if (!Phrase(data).includes("_")) {
       conductor?.shoot();
       return setEndGame("win");
     }
-  }, [data, endGame, mistakesAmount, conductor, phraseCompletion]);
+  }, [data, endGame, Mistakes, Phrase, conductor]);
 
   // letters of alphabet
   const polishAlphabet = "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż";
   const vowels = "aąeęioóuy";
 
-  // loading data handler
   if (loading) {
-    return <h1 className="loading">Trwa ładowanie...</h1>;
-  } else if (!data) return;
+    // loading screen
+    return (
+      <div className={styles.loading}>
+        <div className={styles.spinner} />
+      </div>
+    );
+  } else if (!data) {
+    // no data screen
+    return null;
+  }
 
-  // page main render
+  // page content
   return (
     <>
       {/* hidden input for keyboard interactions */}
       <input
-        type="text"
         className={styles.globalKeyboard}
-        ref={(input: HTMLInputElement) => {
-          if (input) input.focus();
-        }}
-        onBlur={(e) => e.target.focus()}
+        ref={(input) => input?.focus()}
         onChange={(e) => {
           if (endGame) return;
 
-          const key = e.target.value.toLowerCase();
-          // if key is not a letter, return it
-          if (key.length !== 1 || !/[a-ząćęłńóśźż]/.test(key)) return;
-          // add letter to letters array
-          if (!letters.includes(key)) setLetters([...letters, key]);
+          const value = e.target.value.toLowerCase();
 
+          // add to letters array
+          if (polishAlphabet.includes(value) && !letters.includes(value)) {
+            setLetters([...letters, value]);
+          }
+
+          // clear input
           e.target.value = "";
         }}
+        onBlur={(e) => e.target.focus()}
       />
 
       {/* complete confetti */}
@@ -157,27 +163,26 @@ export default function WisielecBoardID({
 
           {remainingTime >= 0 && (
             <>
-              <p className={styles.separator}>{"•"}</p>
+              <p>{"•"}</p>
+
               <p>
                 Pozostały czas:{" "}
-                <span
-                  style={{
-                    color: remainingTime === 0 ? "red" : "",
-                  }}
-                >{`${Math.floor(remainingTime / 60_000)
-                  .toString()
-                  .padStart(2, "0")}:${Math.floor(
-                  (remainingTime % 60_000) / 1_000
-                )
-                  .toString()
-                  .padStart(2, "0")}`}</span>
+                <span style={{ color: remainingTime === 0 ? "red" : "" }}>
+                  {`${Math.floor(remainingTime / 60_000)
+                    .toString()
+                    .padStart(2, "0")}:${Math.floor(
+                    (remainingTime % 60_000) / 1_000
+                  )
+                    .toString()
+                    .padStart(2, "0")}`}
+                </span>
               </p>
             </>
           )}
         </div>
 
         <div className={styles.phrase}>
-          <h1>{phraseCompletion(data)}</h1>
+          <h1>{Phrase(data)}</h1>
         </div>
 
         <div className={styles.bottomDiv}>
@@ -185,10 +190,10 @@ export default function WisielecBoardID({
             Błędy:{" "}
             <span
               style={{
-                color: mistakesAmount(data) === data.attempts ? "red" : "",
+                color: Mistakes(data) === data.attempts ? "red" : "",
               }}
             >
-              {mistakesAmount(data)}/{data.attempts}
+              {Mistakes(data)}/{data.attempts}
             </span>
           </p>
 
@@ -205,6 +210,19 @@ export default function WisielecBoardID({
               </button>
             ))}
           </div>
+        </div>
+
+        {/* dynamic image in background */}
+        <div className={styles.bgImage}>
+          <Image
+            alt={`wisielec`}
+            src={`/wisielec/${Math.ceil(
+              (15 / data.attempts) * Mistakes(data)
+            )}.svg`}
+            width={800}
+            height={750}
+            draggable={false}
+          />
         </div>
       </div>
     </>
