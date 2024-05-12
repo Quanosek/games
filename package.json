@@ -1,5 +1,5 @@
 {
-  "version": "0.3.1",
+  "version": "0.3.2",
   "name": "games",
   "description": "Complex web-based library of party-games",
   "scripts": {
@@ -13,20 +13,20 @@
     "next": "14.2.2",
     "nextjs-google-adsense": "^1.0.0",
     "nextjs-google-analytics": "^2.3.3",
-    "react": "^18.2.0",
+    "react": "^18.3.1",
     "react-canvas-confetti": "^2.0.7",
-    "react-dom": "^18.2.0",
+    "react-dom": "^18.3.1",
     "sharp": "^0.33.3",
     "the-new-css-reset": "^1.11.2"
   },
   "devDependencies": {
     "@types/ms": "^0.7.34",
-    "@types/node": "^20.12.7",
-    "@types/react": "^18.2.79",
-    "@types/react-dom": "^18.2.25",
+    "@types/node": "^20.12.11",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.2",
-    "sass": "^1.75.0",
+    "sass": "^1.77.1",
     "typescript": "^5.4.5"
   }
 }

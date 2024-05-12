@@ -213,17 +213,19 @@ export default function WisielecBoardID({
         </div>
 
         {/* dynamic image in background */}
-        <div className={styles.bgImage}>
-          <Image
-            alt={`wisielec`}
-            src={`/wisielec/${Math.ceil(
-              (15 / data.attempts) * Mistakes(data)
-            )}.svg`}
-            width={800}
-            height={750}
-            draggable={false}
-          />
-        </div>
+        {Mistakes(data) > 0 && (
+          <div className={styles.bgImage}>
+            <Image
+              alt={`wisielec`}
+              src={`/wisielec/${Math.ceil(
+                (15 / data.attempts) * Mistakes(data)
+              )}.svg`}
+              width={800}
+              height={750}
+              draggable={false}
+            />
+          </div>
+        )}
       </div>
     </>
   );
