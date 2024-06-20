@@ -43,7 +43,7 @@ export default function HomePage() {
           <p>{`"Familiada"`}</p>
         </Link>
 
-        <Link className="button disabled" href="/postaw-na-milion">
+        <Link className="button disabled" href="/pnm">
           <Image
             alt="icon"
             src="/favicons/dollar_banknote.svg"

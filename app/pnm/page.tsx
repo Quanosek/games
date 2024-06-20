@@ -70,11 +70,7 @@ export default function PnmPage() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            open(
-              "/postaw-na-milion/board/0",
-              "game_window",
-              "width=960, height=540"
-            );
+            open("/pnm/board/0", "game_window", "width=960, height=540");
           }}
         >
           {/* start game button */}
