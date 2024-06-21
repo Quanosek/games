@@ -7,11 +7,11 @@ import { useEffect, useState } from "react";
 
 import styles from "./page.module.scss";
 import Layout from "@/components/pageLayout";
-import FormatPoints from "@/functions/formatPoints";
+import FormatPoints from "../../../functions/formatPoints";
 
 import localFont from "next/font/local";
 const dottedFont = localFont({
-  src: "../../fonts/familiada_regular.woff2",
+  src: "./familiada_regular.woff2",
   display: "swap",
 });
 

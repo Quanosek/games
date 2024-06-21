@@ -6,7 +6,7 @@ import styles from "./styles.module.scss";
 
 import localFont from "next/font/local";
 const dottedFont = localFont({
-  src: "../../../../fonts/familiada_regular.woff2",
+  src: "../../familiada_regular.woff2",
   display: "swap",
 });
 

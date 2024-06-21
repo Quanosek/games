@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import Analytics from "@/components/analytics";
@@ -34,6 +35,18 @@ export default function PageLayout({
             <Link href="https://www.klalo.pl/" target="_blank">
               www.klalo.pl
             </Link>
+
+            {/* <Link href="/sign-in">
+              <Image
+                className="icon"
+                src="/icons/person.svg"
+                alt="login"
+                width={25}
+                height={25}
+                draggable={false}
+                priority
+              />
+            </Link> */}
           </div>
         </section>
       </header>

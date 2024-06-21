@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 
-import type { Data } from "@/app/pnm/page";
+import type { Data } from "@/app/(games)/pnm/page";
 import styles from "./styles.module.scss";
 
 export default function PnmBoardID({ params }: { params: { id: number } }) {

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 
 import styles from "./styles.module.scss";
-import FormatPoints from "@/functions/formatPoints";
+import FormatPoints from "../../../../../functions/formatPoints";
 
 export default function FamiliadaBoardID({
   params,
