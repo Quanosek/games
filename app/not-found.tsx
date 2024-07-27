@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
 import Layout from "@/components/pageLayout";
 
 export default function NotFoundPage() {

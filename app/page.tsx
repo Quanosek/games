@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import Layout from "@/components/pageLayout";
 
 import styles from "./page.module.scss";
-import Layout from "@/components/pageLayout";
 
 export default function HomePage() {
   return (

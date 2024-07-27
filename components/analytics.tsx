@@ -3,12 +3,11 @@
 import { GoogleAnalytics } from "nextjs-google-analytics";
 import { GoogleAdSense } from "nextjs-google-adsense";
 
-export default function Analytics() {
-  //
+export default function AnalyticsComponent() {
   // https://search.google.com/search-console
   // https://analytics.google.com/
   // https://www.google.com/adsense/
-  //
+
   return (
     <>
       <GoogleAnalytics

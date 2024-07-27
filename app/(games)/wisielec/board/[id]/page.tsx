@@ -2,14 +2,12 @@
 
 import Image from "next/image";
 import { useEffect, useState, useCallback } from "react";
-
-import ms from "ms";
-
-import type { Data } from "@/app/wisielec/page";
-import styles from "./styles.module.scss";
-
 import { TConductorInstance } from "react-canvas-confetti/dist/types";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
+import ms from "ms";
+
+import type { Data } from "../../page";
+import styles from "./styles.module.scss";
 
 export default function WisielecBoardID({
   params,

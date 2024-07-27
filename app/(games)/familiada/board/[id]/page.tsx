@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
+import FormatPoints from "@/lib/formatPoints";
 
 import styles from "./styles.module.scss";
-import FormatPoints from "../../../../../functions/formatPoints";
 
 export default function FamiliadaBoardID({
   params,

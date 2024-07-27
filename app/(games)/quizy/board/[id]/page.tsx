@@ -3,12 +3,11 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-import type { Data } from "@/app/(games)/quizy/page";
-import styles from "./styles.module.scss";
-
 import { TConductorInstance } from "react-canvas-confetti/dist/types";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
+
+import type { Data } from "../../page";
+import styles from "./styles.module.scss";
 
 export default function QuizyBoardID({ params }: { params: { id: number } }) {
   const id = Number(params.id);

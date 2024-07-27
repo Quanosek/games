@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Layout from "@/components/pageLayout";
 
 import styles from "./page.module.scss";
-import Layout from "@/components/pageLayout";
 
 // local object template
 export interface Data {

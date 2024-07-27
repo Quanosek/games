@@ -1,6 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
-
+import { ReactNode } from "react";
 import Analytics from "@/components/analytics";
 
 import { Roboto } from "next/font/google";
@@ -10,10 +9,10 @@ const font = Roboto({
   display: "swap",
 });
 
-export default function PageLayout({
+export default function PageLayoutComponent({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <>
@@ -35,18 +34,6 @@ export default function PageLayout({
             <Link href="https://www.klalo.pl/" target="_blank">
               www.klalo.pl
             </Link>
-
-            {/* <Link href="/sign-in">
-              <Image
-                className="icon"
-                src="/icons/person.svg"
-                alt="login"
-                width={25}
-                height={25}
-                draggable={false}
-                priority
-              />
-            </Link> */}
           </div>
         </section>
       </header>
