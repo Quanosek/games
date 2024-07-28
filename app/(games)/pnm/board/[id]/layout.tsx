@@ -8,11 +8,11 @@ import localFont from "next/font/local";
 const Myriad = localFont({
   src: [
     {
-      path: "../../../../fonts/myriad_pro_semibold.woff2",
+      path: "./myriad_pro_semibold.woff2",
       weight: "normal",
     },
     {
-      path: "../../../../fonts/myriad_pro_bold_cond.woff2",
+      path: "./myriad_pro_bold_cond.woff2",
       weight: "bold",
     },
   ],

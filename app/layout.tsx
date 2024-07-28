@@ -9,15 +9,15 @@ import localFont from "next/font/local";
 const Nexa = localFont({
   src: [
     {
-      path: "../fonts/nexa_light.woff2",
+      path: "./nexa_light.woff2",
       weight: "200",
     },
     {
-      path: "../fonts/nexa_regular.woff2",
+      path: "./nexa_regular.woff2",
       weight: "400",
     },
     {
-      path: "../fonts/nexa_bold.woff2",
+      path: "./nexa_bold.woff2",
       weight: "800",
     },
   ],
