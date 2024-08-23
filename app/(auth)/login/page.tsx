@@ -8,17 +8,17 @@ export default function LoginPage() {
     <>
       <div className={styles.title}>
         <h1>Zaloguj się</h1>
-        {/* <p>Wpisz swoje dane, aby kontynuować</p> */}
+        <p>Wpisz swoje dane, aby kontynuować</p>
       </div>
 
       <LoginForm />
 
-      {/* <div className={styles.signUp}>
+      <div className={styles.signUp}>
         <p>Nie posiadasz konta?</p>
         <Link href="/register" className="disabled">
           Zarejestruj się!
         </Link>
-      </div> */}
+      </div>
     </>
   );
 }

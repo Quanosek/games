@@ -1,16 +1,16 @@
 "use client";
 
 import Image from "next/image";
-// import { useState } from "react";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
 import styles from "./styles.module.scss";
 
 export default function LoginForm() {
-  // const [passwordVisible, setPasswordVisible] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   return (
     <div className={styles.formContainer}>
-      {/* <form>
+      <form>
         <label>
           <p>E-mail</p>
 
@@ -51,7 +51,7 @@ export default function LoginForm() {
         <button className={styles.submitButton} type="submit">
           <p>Zaloguj się</p>
         </button>
-      </form> */}
+      </form>
 
       <div className={styles.callbacks}>
         <button onClick={() => signIn("google")} title="Google">

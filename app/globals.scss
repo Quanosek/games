@@ -64,6 +64,10 @@ header {
     padding: min(0.8rem, 1.5vw) 3%;
   }
 
+  section {
+    position: relative;
+  }
+
   div {
     height: 100%;
     display: flex;
@@ -101,19 +105,63 @@ header {
   }
 
   .loginButton {
-    height: 100%;
-
     @media (max-width: 768px) {
       display: none;
     }
 
+    a,
     button {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
       cursor: pointer;
     }
 
     img {
+      height: 30px;
+      width: 30px;
+      aspect-ratio: 1/1;
       border-radius: 30px;
       overflow: hidden;
+    }
+
+    .list {
+      z-index: 1;
+      position: absolute;
+      top: 100%;
+      right: 0;
+
+      height: unset;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--primary);
+      border: var(--light-border);
+      border-radius: 0 0 0.4rem 0.4rem;
+      overflow: hidden;
+
+      a,
+      button {
+        padding: 0.8rem 1.8rem;
+        position: static;
+        background-color: var(--primary);
+        border-radius: 0;
+        font-size: 95%;
+        transition: 100ms filter ease-out;
+
+        &:hover {
+          transform: none;
+          filter: contrast(0.75);
+        }
+      }
+
+      hr {
+        margin: 3px 0;
+        height: 1px;
+        width: 100%;
+        background-color: #4e4e4e;
+      }
     }
   }
 }
@@ -149,7 +197,6 @@ footer {
 
 .mobileView,
 main {
-  margin-top: min(1rem, 3%);
   padding: min(3rem, 3%);
   min-height: calc(100svh - $header-height);
   width: $page-width;
