@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 
 import styles from "./styles.module.scss";
 
@@ -8,11 +8,11 @@ import localFont from "next/font/local";
 const Myriad = localFont({
   src: [
     {
-      path: "./myriad_pro_semibold.woff2",
+      path: "../../fonts/myriad_pro_semibold.woff2",
       weight: "normal",
     },
     {
-      path: "./myriad_pro_bold_cond.woff2",
+      path: "../../fonts/myriad_pro_bold_cond.woff2",
       weight: "bold",
     },
   ],
@@ -21,7 +21,11 @@ const Myriad = localFont({
   display: "swap",
 });
 
-export default function BoardLayout({ children }: { children: ReactNode }) {
+export default function BoardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   useEffect(() => {
     // keyboard interactions
     const KeyupEvent = (event: KeyboardEvent) => {

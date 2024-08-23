@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, Fragment } from "react";
-import Layout from "@/components/pageLayout";
 
 import styles from "./page.module.scss";
 
@@ -50,7 +49,7 @@ export default function PnmPage() {
 
   // main page render
   return (
-    <Layout>
+    <main>
       <div style={{ userSelect: "none" }}>
         <Image
           alt="Postaw na milion"
@@ -368,6 +367,6 @@ export default function PnmPage() {
         . Wszystkie prawa do emisji oraz znaki towarowe należą do ich prawnych
         właścicieli.
       </p>
-    </Layout>
+    </main>
   );
 }

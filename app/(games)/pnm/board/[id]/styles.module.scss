@@ -1,7 +1,10 @@
 // LAYOUT STYLES
 
 .container {
-  position: relative;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100svw;
   height: auto;
 
@@ -115,6 +118,7 @@
     background-color: rgba(#1a1c49, 0.8);
     backdrop-filter: blur(0.8vw);
     transition: all 0s, filter 200ms;
+    cursor: pointer;
   }
 
   .background {

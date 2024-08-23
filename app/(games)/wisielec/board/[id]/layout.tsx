@@ -1,10 +1,14 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 
 import styles from "./styles.module.scss";
 
-export default function BoardLayout({ children }: { children: ReactNode }) {
+export default function BoardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   // keyboard interactions
   useEffect(() => {
     const KeyupEvent = (event: KeyboardEvent) => {

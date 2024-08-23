@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ReactNode } from "react";
 
 // pnm metadata
 export const metadata: Metadata = {
@@ -10,6 +9,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function PnmLayout({ children }: { children: ReactNode }) {
+export default function PnmLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

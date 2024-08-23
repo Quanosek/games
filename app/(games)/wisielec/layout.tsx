@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ReactNode } from "react";
 
 // wisielec metadata
 export const metadata: Metadata = {
@@ -11,6 +10,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function WisielecLayout({ children }: { children: ReactNode }) {
+export default function WisielecLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return <>{children}</>;
 }

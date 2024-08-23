@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Layout from "@/components/pageLayout";
 
 import styles from "./page.module.scss";
 
@@ -66,7 +65,7 @@ export default function WisielecPage() {
 
   // main page render
   return (
-    <Layout>
+    <main>
       <h1 className={styles.pageTitle}>
         Gra w <span>wisielca</span>
       </h1>
@@ -373,6 +372,6 @@ export default function WisielecPage() {
           </button>
         </div>
       )}
-    </Layout>
+    </main>
   );
 }

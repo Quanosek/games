@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Layout from "@/components/pageLayout";
 
 import styles from "./page.module.scss";
 
@@ -56,8 +55,7 @@ export default function QuizyPage() {
           <p>Pytanie zamknięte</p>
         </>
       );
-    }
-    if (type === "gap") {
+    } else if (type === "gap") {
       return (
         <>
           <Image
@@ -71,8 +69,7 @@ export default function QuizyPage() {
           <p>Uzupełnij lukę</p>
         </>
       );
-    }
-    if (type === "open") {
+    } else if (type === "open") {
       return (
         <>
           <Image
@@ -303,7 +300,7 @@ export default function QuizyPage() {
 
   // main page render
   return (
-    <Layout>
+    <main>
       <h1 className={styles.pageTitle}>
         Stwórz własny <span>Quiz</span>
       </h1>
@@ -540,13 +537,13 @@ export default function QuizyPage() {
                     ]);
                   }}
                 >
-                  <p> pytanie otwarte</p>
+                  <p>pytanie otwarte</p>
                 </button>
               </div>
             </div>
           </div>
         </form>
       )}
-    </Layout>
+    </main>
   );
 }

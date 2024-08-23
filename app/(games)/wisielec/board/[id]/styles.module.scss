@@ -1,7 +1,10 @@
 // Board layout
 
 .container {
-  position: relative;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
   padding: 6vh 6vw 10vh 6vw;
   width: 100svw;
   height: 100svh;
@@ -26,6 +29,7 @@
     background-color: rgba(#ffffff, 0.1);
     border-radius: 0.8vw;
     border: none;
+    cursor: pointer;
   }
 }
 

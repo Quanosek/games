@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Layout from "@/components/pageLayout";
 
 export default function NotFoundPage() {
   const router = useRouter();
@@ -19,12 +18,12 @@ export default function NotFoundPage() {
   }, [router, seconds]);
 
   return (
-    <Layout>
+    <main>
       <h1>Nie znaleziono strony!</h1>
 
       <Link className="button" href="/">
         🏠 Powrót na stronę główną <span>[{seconds}]</span>
       </Link>
-    </Layout>
+    </main>
   );
 }

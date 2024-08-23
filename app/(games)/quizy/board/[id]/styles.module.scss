@@ -1,7 +1,10 @@
 // Board layout
 
 .container {
-  position: relative;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
   padding: 5vh 4vw 15vh 4vw;
   width: 100svw;
   height: 100svh;
@@ -27,6 +30,7 @@
     background-color: rgba(#ffffff, 0.1);
     border-radius: 0.8vw;
     border: none;
+    cursor: pointer;
   }
 }
 
@@ -156,6 +160,8 @@
   justify-content: center;
   align-items: center;
   gap: 1vw;
+  font-size: 150%;
+  font-weight: bold;
 
   span {
     color: #8bf2ce;
@@ -230,6 +236,6 @@
   position: absolute;
   top: 65%;
   font-size: 120%;
-  width: 100%;
+  width: calc(100% - 8vw);
   text-align: center;
 }

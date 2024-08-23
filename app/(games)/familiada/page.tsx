@@ -4,14 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Layout from "@/components/pageLayout";
 import FormatPoints from "@/lib/formatPoints";
 
 import styles from "./page.module.scss";
 
 import localFont from "next/font/local";
 const dottedFont = localFont({
-  src: "./familiada_regular.woff2",
+  src: "./fonts/familiada_regular.woff2",
   display: "swap",
 });
 
@@ -70,7 +69,7 @@ export default function FamiliadaPage() {
 
   // main page render
   return (
-    <Layout>
+    <main>
       <div style={{ userSelect: "none" }}>
         <Image
           alt="FAMILIADA"
@@ -442,6 +441,6 @@ export default function FamiliadaPage() {
         . Wszystkie prawa do emisji oraz znaki towarowe należą do ich prawnych
         właścicieli.
       </p>
-    </Layout>
+    </main>
   );
 }

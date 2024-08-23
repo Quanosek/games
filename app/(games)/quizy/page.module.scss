@@ -3,7 +3,7 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
 .pageTitle {
   margin-bottom: 0.5rem;
   font-size: 500%;
-  user-select: none;
+  text-align: center;
 
   span {
     opacity: 90%;
@@ -131,7 +131,7 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
     position: absolute;
     top: 95%;
     width: 100%;
-    border: var(--white-border);
+    border: var(--light-border);
     border-radius: 0 0 0.4rem 0.4rem;
     overflow: hidden;
 
@@ -139,6 +139,10 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
       border: none;
       border-radius: 0;
       position: static;
+
+      &:hover {
+        transform: none;
+      }
     }
   }
 }
@@ -169,7 +173,7 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
 .answers {
   display: flex;
   flex-direction: column;
-  border: var(--white-border);
+  border: var(--light-border);
 }
 
 .value {
@@ -198,7 +202,7 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
   display: flex;
   justify-content: flex-end;
   background-color: var(--secondary);
-  border-top: var(--white-border);
+  border-top: var(--light-border);
 
   .checkbox {
     display: flex;

@@ -1,16 +1,20 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 
 import styles from "./styles.module.scss";
 
 import localFont from "next/font/local";
 const dottedFont = localFont({
-  src: "../../familiada_regular.woff2",
+  src: "../../fonts/familiada_regular.woff2",
   display: "swap",
 });
 
-export default function BoardLayout({ children }: { children: ReactNode }) {
+export default function BoardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   // keyboard interactions
   useEffect(() => {
     const KeyupEvent = (event: KeyboardEvent) => {

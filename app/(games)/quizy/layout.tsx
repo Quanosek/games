@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ReactNode } from "react";
 
 // milionerzy metadata
 export const metadata: Metadata = {
@@ -11,6 +10,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function QuizyLayout({ children }: { children: ReactNode }) {
+export default function QuizyLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return <>{children}</>;
 }

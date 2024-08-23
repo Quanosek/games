@@ -1,10 +1,14 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 
 import styles from "./styles.module.scss";
 
-export default function BoardLayout({ children }: { children: ReactNode }) {
+export default function BoardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   // keyboard interactions
   useEffect(() => {
     const KeyupEvent = (event: KeyboardEvent) => {
@@ -22,7 +26,6 @@ export default function BoardLayout({ children }: { children: ReactNode }) {
   return (
     <div className={styles.container}>
       <div className={styles.board}>{children}</div>
-
       <p className={styles.credits}>Stworzone na stronie games.klalo.pl</p>
     </div>
   );

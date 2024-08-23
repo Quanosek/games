@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ReactNode } from "react";
 
 // familiada metadata
 export const metadata: Metadata = {
@@ -10,6 +9,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function FamiliadaLayout({ children }: { children: ReactNode }) {
+export default function FamiliadaLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return <>{children}</>;
 }

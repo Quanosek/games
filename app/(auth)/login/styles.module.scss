@@ -1,0 +1,131 @@
+.title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  font-size: 130%;
+  text-align: center;
+
+  h1 {
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  p {
+    opacity: 90%;
+    font-size: 85%;
+  }
+}
+
+.formContainer {
+  margin-top: 1.5rem;
+  width: 28rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  form {
+    width: 100%;
+    gap: 14px;
+
+    label {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      p {
+        font-size: 110%;
+        font-weight: bold;
+      }
+
+      input {
+        padding: 14px 21px;
+        width: 100%;
+        border: none;
+        border-radius: 30px;
+      }
+    }
+  }
+
+  .passwordInput {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+
+    .eyeIcon {
+      position: absolute;
+      right: 0;
+      margin: 0;
+      padding: 5px;
+      height: 100%;
+      width: auto;
+      aspect-ratio: 1/1;
+
+      border: none;
+      background: none;
+      transform: none;
+      filter: none;
+
+      img {
+        opacity: 65%;
+      }
+    }
+  }
+
+  .forgotPassword {
+    margin-top: -2px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      padding: 5px;
+      background: none;
+      border: none;
+      font-size: 90%;
+      transform: none;
+    }
+  }
+
+  .submitButton {
+    margin-top: 1.5rem;
+    padding: 14px 6rem;
+    width: auto;
+    justify-content: center;
+    border: none;
+    border-radius: 30px;
+  }
+}
+
+.callbacks {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+
+  button {
+    opacity: 90%;
+    padding: 8px;
+    border: none;
+    background: none;
+  }
+}
+
+.signUp {
+  margin: 1.2rem 0 3rem;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+
+  a {
+    transition: 100ms filter ease-out;
+
+    &:hover {
+      filter: contrast(0.75);
+    }
+  }
+}

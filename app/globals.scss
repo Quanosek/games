@@ -9,11 +9,11 @@
   --secondary: #242424;
   --background: #121212;
 
-  --white-border: 0.5px solid #4e4e4e;
+  --light-border: 0.5px solid #4e4e4e;
 }
 
-*:focus-visible {
-  box-shadow: 0 0 1px 2px var(--white);
+:focus-visible {
+  box-shadow: 0 0 1px 2px var(--white) !important;
 }
 
 ::placeholder {
@@ -34,40 +34,7 @@ section {
   justify-content: center;
 }
 
-$custom-width: min(100%, 1440px);
-$header-height: 3.5rem;
-$header-padding: 0.5rem;
-
-main {
-  $header-height: $header-height + 2 * $header-padding;
-
-  position: relative;
-  padding: 2rem min(3%, 3rem) 6rem;
-  min-height: calc(100svh - $header-height);
-  width: $custom-width;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-}
-
-.mobileView {
-  display: none;
-
-  @media (max-width: 768px) {
-    padding: 3rem 5%;
-    min-height: calc(100svh - $header-height);
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    font-size: min(1.5rem, 4vw);
-  }
-}
+$page-width: min(100%, 1440px);
 
 header,
 footer {
@@ -76,143 +43,196 @@ footer {
   background-color: var(--background);
 
   section {
-    width: $custom-width;
+    width: $page-width;
     justify-content: space-between;
     align-items: center;
   }
 
   @media (max-width: 768px) {
-    font-size: min(1.1rem, 3.5vw);
+    font-size: min(110%, 3.5vw);
   }
 }
 
+$header-height: min(4rem, 16vw);
 $section-padding: 0.85rem;
 
 header {
-  padding: $header-padding calc(3% - $section-padding);
+  padding: 0.5rem 2rem;
+  height: $header-height;
 
   @media (max-width: 768px) {
-    padding: min(1.5rem, 4vw) 2vw;
-  }
-
-  a {
-    opacity: 85%;
-    position: relative;
-    bottom: 0;
-    padding: 0 $section-padding;
-    height: $header-height;
-    display: flex;
-    align-items: center;
-    border-radius: 0.6rem;
-    transition: 150ms ease-in-out;
-
-    &:hover {
-      opacity: 100%;
-      bottom: 1.5px;
-    }
-
-    @media (max-width: 768px) {
-      padding: 0 min($section-padding, 3vw);
-      height: 2rem;
-    }
-  }
-
-  .headerTitle {
-    display: flex;
-    font-weight: bold;
-
-    p {
-      font-size: 135%;
-    }
+    padding: min(0.8rem, 1.5vw) 3%;
   }
 
   div {
     height: 100%;
     display: flex;
+    align-items: stretch;
+  }
+
+  h1 {
+    font-size: 120%;
+    font-weight: bold;
+  }
+
+  a,
+  button {
+    opacity: 90%;
+    padding: 0 1rem;
+    display: flex;
     align-items: center;
+    height: 100%;
+    gap: 8px;
+    border-radius: 0.6rem;
+    transition: 150ms ease-in-out;
+
+    &:hover {
+      opacity: 100%;
+      transform: translateY(-1px);
+    }
+
+    &.supportButton:hover {
+      color: #00a962;
+    }
+
+    @media (max-width: 768px) {
+      padding: 0 min(1rem, 3vw);
+    }
+  }
+
+  .loginButton {
+    height: 100%;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    img {
+      border-radius: 30px;
+      overflow: hidden;
+    }
   }
 }
 
 footer {
-  padding: min(1.5rem, 4vw);
+  padding: 1.5rem 3rem;
 
-  section {
-    padding: 0 $section-padding;
+  @media (max-width: 768px) {
+    padding: 1.5rem min(3rem, 3vw);
 
-    @media (max-width: 768px) {
-      padding: 0 3vw;
+    section {
       flex-direction: column;
       gap: 0.5rem;
-      font-size: 90%;
+      font-size: min(90%, 3vw);
       text-align: center;
     }
   }
 
   p {
     opacity: 80%;
-    font-size: 90%;
+    font-size: 85%;
   }
 
-  a:hover {
-    text-decoration: underline;
+  a {
+    display: unset;
+    transition: 100ms filter ease-out;
+
+    &:hover {
+      filter: contrast(0.75);
+    }
   }
 }
 
-form {
+.mobileView,
+main {
+  margin-top: min(1rem, 3%);
+  padding: min(3rem, 3%);
+  min-height: calc(100svh - $header-height);
+  width: $page-width;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
 }
 
-h1 {
-  font-size: 150%;
-  font-weight: bold;
-}
+.mobileView {
+  margin-top: 5%;
+  text-align: center;
+  font-size: min(120%, 4vw);
 
-input,
-button,
-.button,
-select {
-  box-shadow: none !important;
-  border: var(--white-border);
-  background-color: var(--primary);
-  transition: 100ms filter ease-out;
-
-  &:hover {
-    filter: contrast(0.8);
+  @media (min-width: 769px) {
+    display: none;
   }
 }
 
-input {
-  padding: 0.5rem 1rem;
-
-  &:focus {
-    filter: contrast(0.7);
-  }
-}
-
-button,
-.button {
+main {
   position: relative;
-  bottom: 0;
-  padding: 0.65rem 2.5rem;
-  border-radius: 0.4rem;
-  transition: 100ms filter ease-out, 150ms bottom ease-in-out;
-  cursor: pointer;
+  align-items: center;
+  gap: 1rem;
 
-  &:hover {
-    bottom: 2px;
+  @media (max-width: 768px) {
+    display: none;
   }
-}
 
-select {
-  border-radius: 0.4rem;
-  background-color: var(--secondary);
-  cursor: pointer;
+  h1 {
+    font-size: 150%;
+    font-weight: bold;
+  }
 
-  &:hover {
-    filter: contrast(0.9);
+  input,
+  button,
+  .button,
+  select {
+    box-shadow: none !important;
+    border: var(--light-border);
+    background-color: var(--primary);
+    transition: 100ms filter ease-out;
+
+    &:hover {
+      filter: contrast(0.75);
+    }
+  }
+
+  input {
+    padding: 0.5rem 1rem;
+
+    &:focus {
+      filter: contrast(0.7);
+    }
+  }
+
+  button,
+  .button {
+    padding: 0.65rem 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: 100ms filter ease-out, 150ms transform ease-in-out;
+
+    &:hover {
+      transform: translateY(-1.5px);
+    }
+  }
+
+  select {
+    border-radius: 0.4rem;
+    background-color: var(--secondary);
+    cursor: pointer;
+
+    &:hover {
+      filter: contrast(0.9);
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
   }
 }
 

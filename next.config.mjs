@@ -4,6 +4,11 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     minimumCacheTTL: 60,
+    domains: [
+      "lh3.googleusercontent.com",
+      "avatars.githubusercontent.com",
+      "cdn.discordapp.com",
+    ],
   },
 };
 
