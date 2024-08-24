@@ -10,7 +10,7 @@ export default function AuthPasswordInput({
 }: {
   function: Function;
   name: string;
-  autocomplete?: "current-password" | "off";
+  autocomplete?: "current-password" | "new-password" | "off";
 }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
 

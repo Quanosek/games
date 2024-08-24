@@ -64,10 +64,6 @@ header {
     padding: min(0.8rem, 1.5vw) 3%;
   }
 
-  section {
-    position: relative;
-  }
-
   div {
     height: 100%;
     display: flex;
@@ -105,6 +101,8 @@ header {
   }
 
   .loginButton {
+    position: relative;
+
     @media (max-width: 768px) {
       display: none;
     }
@@ -130,9 +128,10 @@ header {
     .list {
       z-index: 1;
       position: absolute;
-      top: 100%;
+      top: calc(100% + 0.5rem);
       right: 0;
 
+      min-width: 100%;
       height: unset;
       display: flex;
       flex-direction: column;
@@ -147,7 +146,6 @@ header {
         position: static;
         background-color: var(--primary);
         border-radius: 0;
-        font-size: 95%;
         transition: 100ms filter ease-out;
 
         &:hover {

@@ -1,25 +1,38 @@
+import Image from "next/image";
 import { auth } from "@/lib/auth";
+import Data from "./data";
 
-// import styles from "@/styles/dashboard.module.scss";
+import styles from "@/styles/dashboard.module.scss";
 
 export default async function ProfilePage() {
   const session = await auth();
   const user = session?.user;
 
   return (
-    <>
+    <div className={styles.profileContainer}>
       <h1>Twój profil</h1>
+      <p>Już wkrótce</p>
 
-      {user?.role === "admin" && <p>Jesteś administratorem {";D"}</p>}
+      {/* <div className={styles.profileLayout}>
+        <div className={styles.flex}>
+          <Image
+            alt=""
+            src={user?.image ?? ""}
+            width={140}
+            height={140}
+            draggable={false}
+          />
 
-      {/* <pre>
-        <code>{JSON.stringify(user, null, "  ")}</code>
-      </pre> */}
+          <div className={styles.info}>
+            <p>ID: {user?.id}</p>
+            {user?.role === "admin" && <span>Administrator</span>}
+          </div>
+        </div>
 
-      {!user?.name && <p>Dodaj nazwę profilu</p>}
-      {!user?.username && <p>Dodaj wyświetlaną nazwę (pseudonim)</p>}
-      {!user?.password && <p>Utwórz hasło</p>}
-      {!user?.image && <p>Dodaj zdjęcie profilowe</p>}
-    </>
+        <hr />
+
+        <Data user={user} />
+      </div> */}
+    </div>
   );
 }

@@ -8,7 +8,7 @@ import { RegisterUserInput, registerUserSchema } from "@/lib/zod";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Callbacks from "../callbacks";
-import PasswordInput from "../passwordInput";
+import PasswordInput from "@/components/passwordInput";
 
 import styles from "@/styles/auth.module.scss";
 
@@ -52,7 +52,7 @@ export default function RegisterForm() {
       <form onSubmit={handleSubmit(formSubmit)}>
         <label>
           <p>E-mail</p>
-          <input {...register("email")} autoComplete="email" maxLength={100} />
+          <input {...register("email")} autoComplete="email" maxLength={150} />
           {errors.email && <span>{errors.email.message}</span>}
         </label>
 
