@@ -1,6 +1,6 @@
 import styles from "@/styles/dashboard.module.scss";
 
-export default function InfoPage() {
+export default function SavedPage() {
   return (
     <div className={styles.placeholder}>
       <h1>Zapisane gry</h1>

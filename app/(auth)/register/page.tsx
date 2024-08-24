@@ -1,9 +1,9 @@
 import Link from "next/link";
-import RegisterForm from "./form";
+import Form from "./form";
 
 import styles from "@/styles/auth.module.scss";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   return (
     <>
       <div className={styles.title}>
@@ -11,7 +11,7 @@ export default function LoginPage() {
         <p>Stwórz konto, aby korzystać z możliwości zapisu gier</p>
       </div>
 
-      <RegisterForm />
+      <Form />
 
       <div className={styles.prompt}>
         <p>Posiadasz już konto?</p>

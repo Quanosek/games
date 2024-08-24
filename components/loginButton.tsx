@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
 
-export default function LoginButtonComponent({ user }: { user: any }) {
+export default function LoginButtonComponent({ user }: any) {
   // handle add buttons list show
   const [showButtonsList, setShowButtonsList] = useState(false);
 

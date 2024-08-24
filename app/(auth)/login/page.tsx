@@ -1,5 +1,5 @@
 import Link from "next/link";
-import LoginForm from "./form";
+import Form from "./form";
 
 import styles from "@/styles/auth.module.scss";
 
@@ -11,7 +11,7 @@ export default function LoginPage() {
         <p>Wpisz swoje dane, aby kontynuować</p>
       </div>
 
-      <LoginForm />
+      <Form />
 
       <div className={styles.prompt}>
         <p>Nie posiadasz konta?</p>

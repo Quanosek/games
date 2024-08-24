@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import styles from "@/styles/auth.module.scss";
 
-export default function PasswordInput({
+export default function AuthPasswordInput({
   function: register,
   name,
 }: {

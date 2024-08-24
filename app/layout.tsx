@@ -4,6 +4,7 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import Analytics from "@/components/analytics";
 import LoginButton from "@/components/loginButton";
+import Wrapper from "@/components/wrapper";
 
 import "the-new-css-reset/css/reset.css";
 import "@/styles/globals.scss";
@@ -56,69 +57,71 @@ export default async function RootLayout({
       <body>
         {process.env.NODE_ENV !== "development" && <Analytics />}
 
-        <header>
+        <Wrapper>
+          <header>
+            <section>
+              <div>
+                <Link href="/">
+                  <Image
+                    src="/favicons/game_die.svg"
+                    alt=""
+                    width={28}
+                    height={28}
+                  />
+                  <h1>Pokój gier</h1>
+                </Link>
+
+                {/* <Link href="/list">
+                  <p>Lista gier</p>
+                </Link> */}
+
+                {/* <Link href="/info">
+                  <p>Informacje</p>
+                </Link> */}
+
+                <Link
+                  href="https://buycoffee.to/kubaklalo/"
+                  target="_blank"
+                  className="supportButton"
+                >
+                  <p>Wesprzyj</p>
+                </Link>
+              </div>
+
+              <LoginButton user={session?.user} />
+            </section>
+          </header>
+
           <section>
-            <div>
-              <Link href="/">
-                <Image
-                  src="/favicons/game_die.svg"
-                  alt=""
-                  width={28}
-                  height={28}
-                />
-                <h1>Pokój gier</h1>
-              </Link>
-
-              {/* <Link href="/list">
-                <p>Lista gier</p>
-              </Link> */}
-
-              {/* <Link href="/info">
-                <p>Informacje</p>
-              </Link> */}
-
-              <Link
-                href="https://buycoffee.to/kubaklalo/"
-                target="_blank"
-                className="supportButton"
-              >
-                <p>Wesprzyj</p>
-              </Link>
+            <div className="mobileView">
+              <p>
+                Wybrana strona nie jest dostępna
+                <br />
+                dla urządzeń mobilnych.
+              </p>
             </div>
 
-            <LoginButton user={session?.user} />
+            {children}
           </section>
-        </header>
 
-        <section>
-          <div className="mobileView">
-            <p>
-              Wybrana strona nie jest dostępna
-              <br />
-              dla urządzeń mobilnych.
-            </p>
-          </div>
+          <footer>
+            <section>
+              <p>
+                Stworzone z 💙 przez{" "}
+                <Link href="https://github.com/quanosek" target="_blank">
+                  Jakuba Kłało
+                </Link>
+              </p>
 
-          {children}
-        </section>
-
-        <footer>
-          <section>
-            <p>
-              Stworzone z 💙 przez{" "}
-              <Link href="https://github.com/quanosek" target="_blank">
-                Jakuba Kłało
-              </Link>
-            </p>
-
-            <p>
-              Wszelkie prawa zastrzeżone &#169; 2024 | domena{" "}
-              <Link href="https://www.klalo.pl/" target="_blank">
-                klalo.pl
-              </Link>
-            </p>
-          </section>
-        </footer>
+              <p>
+                Wszelkie prawa zastrzeżone &#169; 2024 | domena{" "}
+                <Link href="https://www.klalo.pl/" target="_blank">
+                  klalo.pl
+                </Link>
+              </p>
+            </section>
+          </footer>
+        </Wrapper>
       </body>
     </html>
   );

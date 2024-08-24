@@ -9,7 +9,7 @@ import PasswordInput from "../passwordInput";
 
 import styles from "@/styles/auth.module.scss";
 
-export default function LoginForm() {
+export default function RegisterForm() {
   const router = useRouter();
 
   const { handleSubmit, register, reset } = useForm();
