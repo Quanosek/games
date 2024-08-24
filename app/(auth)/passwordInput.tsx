@@ -1,16 +1,31 @@
 import Image from "next/image";
 import { useState } from "react";
 
-export default function PasswordInputComponent() {
+import styles from "@/styles/auth.module.scss";
+
+export default function PasswordInput({
+  function: register,
+  name,
+}: {
+  function: Function;
+  name: string;
+}) {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   return (
-    <>
-      <input name="password" type={passwordVisible ? "text" : "password"} />
+    <div className={styles.passwordInput}>
+      <input
+        {...register(name)}
+        type={passwordVisible ? "text" : "password"}
+        maxLength={64}
+        required
+      />
+
       <button
         tabIndex={-1}
         type="button"
         name="toggle"
+        className={styles.eyeIcon}
         onClick={() => setPasswordVisible(!passwordVisible)}
       >
         <Image
@@ -22,6 +37,6 @@ export default function PasswordInputComponent() {
           draggable={false}
         />
       </button>
-    </>
+    </div>
   );
 }

@@ -4,10 +4,9 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import Analytics from "@/components/analytics";
 import LoginButton from "@/components/loginButton";
-import Provider from "@/components/provider";
 
 import "the-new-css-reset/css/reset.css";
-import "./globals.scss";
+import "@/styles/globals.scss";
 
 import localFont from "next/font/local";
 const Nexa = localFont({
@@ -53,76 +52,74 @@ export default async function RootLayout({
   const session = await auth();
 
   return (
-    <Provider>
-      <html lang="pl" className={Nexa.className}>
-        <body>
-          {process.env.NODE_ENV !== "development" && <Analytics />}
+    <html lang="pl" className={Nexa.className}>
+      <body>
+        {process.env.NODE_ENV !== "development" && <Analytics />}
 
-          <header>
-            <section>
-              <div>
-                <Link href="/">
-                  <Image
-                    src="/favicons/game_die.svg"
-                    alt=""
-                    width={28}
-                    height={28}
-                  />
-                  <h1>Pokój gier</h1>
-                </Link>
-
-                {/* <Link href="/list">
-                  <p>Lista gier</p>
-                </Link> */}
-
-                {/* <Link href="/info">
-                  <p>Informacje</p>
-                </Link> */}
-
-                <Link
-                  href="https://buycoffee.to/kubaklalo/"
-                  target="_blank"
-                  className="supportButton"
-                >
-                  <p>Wesprzyj</p>
-                </Link>
-              </div>
-
-              <LoginButton user={session?.user} />
-            </section>
-          </header>
-
+        <header>
           <section>
-            <div className="mobileView">
-              <p>
-                Wybrana strona nie jest dostępna
-                <br />
-                dla urządzeń mobilnych.
-              </p>
+            <div>
+              <Link href="/">
+                <Image
+                  src="/favicons/game_die.svg"
+                  alt=""
+                  width={28}
+                  height={28}
+                />
+                <h1>Pokój gier</h1>
+              </Link>
+
+              {/* <Link href="/list">
+                <p>Lista gier</p>
+              </Link> */}
+
+              {/* <Link href="/info">
+                <p>Informacje</p>
+              </Link> */}
+
+              <Link
+                href="https://buycoffee.to/kubaklalo/"
+                target="_blank"
+                className="supportButton"
+              >
+                <p>Wesprzyj</p>
+              </Link>
             </div>
 
-            {children}
+            <LoginButton user={session?.user} />
           </section>
+        </header>
 
-          <footer>
-            <section>
-              <p>
-                Stworzone z 💙 przez{" "}
-                <Link href="https://github.com/quanosek" target="_blank">
-                  Jakuba Kłało
-                </Link>
-              </p>
+        <section>
+          <div className="mobileView">
+            <p>
+              Wybrana strona nie jest dostępna
+              <br />
+              dla urządzeń mobilnych.
+            </p>
+          </div>
 
-              <p>
-                Wszelkie prawa zastrzeżone &#169; 2024 | domena{" "}
-                <Link href="https://www.klalo.pl/" target="_blank">
-                  klalo.pl
-                </Link>
-              </p>
-            </section>
-          </footer>
-        </body>
-      </html>
-    </Provider>
+          {children}
+        </section>
+
+        <footer>
+          <section>
+            <p>
+              Stworzone z 💙 przez{" "}
+              <Link href="https://github.com/quanosek" target="_blank">
+                Jakuba Kłało
+              </Link>
+            </p>
+
+            <p>
+              Wszelkie prawa zastrzeżone &#169; 2024 | domena{" "}
+              <Link href="https://www.klalo.pl/" target="_blank">
+                klalo.pl
+              </Link>
+            </p>
+          </section>
+        </footer>
+      </body>
+    </html>
   );
 }

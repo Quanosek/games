@@ -1,80 +1,73 @@
 "use client";
 
-import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
-// import PasswordInput from "@/components/passwordInput";
+import { useForm } from "react-hook-form";
+import Callbacks from "../callbacks";
+import PasswordInput from "../passwordInput";
 
-import styles from "./styles.module.scss";
+import styles from "@/styles/auth.module.scss";
 
 export default function LoginForm() {
+  const router = useRouter();
+
+  const { handleSubmit, register, reset } = useForm();
+  const [submitting, setSubmitting] = useState(false);
+
+  const formSubmit = async ({ email, password }: any) => {
+    try {
+      setSubmitting(true);
+
+      const response = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (response?.error) {
+        reset({ password: "" });
+        console.error(response.error);
+      } else {
+        router.push("/profile");
+        router.refresh();
+      }
+    } catch (error) {
+      console.error("Wystąpił nieoczekiwany błąd, spróbuj ponownie", error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className={styles.formContainer}>
-      {/* <form onSubmit={() => {}}>
+      <form onSubmit={handleSubmit(formSubmit)}>
         <label>
           <p>E-mail</p>
-          <input name="email" type="email" />
+          <input {...register("email")} maxLength={100} required />
         </label>
 
         <label>
           <p>Hasło</p>
-
-          <div className={styles.passwordInput}>
-            <PasswordInput />
-          </div>
+          <PasswordInput function={register} name="password" />
         </label>
 
-        <div className={styles.forgotPassword}>
+        {/* <div className={styles.forgotPassword}>
           <button onClick={() => {}} type="button">
             <p>Nie pamiętasz hasła?</p>
           </button>
-        </div>
+        </div> */}
 
-        <button className={styles.submitButton} type="submit">
-          <p>Zaloguj się</p>
+        <button
+          className={styles.submitButton}
+          type="submit"
+          disabled={submitting}
+        >
+          <p>{submitting ? "Ładowanie..." : "Zaloguj się"}</p>
         </button>
-      </form> */}
+      </form>
 
-      <div className={styles.callbacks}>
-        <button onClick={() => signIn("google")} title="Google">
-          <Image
-            className="icon"
-            src="/icons/google.svg"
-            alt="Google"
-            width={34}
-            height={34}
-          />
-        </button>
-
-        <button onClick={() => signIn("facebook")} title="Facebook">
-          <Image
-            className="icon"
-            src="/icons/facebook.svg"
-            alt="Facebook"
-            width={34}
-            height={34}
-          />
-        </button>
-
-        <button onClick={() => signIn("github")} title="Github">
-          <Image
-            className="icon"
-            src="/icons/github.svg"
-            alt="Github"
-            width={34}
-            height={34}
-          />
-        </button>
-
-        <button onClick={() => signIn("discord")} title="Discord">
-          <Image
-            className="icon"
-            src="/icons/discord.svg"
-            alt="Discord"
-            width={34}
-            height={34}
-          />
-        </button>
-      </div>
+      <Callbacks />
     </div>
   );
 }

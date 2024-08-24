@@ -283,6 +283,11 @@ main {
   }
 }
 
+button:disabled {
+  filter: brightness(0.8) contrast(1.05) !important;
+  cursor: not-allowed;
+}
+
 .loading {
   animation: loading 1s ease-out;
 

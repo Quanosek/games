@@ -1,4 +1,4 @@
-import styles from "./page.module.scss";
+import styles from "@/styles/info.module.scss";
 
 export default function InfoPage() {
   return (

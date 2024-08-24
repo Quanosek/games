@@ -48,34 +48,6 @@
     }
   }
 
-  .passwordInput {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    border-radius: 4px;
-
-    button {
-      position: absolute;
-      right: 0;
-      margin: 0;
-      padding: 5px;
-      height: 100%;
-      width: auto;
-      aspect-ratio: 1/1;
-
-      border: none;
-      background: none;
-      transform: none;
-      filter: none;
-
-      img {
-        opacity: 65%;
-      }
-    }
-  }
-
   .forgotPassword {
     margin-top: -2px;
     width: 100%;
@@ -93,13 +65,30 @@
 
   .submitButton {
     margin-top: 1.5rem;
-    padding: 14px 6rem;
-    width: auto;
+    padding: 14px 25px;
+    width: 16rem;
     justify-content: center;
     border: none;
     border-radius: 30px;
   }
 }
+
+.prompt {
+  margin: 1.2rem 0 3rem;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+
+  a {
+    transition: 100ms filter ease-out;
+
+    &:hover {
+      filter: contrast(0.75);
+    }
+  }
+}
+
+// COMPONENTS
 
 .callbacks {
   margin-top: 1.5rem;
@@ -115,17 +104,29 @@
   }
 }
 
-.prompt {
-  margin: 1.2rem 0 3rem;
+.passwordInput {
+  position: relative;
+  height: 100%;
+  width: 100%;
   display: flex;
-  justify-content: center;
-  gap: 4px;
+  align-items: center;
+  border-radius: 4px;
 
-  a {
-    transition: 100ms filter ease-out;
+  .eyeIcon {
+    position: absolute;
+    right: 0;
+    margin: 0;
+    padding: 5px;
+    height: 100%;
+    width: auto;
+    aspect-ratio: 1/1;
 
-    &:hover {
-      filter: contrast(0.75);
+    border: none;
+    background: none;
+    transform: none;
+
+    img {
+      opacity: 65%;
     }
   }
 }

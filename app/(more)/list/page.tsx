@@ -1,4 +1,4 @@
-import styles from "./page.module.scss";
+import styles from "@/styles/list.module.scss";
 
 export default function AllPage() {
   return (

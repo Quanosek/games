@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { compare } from "bcrypt";
 import db from "@/lib/db";
 
 import Credentials from "next-auth/providers/credentials";
@@ -10,24 +11,31 @@ import Discord from "next-auth/providers/discord";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
-  callbacks: {
-    session({ session, user }) {
-      session.user.id = user.id;
-      return session;
-    },
-  },
+  pages: { error: "/", signIn: "/login" },
+
   providers: [
     Credentials({
-      credentials: {
-        email: { label: "E-mail" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize({ request }: any) {
-        const response = await fetch(request);
-        if (!response.ok) return null;
-        return (await response.json()) ?? null;
+      async authorize(credentials) {
+        if (!credentials.email || !credentials.password) return null;
+
+        const existingUser = await db.user.findUnique({
+          where: { email: credentials.email as string },
+        });
+
+        if (!(existingUser && existingUser.password)) return null;
+
+        const passwordMatch = await compare(
+          credentials.password as string,
+          existingUser.password
+        );
+
+        if (!passwordMatch) return null;
+
+        const { id, email } = existingUser;
+        return { id, email };
       },
     }),
+
     Google({
       allowDangerousEmailAccountLinking: true,
     }),
@@ -41,4 +49,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       allowDangerousEmailAccountLinking: true,
     }),
   ],
+
+  session: { strategy: "jwt" },
+
+  callbacks: {
+    async jwt({ user, token }) {
+      if (user) {
+        return {
+          ...token,
+          id: user.id,
+          email: user.email,
+        };
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: `${token.id}`,
+          email: token.email,
+        },
+      };
+    },
+  },
 });
