@@ -71,13 +71,13 @@ export default async function RootLayout({
                   <h1>Pokój gier</h1>
                 </Link>
 
-                <Link href="/list" className="disabled">
+                {/* <Link href="/list">
                   <p>Lista gier</p>
-                </Link>
+                </Link> */}
 
-                <Link href="/info" className="disabled">
+                {/* <Link href="/info">
                   <p>Informacje</p>
-                </Link>
+                </Link> */}
 
                 <Link
                   href="https://buycoffee.to/kubaklalo/"

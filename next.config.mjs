@@ -6,6 +6,7 @@ const nextConfig = {
     minimumCacheTTL: 60,
     domains: [
       "lh3.googleusercontent.com",
+      "platform-lookaside.fbsbx.com",
       "avatars.githubusercontent.com",
       "cdn.discordapp.com",
     ],

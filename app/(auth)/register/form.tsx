@@ -2,14 +2,14 @@
 
 import Image from "next/image";
 import { signIn } from "next-auth/react";
-// import PasswordInput from "@/components/passwordInput";
+import PasswordInput from "@/components/passwordInput";
 
 import styles from "./styles.module.scss";
 
 export default function LoginForm() {
   return (
     <div className={styles.formContainer}>
-      {/* <form onSubmit={() => {}}>
+      <form onSubmit={() => {}}>
         <label>
           <p>E-mail</p>
           <input name="email" type="email" />
@@ -23,16 +23,18 @@ export default function LoginForm() {
           </div>
         </label>
 
-        <div className={styles.forgotPassword}>
-          <button onClick={() => {}} type="button">
-            <p>Nie pamiętasz hasła?</p>
-          </button>
-        </div>
+        <label>
+          <p>Powtórz hasło</p>
+
+          <div className={styles.passwordInput}>
+            <PasswordInput />
+          </div>
+        </label>
 
         <button className={styles.submitButton} type="submit">
-          <p>Zaloguj się</p>
+          <p>Stwórz konto</p>
         </button>
-      </form> */}
+      </form>
 
       <div className={styles.callbacks}>
         <button onClick={() => signIn("google")} title="Google">
