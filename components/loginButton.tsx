@@ -31,7 +31,7 @@ export default function LoginButtonComponent({ user }: any) {
             className="list"
             style={{ display: showButtonsList ? "" : "none" }}
           >
-            <Link href="/profile" className="disabled">
+            <Link href="/profile">
               <p>Przejdź do profilu</p>
             </Link>
 

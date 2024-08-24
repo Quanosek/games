@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, Fragment } from "react";
+import toast from "react-hot-toast";
 
 import styles from "./page.module.scss";
 
@@ -322,7 +323,7 @@ export default function PnmPage() {
                   JSON.stringify(data[data.length - 1]) ===
                   JSON.stringify(newStage)
                 ) {
-                  return alert(
+                  return toast(
                     "Uzupełnij poprzednią planszę przed dodaniem nowej."
                   );
                 }

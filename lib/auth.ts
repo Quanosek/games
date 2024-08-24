@@ -12,6 +12,7 @@ import Discord from "next-auth/providers/discord";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
   pages: { error: "/", signIn: "/login" },
+  session: { strategy: "jwt" },
 
   providers: [
     Credentials({
@@ -31,8 +32,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!passwordMatch) return null;
 
-        const { id, email } = existingUser;
-        return { id, email };
+        return existingUser;
       },
     }),
 
@@ -50,28 +50,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
 
-  session: { strategy: "jwt" },
-
   callbacks: {
-    async jwt({ user, token }) {
+    jwt({ token, user }) {
       if (user) {
-        return {
-          ...token,
-          id: user.id,
-          email: user.email,
-        };
+        const { username, id, role } = user;
+        return { ...token, username, id, role };
+      } else {
+        return token;
       }
-      return token;
     },
 
-    async session({ session, token }) {
+    session({ session, token }) {
+      const { username, id, role } = token as any;
       return {
         ...session,
-        user: {
-          ...session.user,
-          id: `${token.id}`,
-          email: token.email,
-        },
+        user: { ...session.user, username, id, role },
       };
     },
   },

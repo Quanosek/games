@@ -5,7 +5,7 @@ import styles from "@/styles/auth.module.scss";
 
 export default function AuthCallbacks() {
   const authOptions = {
-    callbackUrl: "/profile",
+    callbackUrl: "/",
   };
 
   return (

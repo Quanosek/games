@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { SessionProvider } from "next-auth/react";
+import toast from "react-hot-toast";
 
 export default function WrapperComponent({
   children,
@@ -13,6 +14,7 @@ export default function WrapperComponent({
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    if (pathname !== "/login") toast.dismiss();
   }, [pathname]);
 
   return <SessionProvider>{children}</SessionProvider>;

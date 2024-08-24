@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 import styles from "./page.module.scss";
 
@@ -345,7 +346,7 @@ export default function WisielecPage() {
                 JSON.stringify(data[data.length - 1]) ===
                 JSON.stringify(emptyData)
               ) {
-                return alert(
+                return toast(
                   "Uzupełnij poprzednią planszę przed dodaniem nowej."
                 );
               }

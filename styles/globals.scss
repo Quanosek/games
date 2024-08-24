@@ -5,7 +5,7 @@
   --black: #0a0b0d;
   --yellow: #d9c465;
 
-  --primary: #303030;
+  --primary: #2a2a2a;
   --secondary: #242424;
   --background: #121212;
 
@@ -53,7 +53,7 @@ footer {
   }
 }
 
-$header-height: min(4rem, 16vw);
+$header-height: min(4rem, 16vw); // also Toast component
 $section-padding: 0.85rem;
 
 header {
@@ -263,6 +263,11 @@ main {
     &:hover {
       transform: translateY(-1.5px);
     }
+
+    &:disabled {
+      filter: brightness(0.8) contrast(1.05) !important;
+      cursor: not-allowed;
+    }
   }
 
   select {
@@ -281,11 +286,6 @@ main {
     align-items: center;
     gap: 1.5rem;
   }
-}
-
-button:disabled {
-  filter: brightness(0.8) contrast(1.05) !important;
-  cursor: not-allowed;
 }
 
 .loading {

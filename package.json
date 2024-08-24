@@ -1,5 +1,5 @@
 {
-  "version": "0.4.2",
+  "version": "0.4.3",
   "name": "games",
   "description": "Complex web application of party-games",
   "scripts": {
@@ -23,6 +23,7 @@
     "react-canvas-confetti": "^2.0.7",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",
+    "react-hot-toast": "^2.4.1",
     "sharp": "^0.33.5",
     "the-new-css-reset": "^1.11.2",
     "zod": "^3.23.8"

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { Toaster } from "react-hot-toast";
 import { auth } from "@/lib/auth";
 import Analytics from "@/components/analytics";
 import LoginButton from "@/components/loginButton";
@@ -124,6 +125,16 @@ export default async function RootLayout({
             </section>
           </footer>
         </Wrapper>
+
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            style: {
+              background: "#2a2a2a",
+              color: "#f2f2f2",
+            },
+          }}
+        />
       </body>
     </html>
   );

@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginUserInput, loginUserSchema } from "@/lib/zod";
+import toast from "react-hot-toast";
 import Callbacks from "../callbacks";
 import PasswordInput from "../passwordInput";
 
@@ -24,7 +25,7 @@ export default function LoginForm() {
     resolver: zodResolver(loginUserSchema),
   });
 
-  const formSubmit = async ({ email, password }: any) => {
+  const formSubmit = async ({ email, password }: LoginUserInput) => {
     try {
       setSubmitting(true);
 
@@ -36,13 +37,15 @@ export default function LoginForm() {
 
       if (response?.error) {
         reset({ password: "" });
+        toast.error("Wprowadzono niepoprawny adres e-mail lub hasło");
         console.error(response.error);
       } else {
-        router.push("/profile");
+        router.push("/");
         router.refresh();
       }
     } catch (error) {
-      console.error("Wystąpił nieoczekiwany błąd, spróbuj ponownie", error);
+      toast.error("Wystąpił nieoczekiwany błąd, spróbuj ponownie");
+      console.error(error);
     } finally {
       setSubmitting(false);
     }

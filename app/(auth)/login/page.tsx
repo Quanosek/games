@@ -7,7 +7,7 @@ export default function LoginPage() {
   return (
     <>
       <div className={styles.title}>
-        <h1>Witamy ponownie</h1>
+        <h1>Zaloguj się</h1>
         <p>Wpisz swoje dane, aby kontynuować</p>
       </div>
 

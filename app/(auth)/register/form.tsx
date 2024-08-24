@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterUserInput, registerUserSchema } from "@/lib/zod";
 import axios from "axios";
+import toast from "react-hot-toast";
 import Callbacks from "../callbacks";
 import PasswordInput from "../passwordInput";
 
@@ -24,21 +25,23 @@ export default function RegisterForm() {
     resolver: zodResolver(registerUserSchema),
   });
 
-  const formSubmit = async (values: any) => {
+  const formSubmit = (values: RegisterUserInput) => {
     try {
       setSubmitting(true);
 
       axios
         .post("/api/users", values)
         .then(() => {
+          toast.success("Konto zostało utworzone, zaloguj się");
           router.push("/login");
         })
         .catch((err) => {
           reset({ passwordConfirm: "" });
-          alert(err.response.data.message);
+          toast.error(err.response.data.message);
         });
     } catch (error) {
-      console.error("Wystąpił nieoczekiwany błąd, spróbuj ponownie", error);
+      toast.error("Wystąpił nieoczekiwany błąd, spróbuj ponownie");
+      console.error(error);
     } finally {
       setSubmitting(false);
     }

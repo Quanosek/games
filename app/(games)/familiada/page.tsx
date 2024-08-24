@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import FormatPoints from "@/lib/formatPoints";
+import toast from "react-hot-toast";
 
 import styles from "./page.module.scss";
 
@@ -337,15 +338,15 @@ export default function FamiliadaPage() {
                       if (
                         answers.filter((el) => el.value && el.points).length < 3
                       ) {
-                        return alert(
+                        return toast(
                           "Plansza musi mieć przynajmniej 3 wypełnione odpowiedzi z punktami!"
                         );
                       } else if (answers.some((el) => el.value && !el.points)) {
-                        return alert(
+                        return toast(
                           "Niektóre odpowiedzi nie mają przydzielonych punktów!"
                         );
                       } else if (answers.some((el) => !el.value && el.points)) {
-                        return alert(
+                        return toast(
                           "Niektóre odpowiedzi nie mają wypełnionych odpowiedzi!"
                         );
                       }
@@ -376,7 +377,7 @@ export default function FamiliadaPage() {
                   <button
                     onClick={() => {
                       if (!preview[index]) {
-                        return alert(
+                        return toast(
                           "Nie sprawdzono danych dla wybranej planszy!"
                         );
                       }
@@ -400,7 +401,7 @@ export default function FamiliadaPage() {
             className={styles.addButton}
             onClick={() => {
               if (emptyQuestionCheck(data[data.length - 1])) {
-                return alert(
+                return toast(
                   "Uzupełnij poprzednią planszę przed dodaniem nowej."
                 );
               }
