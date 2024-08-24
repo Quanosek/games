@@ -214,7 +214,7 @@ export default function WisielecBoardID({
         {Mistakes(data) > 0 && (
           <div className={styles.bgImage}>
             <Image
-              alt={`wisielec`}
+              alt="wisielec"
               src={`/wisielec/${Math.ceil(
                 (15 / data.attempts) * Mistakes(data)
               )}.svg`}

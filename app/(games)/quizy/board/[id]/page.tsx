@@ -159,7 +159,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
           >
             <Image
               className="icon"
-              alt="icon"
+              alt=""
               src="/icons/question_mark.svg"
               width={20}
               height={20}
@@ -174,7 +174,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
           >
             <Image
               className="icon"
-              alt="icon"
+              alt=""
               src="/icons/magnifying_glass.svg"
               width={20}
               height={20}
@@ -208,7 +208,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
           >
             <Image
               className="icon"
-              alt="icon"
+              alt=""
               src="/icons/magnifying_glass.svg"
               width={20}
               height={20}
@@ -277,7 +277,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
           <Image
             style={{ rotate: "-90deg" }}
             className="icon"
-            alt="arrow-left"
+            alt="w lewo"
             src="/icons/arrow.svg"
             width={50}
             height={50}
@@ -293,7 +293,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
           <Image
             style={{ rotate: "90deg" }}
             className="icon"
-            alt="arrow-left"
+            alt="w prawo"
             src="/icons/arrow.svg"
             width={50}
             height={50}

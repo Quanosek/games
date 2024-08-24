@@ -63,10 +63,12 @@ export default async function RootLayout({
               <div>
                 <Link href="/">
                   <Image
+                    alt="🎲"
                     src="/favicons/game_die.svg"
-                    alt=""
                     width={28}
                     height={28}
+                    draggable={false}
+                    priority
                   />
                   <h1>Pokój gier</h1>
                 </Link>

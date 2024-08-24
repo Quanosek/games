@@ -121,7 +121,7 @@ export default function WisielecPage() {
                   >
                     <Image
                       className="icon"
-                      alt="delete"
+                      alt="usuń"
                       src="/icons/trashcan.svg"
                       width={20}
                       height={20}
@@ -147,7 +147,7 @@ export default function WisielecPage() {
                     <Image
                       style={{ rotate: "180deg" }}
                       className="icon"
-                      alt="arrow"
+                      alt="w dół"
                       src="/icons/arrow.svg"
                       width={20}
                       height={20}
@@ -172,7 +172,7 @@ export default function WisielecPage() {
                   >
                     <Image
                       className="icon"
-                      alt="arrow"
+                      alt="w górę"
                       src="/icons/arrow.svg"
                       width={20}
                       height={20}

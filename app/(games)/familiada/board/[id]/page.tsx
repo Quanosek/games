@@ -112,20 +112,20 @@ export default function FamiliadaBoardID({
       <div className={styles.mistakes}>
         {(teamCounter > 3 && (
           <Image
-            src="/familiada/images/x_big.webp"
+            className={styles.big}
             alt="X"
+            src="/familiada/images/x_big.webp"
             width={111}
             height={283}
             draggable={false}
-            className={styles.big}
           />
         )) ||
           [...Array(teamCounter)].map((_, i) => {
             return (
               <Image
                 key={i}
-                src="/familiada/images/x_small.webp"
                 alt="x"
+                src="/familiada/images/x_small.webp"
                 width={111}
                 height={163}
                 draggable={false}
@@ -142,8 +142,8 @@ export default function FamiliadaBoardID({
       <>
         <Image
           className={styles.titleBoard}
-          src="/familiada/images/background_title.webp"
           alt="FAMILIADA"
+          src="/familiada/images/background_title.webp"
           width={1920}
           height={1080}
           draggable={false}

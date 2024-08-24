@@ -46,7 +46,7 @@ export default function QuizyPage() {
         <>
           <Image
             className="icon"
-            alt="closed"
+            alt=""
             src="/icons/a_button.svg"
             width={20}
             height={20}
@@ -60,7 +60,7 @@ export default function QuizyPage() {
         <>
           <Image
             className="icon"
-            alt="gap"
+            alt=""
             src="/icons/magnifying_glass.svg"
             width={20}
             height={20}
@@ -74,7 +74,7 @@ export default function QuizyPage() {
         <>
           <Image
             className="icon"
-            alt="open"
+            alt=""
             src="/icons/thought_balloon.svg"
             width={20}
             height={20}
@@ -374,7 +374,7 @@ export default function QuizyPage() {
                       >
                         <Image
                           className="icon"
-                          alt="delete"
+                          alt="usuń"
                           src="/icons/trashcan.svg"
                           width={20}
                           height={20}
@@ -400,7 +400,7 @@ export default function QuizyPage() {
                         <Image
                           style={{ rotate: "180deg" }}
                           className="icon"
-                          alt="arrow"
+                          alt="w lewo"
                           src="/icons/arrow.svg"
                           width={20}
                           height={20}
@@ -425,7 +425,7 @@ export default function QuizyPage() {
                       >
                         <Image
                           className="icon"
-                          alt="arrow"
+                          alt="w górę"
                           src="/icons/arrow.svg"
                           width={20}
                           height={20}

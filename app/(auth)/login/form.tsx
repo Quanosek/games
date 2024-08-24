@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginUserInput, loginUserSchema } from "@/lib/zod";
 import Callbacks from "../callbacks";
 import PasswordInput from "../passwordInput";
 
@@ -11,9 +13,16 @@ import styles from "@/styles/auth.module.scss";
 
 export default function LoginForm() {
   const router = useRouter();
-
-  const { handleSubmit, register, reset } = useForm();
   const [submitting, setSubmitting] = useState(false);
+
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+    reset,
+  } = useForm<LoginUserInput>({
+    resolver: zodResolver(loginUserSchema),
+  });
 
   const formSubmit = async ({ email, password }: any) => {
     try {
@@ -44,12 +53,18 @@ export default function LoginForm() {
       <form onSubmit={handleSubmit(formSubmit)}>
         <label>
           <p>E-mail</p>
-          <input {...register("email")} maxLength={100} required />
+          <input {...register("email")} autoComplete="email" maxLength={100} />
+          {errors.email && <span>{errors.email.message}</span>}
         </label>
 
         <label>
           <p>Hasło</p>
-          <PasswordInput function={register} name="password" />
+          <PasswordInput
+            function={register}
+            name="password"
+            autocomplete="current-password"
+          />
+          {errors.password && <span>{errors.password.message}</span>}
         </label>
 
         {/* <div className={styles.forgotPassword}>

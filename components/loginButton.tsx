@@ -23,7 +23,7 @@ export default function LoginButtonComponent({ user }: any) {
           <button onClick={() => setShowButtonsList(true)}>
             <p>{user.username ?? user.email}</p>
             {user.image && (
-              <Image src={user.image ?? ""} alt="" width={100} height={100} />
+              <Image alt="" src={user.image ?? ""} width={100} height={100} />
             )}
           </button>
 

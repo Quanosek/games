@@ -13,8 +13,8 @@ export default function AuthCallbacks() {
       <button title="Google" onClick={() => signIn("google", authOptions)}>
         <Image
           className="icon"
-          src="/icons/google.svg"
           alt="Google"
+          src="/icons/google.svg"
           width={34}
           height={34}
         />
@@ -23,8 +23,8 @@ export default function AuthCallbacks() {
       <button title="Facebook" onClick={() => signIn("facebook", authOptions)}>
         <Image
           className="icon"
-          src="/icons/facebook.svg"
           alt="Facebook"
+          src="/icons/facebook.svg"
           width={34}
           height={34}
         />
@@ -33,8 +33,8 @@ export default function AuthCallbacks() {
       <button title="Github" onClick={() => signIn("github", authOptions)}>
         <Image
           className="icon"
-          src="/icons/github.svg"
           alt="Github"
+          src="/icons/github.svg"
           width={34}
           height={34}
         />
@@ -43,8 +43,8 @@ export default function AuthCallbacks() {
       <button title="Discord" onClick={() => signIn("discord", authOptions)}>
         <Image
           className="icon"
-          src="/icons/discord.svg"
           alt="Discord"
+          src="/icons/discord.svg"
           width={34}
           height={34}
         />

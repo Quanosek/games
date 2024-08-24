@@ -11,7 +11,7 @@ export default function HomePage() {
       <div className={styles.buttons}>
         <Link className="button" href="/quizy">
           <Image
-            alt="icon"
+            alt="❔"
             src="/favicons/white_question_mark.svg"
             width={22}
             height={22}
@@ -22,7 +22,7 @@ export default function HomePage() {
 
         <Link className="button" href="/wisielec">
           <Image
-            alt="icon"
+            alt="🪢"
             src="/favicons/knot.svg"
             width={22}
             height={22}
@@ -33,7 +33,7 @@ export default function HomePage() {
 
         <Link className="button" href="/familiada">
           <Image
-            alt="icon"
+            alt="💰"
             src="/favicons/money_bag.svg"
             width={22}
             height={22}
@@ -44,7 +44,7 @@ export default function HomePage() {
 
         <Link className="button disabled" href="/pnm">
           <Image
-            alt="icon"
+            alt="💸"
             src="/favicons/dollar_banknote.svg"
             width={22}
             height={22}

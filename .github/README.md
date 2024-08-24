@@ -40,5 +40,5 @@
 <h2>Support</h2>
 
 <a href="https://ko-fi.com/quanosek">
-  <img src="https://cdn.ko-fi.com/cdn/kofi3.png?v=3" height="50" width="210" alt="quanosek" />
+  <img alt="quanosek" src="https://cdn.ko-fi.com/cdn/kofi3.png?v=3" width="210" height="50" />
 </a>

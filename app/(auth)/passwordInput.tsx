@@ -6,9 +6,11 @@ import styles from "@/styles/auth.module.scss";
 export default function AuthPasswordInput({
   function: register,
   name,
+  autocomplete,
 }: {
   function: Function;
   name: string;
+  autocomplete?: "current-password" | "off";
 }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -17,8 +19,8 @@ export default function AuthPasswordInput({
       <input
         {...register(name)}
         type={passwordVisible ? "text" : "password"}
-        maxLength={64}
-        required
+        autoComplete={autocomplete}
+        maxLength={65}
       />
 
       <button
@@ -30,10 +32,10 @@ export default function AuthPasswordInput({
       >
         <Image
           className="icon"
-          src={`/icons/${passwordVisible ? "eye" : "eye_slash"}.svg`}
           alt=""
-          height={24}
+          src={`/icons/${passwordVisible ? "eye" : "eye_slash"}.svg`}
           width={24}
+          height={24}
           draggable={false}
         />
       </button>

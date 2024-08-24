@@ -76,10 +76,11 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
               >
                 <Image
                   className="icon"
-                  src="/icons/play.svg"
                   alt="Odtwórz"
+                  src="/icons/play.svg"
                   width={100}
                   height={100}
+                  draggable={false}
                 />
               </button>
             )}

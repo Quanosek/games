@@ -179,10 +179,10 @@
   grid-gap: $grid-gap;
 
   button {
-    font-size: 105%;
-    min-height: 20vh;
     padding: 2vw;
     flex: 0 0 calc(50% - $grid-gap);
+    min-height: 20vh;
+    font-size: 105%;
     border-radius: 0;
 
     &.correct {
