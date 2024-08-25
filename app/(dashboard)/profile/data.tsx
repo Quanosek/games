@@ -1,20 +1,41 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { User } from "next-auth";
+import { signOut } from "next-auth/react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import toast from "react-hot-toast";
 import PasswordInput from "@/components/passwordInput";
 
 import styles from "@/styles/dashboard.module.scss";
 
-export default function Data({ user }: any) {
+export default function Data({ user }: { user: User }) {
+  const router = useRouter();
+
   const [submitting, setSubmitting] = useState(false);
-  const { handleSubmit, register } = useForm();
+  const { handleSubmit, register, reset } = useForm();
 
   const formSubmit = (values: any) => {
     try {
       setSubmitting(true);
-      console.log(values);
+
+      const { name, username, passwordNew: password } = values;
+      const data = { id: user.id, name, username, password };
+
+      axios
+        .post("/api/user/data", { ...data })
+        .then(async () => {
+          await signOut({ redirect: false });
+          toast.success("Dane zostały zaktualizowane, zaloguj się ponownie");
+          router.push("/login");
+          router.refresh();
+        })
+        .catch((err) => {
+          reset({ passwordConfirm: "", password: "" });
+          toast.error(err.response.data.message);
+        });
     } catch (error) {
       toast.error("Wystąpił nieoczekiwany błąd, spróbuj ponownie");
       console.error(error);
@@ -32,7 +53,7 @@ export default function Data({ user }: any) {
             {...register("name")}
             autoComplete="name"
             maxLength={250}
-            defaultValue={user.name}
+            defaultValue={user.name ?? ""}
           />
         </label>
 
@@ -42,7 +63,7 @@ export default function Data({ user }: any) {
             {...register("username")}
             autoComplete="username"
             maxLength={200}
-            defaultValue={user.username}
+            defaultValue={user.username ?? ""}
           />
         </label>
       </div>
@@ -53,7 +74,7 @@ export default function Data({ user }: any) {
           {...register("email")}
           autoComplete="email"
           maxLength={150}
-          defaultValue={user.email}
+          defaultValue={user.email ?? ""}
         />
       </label>
 

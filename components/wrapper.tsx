@@ -14,7 +14,7 @@ export default function WrapperComponent({
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (pathname !== "/login") toast.dismiss();
+    if (pathname === "/") toast.dismiss();
   }, [pathname]);
 
   return <SessionProvider>{children}</SessionProvider>;

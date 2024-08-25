@@ -152,6 +152,10 @@ header {
           transform: none;
           filter: contrast(0.75);
         }
+
+        p {
+          white-space: nowrap;
+        }
       }
 
       hr {

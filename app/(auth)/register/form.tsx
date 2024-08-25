@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterUserInput, registerUserSchema } from "@/lib/zod";
@@ -30,10 +31,13 @@ export default function RegisterForm() {
       setSubmitting(true);
 
       axios
-        .post("/api/users", values)
-        .then(() => {
-          toast.success("Konto zostało utworzone, zaloguj się");
-          router.push("/login");
+        .post("/api/user/create", values)
+        .then(async () => {
+          const { email, password } = values;
+          await signIn("credentials", { email, password });
+          toast.success("Pomyślnie utworzono nowe konto");
+          router.push("/profile");
+          router.refresh();
         })
         .catch((err) => {
           reset({ passwordConfirm: "" });

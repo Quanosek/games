@@ -3,9 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { User } from "next-auth";
 import { signOut } from "next-auth/react";
 
-export default function LoginButtonComponent({ user }: any) {
+export default function LoginButtonComponent({ user }: { user: User }) {
   const [showButtonsList, setShowButtonsList] = useState(false);
 
   useEffect(() => {
@@ -20,7 +21,8 @@ export default function LoginButtonComponent({ user }: any) {
       {user ? (
         <div className="loginButton">
           <button onClick={() => setShowButtonsList(true)}>
-            <p>{user.username ?? user.email}</p>
+            <p>{user.username ? `@${user.username}` : user.email}</p>
+
             {user.image && (
               <Image alt="" src={user.image ?? ""} width={100} height={100} />
             )}
