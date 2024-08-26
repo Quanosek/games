@@ -162,11 +162,12 @@
 .credits {
   opacity: 35%;
   position: absolute;
-  bottom: 1rem;
+  bottom: 0;
   font-size: 80%;
   text-align: center;
 
   a {
+    display: unset;
     text-decoration: underline;
   }
 }

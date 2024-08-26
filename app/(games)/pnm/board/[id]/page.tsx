@@ -250,7 +250,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
                 <div className={styles.buttons}>
                   <button
                     onMouseDown={() => {
-                      function removePackage() {
+                      const removePackage = () => {
                         setStageData((prev) => {
                           if (
                             prev.packagesLeft === 40 ||
@@ -270,7 +270,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
                             }),
                           };
                         });
-                      }
+                      };
 
                       const id = setInterval(removePackage, 300);
                       removePackage(), setIntervalId(id);
@@ -282,7 +282,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
 
                   <button
                     onMouseDown={() => {
-                      function addPackage() {
+                      const addPackage = () => {
                         setStageData((prev) => {
                           if (
                             prev.packagesLeft === 0 ||
@@ -302,7 +302,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
                             }),
                           };
                         });
-                      }
+                      };
 
                       const id = setInterval(addPackage, 300);
                       addPackage(), setIntervalId(id);

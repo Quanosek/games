@@ -128,6 +128,7 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
   }
 
   .list {
+    z-index: 1;
     position: absolute;
     top: 95%;
     width: 100%;

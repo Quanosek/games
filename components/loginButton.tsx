@@ -33,7 +33,7 @@ export default function LoginButtonComponent({
           </button>
 
           <div
-            className="list"
+            className="dropdown"
             style={{ display: showButtonsList ? "" : "none" }}
           >
             <Link href="/profile">

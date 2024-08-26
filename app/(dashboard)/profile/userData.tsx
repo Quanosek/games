@@ -40,7 +40,7 @@ export default function Data({ user }: { user: User | undefined }) {
       const data = { id: user?.id, ...params };
 
       axios
-        .post("/api/user/data", data)
+        .put("/api/user", data)
         .then(async () => {
           await signOut({ redirect: false });
           toast.success("Dane zostały zaktualizowane, zaloguj się ponownie");
@@ -87,9 +87,10 @@ export default function Data({ user }: { user: User | undefined }) {
         </label>
       </div>
 
-      <label className={styles.locked}>
+      <label>
         <p>E-mail</p>
         <input
+          className={styles.locked}
           name="email"
           autoComplete="email"
           maxLength={100}
@@ -125,7 +126,7 @@ export default function Data({ user }: { user: User | undefined }) {
         type="submit"
         disabled={submitting}
       >
-        {submitting ? "Ładowanie..." : "Zapisz dane"}
+        <p>{submitting ? "Ładowanie..." : "Zapisz dane"}</p>
       </button>
     </form>
   );

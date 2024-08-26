@@ -8,13 +8,20 @@
   h1 {
     font-size: 300%;
   }
+
+  h2 {
+    margin: -0.5rem 0 1.5rem;
+    font-size: 150%;
+    font-weight: bold;
+    text-align: center;
+  }
 }
 
 .profileLayout {
   width: 40rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2.5rem;
 
   .flex {
     display: flex;
@@ -34,7 +41,7 @@
 
     span {
       padding: 6px 18px;
-      background-color: #98730d;
+      background-color: var(--gold);
       border-radius: 30px;
     }
   }
@@ -84,20 +91,34 @@
   }
 
   .locked {
+    filter: brightness(0.8) contrast(1.05);
     cursor: not-allowed;
-
-    input {
-      filter: brightness(0.8) contrast(1.05);
-    }
   }
 
   .submitButton {
-    margin: 1.5rem 0 2rem;
+    margin-top: 1.5rem;
     padding: 14px 25px;
     width: 16rem;
     justify-content: center;
     border: none;
     border-radius: 30px;
+  }
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+
+  button {
+    padding: 14px 25px;
+    width: 14rem;
+    border: none;
+    border-radius: 30px;
+
+    &:nth-child(2) {
+      background-color: var(--red);
+    }
   }
 }
 

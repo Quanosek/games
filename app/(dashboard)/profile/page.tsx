@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { auth } from "@/lib/auth";
-import Data from "./data";
+import UserData from "./userData";
+import ActionButtons from "./actionButtons";
 
 import styles from "@/styles/dashboard.module.scss";
 
@@ -30,7 +31,17 @@ export default async function ProfilePage() {
 
         <hr />
 
-        <Data user={user} />
+        <div>
+          <h2>Uzupełnij swoje dane:</h2>
+          <UserData user={user} />
+        </div>
+
+        <hr />
+
+        <div>
+          <h2>Operacje na koncie:</h2>
+          <ActionButtons user={user} />
+        </div>
       </div>
     </div>
   );

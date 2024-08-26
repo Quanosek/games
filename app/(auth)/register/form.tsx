@@ -8,8 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterUserInput, registerUserSchema } from "@/lib/zod";
 import axios from "axios";
 import toast from "react-hot-toast";
-import Callbacks from "../callbacks";
 import PasswordInput from "@/components/passwordInput";
+import Providers from "../providers";
 
 import styles from "@/styles/auth.module.scss";
 
@@ -32,7 +32,7 @@ export default function RegisterForm() {
       setSubmitting(true);
 
       axios
-        .post("/api/user/create", values)
+        .post("/api/user", values)
         .then(async () => {
           const { passwordConfirm, ...params } = values;
           await signIn("credentials", { ...params, redirect: false });
@@ -92,7 +92,7 @@ export default function RegisterForm() {
         </button>
       </form>
 
-      <Callbacks />
+      <Providers />
     </div>
   );
 }

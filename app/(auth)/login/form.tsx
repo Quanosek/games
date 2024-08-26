@@ -7,8 +7,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginUserInput, loginUserSchema } from "@/lib/zod";
 import toast from "react-hot-toast";
-import Callbacks from "../callbacks";
 import PasswordInput from "@/components/passwordInput";
+import Providers from "../providers";
 
 import styles from "@/styles/auth.module.scss";
 
@@ -86,7 +86,7 @@ export default function LoginForm() {
         </button>
       </form>
 
-      <Callbacks />
+      <Providers />
     </div>
   );
 }

@@ -54,7 +54,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     jwt({ token, user }) {
       if (user) {
         const { username, password, id, role } = user;
-        return { ...token, username, password: Boolean(password), id, role };
+        return {
+          ...token,
+          username,
+          password: Boolean(password),
+          id: `${id}`,
+          role,
+        };
       } else {
         return token;
       }
@@ -64,7 +70,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       const { username, password, id, role } = token as any;
       return {
         ...session,
-        user: { ...session.user, username, password, id, role },
+        user: {
+          ...session.user,
+          username,
+          password,
+          id,
+          role,
+        },
       };
     },
   },
