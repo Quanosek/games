@@ -27,16 +27,16 @@ export default function RegisterForm() {
 
   const [submitting, setSubmitting] = useState(false);
 
-  const formSubmit = (values: RegisterUserInput) => {
+  const formSubmit = async (values: RegisterUserInput) => {
     try {
       setSubmitting(true);
 
-      axios
-        .post("/api/user", values)
+      const { passwordConfirm, ...params } = values;
+      await axios
+        .post("/api/user", params)
         .then(async () => {
-          const { passwordConfirm, ...params } = values;
-          await signIn("credentials", { ...params, redirect: false });
           toast.success("Pomyślnie utworzono nowe konto");
+          await signIn("credentials", { ...params, redirect: false });
           router.push("/profile");
           router.refresh();
         })
@@ -92,7 +92,7 @@ export default function RegisterForm() {
         </button>
       </form>
 
-      <Providers />
+      <Providers callbackUrl="/profile" />
     </div>
   );
 }

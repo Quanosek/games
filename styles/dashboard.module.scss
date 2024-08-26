@@ -1,5 +1,4 @@
 .profileContainer {
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,13 +6,6 @@
 
   h1 {
     font-size: 300%;
-  }
-
-  h2 {
-    margin: -0.5rem 0 1.5rem;
-    font-size: 150%;
-    font-weight: bold;
-    text-align: center;
   }
 }
 
@@ -23,38 +15,64 @@
   flex-direction: column;
   gap: 2.5rem;
 
-  .flex {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 1rem;
-
-    p {
-      opacity: 80%;
-      font-size: 90%;
-    }
-
-    span {
-      padding: 6px 18px;
-      background-color: var(--gold);
-      border-radius: 30px;
-    }
-  }
-
   hr {
     opacity: 15%;
     width: 100%;
     border: 0.5px solid var(--white);
     border-radius: 30px;
   }
+
+  h2 {
+    margin: -0.5rem 0 1.5rem;
+    text-align: center;
+    font-size: 150%;
+    font-weight: bold;
+  }
 }
 
-.dataForm {
+.userInfo {
+  display: flex;
+  justify-content: space-between;
+
+  img {
+    border: 2px solid var(--white);
+    border-radius: 100%;
+  }
+
+  .params {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1rem;
+
+      .id {
+        opacity: 80%;
+        font-size: 90%;
+      }
+
+      .badge {
+        padding: 6px 18px;
+        background-color: var(--gold);
+        border-radius: 30px;
+      }
+    }
+
+    .savedButton {
+      padding: 14px 32px;
+      min-width: 12rem;
+      background-color: var(--primary);
+      border-radius: 30px;
+    }
+  }
+}
+
+.userData {
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -62,7 +80,7 @@
   div {
     width: 100%;
     display: flex;
-    gap: 22px;
+    gap: 20px;
   }
 
   label {
@@ -97,9 +115,8 @@
 
   .submitButton {
     margin-top: 1.5rem;
-    padding: 14px 25px;
+    padding: 14px 32px;
     width: 16rem;
-    justify-content: center;
     border: none;
     border-radius: 30px;
   }
@@ -108,10 +125,10 @@
 .actionButtons {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 20px;
 
   button {
-    padding: 14px 25px;
+    padding: 14px 32px;
     width: 14rem;
     border: none;
     border-radius: 30px;
@@ -126,10 +143,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
 
   p {
     opacity: 80%;
-    font-size: 90%;
   }
 }

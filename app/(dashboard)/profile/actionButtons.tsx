@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { User } from "next-auth";
 import { signOut } from "next-auth/react";
@@ -9,6 +10,7 @@ import toast from "react-hot-toast";
 import styles from "@/styles/dashboard.module.scss";
 
 export default function ActionButtons({ user }: { user: User | undefined }) {
+  const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
 
   const deleteAccount = async () => {
@@ -17,10 +19,17 @@ export default function ActionButtons({ user }: { user: User | undefined }) {
 
       if (!confirm("Czy na pewno chcesz usunąć konto?")) return;
 
-      axios
-        .delete("/api/user", { data: JSON.stringify({ id: user?.id }) })
-        .then(async () => await signOut())
-        .catch((error) => toast.error(error.response.data.message));
+      await axios
+        .delete("/api/user", { data: { id: user?.id } })
+        .then(async () => {
+          toast.success("Konto zostało usunięte");
+          await signOut({ redirect: false });
+          router.push("/");
+          router.refresh();
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
     } catch (error) {
       toast.error("Wystąpił nieoczekiwany błąd, spróbuj ponownie");
       console.error(error);
@@ -31,7 +40,7 @@ export default function ActionButtons({ user }: { user: User | undefined }) {
 
   return (
     <div className={styles.actionButtons}>
-      <button type="button" onClick={() => signOut()}>
+      <button type="button" onClick={async () => await signOut()}>
         <p>Wyloguj się</p>
       </button>
 

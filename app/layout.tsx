@@ -61,7 +61,7 @@ export default async function RootLayout({
         <Wrapper>
           <header>
             <section>
-              <div>
+              <div className="navigation">
                 <Link href="/">
                   <Image
                     alt="🎲"
@@ -74,13 +74,9 @@ export default async function RootLayout({
                   <h1>Pokój gier</h1>
                 </Link>
 
-                {/* <Link href="/list">
-                  <p>Lista gier</p>
-                </Link> */}
-
-                {/* <Link href="/info">
+                <Link href="/info">
                   <p>Informacje</p>
-                </Link> */}
+                </Link>
 
                 <Link
                   href="https://buycoffee.to/kubaklalo/"

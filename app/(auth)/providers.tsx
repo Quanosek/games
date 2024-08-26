@@ -3,14 +3,21 @@ import { signIn } from "next-auth/react";
 
 import styles from "@/styles/auth.module.scss";
 
-export default function AuthCallbacks() {
+export default function AuthCallbacks({
+  callbackUrl,
+}: {
+  callbackUrl: string;
+}) {
   const authOptions = {
-    callbackUrl: "/",
+    callbackUrl,
   };
 
   return (
-    <div className={styles.callbacks}>
-      <button title="Google" onClick={() => signIn("google", authOptions)}>
+    <div className={styles.providers}>
+      <button
+        title="Google"
+        onClick={async () => await signIn("google", authOptions)}
+      >
         <Image
           className="icon"
           alt="Google"
@@ -20,7 +27,10 @@ export default function AuthCallbacks() {
         />
       </button>
 
-      <button title="Facebook" onClick={() => signIn("facebook", authOptions)}>
+      <button
+        title="Facebook"
+        onClick={async () => await signIn("facebook", authOptions)}
+      >
         <Image
           className="icon"
           alt="Facebook"
@@ -30,7 +40,10 @@ export default function AuthCallbacks() {
         />
       </button>
 
-      <button title="Github" onClick={() => signIn("github", authOptions)}>
+      <button
+        title="Github"
+        onClick={async () => await signIn("github", authOptions)}
+      >
         <Image
           className="icon"
           alt="Github"
@@ -40,7 +53,10 @@ export default function AuthCallbacks() {
         />
       </button>
 
-      <button title="Discord" onClick={() => signIn("discord", authOptions)}>
+      <button
+        title="Discord"
+        onClick={async () => await signIn("discord", authOptions)}
+      >
         <Image
           className="icon"
           alt="Discord"

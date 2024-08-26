@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { auth } from "@/lib/auth";
 import UserData from "./userData";
 import ActionButtons from "./actionButtons";
@@ -14,18 +15,29 @@ export default async function ProfilePage() {
       <h1>Twój profil</h1>
 
       <div className={styles.profileLayout}>
-        <div className={styles.flex}>
+        <div className={styles.userInfo}>
           <Image
             alt=""
-            src={user?.image ?? ""}
-            width={140}
-            height={140}
+            src={user?.image ?? "/icons/profile.svg"}
+            width={150}
+            height={150}
             draggable={false}
           />
 
-          <div className={styles.info}>
-            <p>ID: {user?.id}</p>
-            {user?.role === "admin" && <span>Administrator</span>}
+          <div className={styles.params}>
+            <div>
+              <p className={styles.id}>ID: {user?.id}</p>
+
+              {user?.role === "admin" && (
+                <Link className={styles.badge} href={"/admin"}>
+                  <p>Administrator</p>
+                </Link>
+              )}
+            </div>
+
+            <Link className={styles.savedButton} href={"/saved"}>
+              <p>Zapisane gry [0]</p>
+            </Link>
           </div>
         </div>
 

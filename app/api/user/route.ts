@@ -1,9 +1,27 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import { hash, compare } from "bcrypt";
 
+// authenticated user session check
+async function UserSession() {
+  const session = await auth();
+
+  const id = session?.user?.id;
+  const user = await db.user.findUnique({ where: { id } });
+
+  if (!(session && user)) {
+    return NextResponse.json(
+      { message: "Nieuprawniony dostęp" },
+      { status: 401 }
+    );
+  }
+}
+
 // create new user
 export async function POST(req: Request) {
+  UserSession();
+
   const { email, password } = await req.json();
 
   try {
@@ -41,7 +59,8 @@ export async function POST(req: Request) {
 
 // update user data
 export async function PUT(req: Request) {
-  console.log(req);
+  UserSession();
+
   const data = await req.json();
 
   try {
@@ -100,7 +119,10 @@ export async function PUT(req: Request) {
     });
 
     // return response
-    return NextResponse.json({ message: result }, { status: 200 });
+    return NextResponse.json(
+      { message: "Zaktualizowano dane użytkownika", result },
+      { status: 200 }
+    );
   } catch (error) {
     // error response
     return NextResponse.json(
@@ -112,6 +134,8 @@ export async function PUT(req: Request) {
 
 // delete user account
 export async function DELETE(req: Request) {
+  UserSession();
+
   const { id } = await req.json();
 
   try {
@@ -131,7 +155,7 @@ export async function DELETE(req: Request) {
 
     // return response
     return NextResponse.json(
-      { message: "Konto użytkownika zostało usunięte" },
+      { message: "Konto użytkownika zostało usunięte", existingUser },
       { status: 200 }
     );
   } catch (error) {

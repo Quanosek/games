@@ -27,23 +27,19 @@ export default function Data({ user }: { user: User | undefined }) {
 
   const [submitting, setSubmitting] = useState(false);
 
-  const formSubmit = (values: userDataInput) => {
+  const formSubmit = async (values: userDataInput) => {
     try {
       setSubmitting(true);
 
-      const {
-        passwordConfirm,
-        ...params
-      }: { [key: string]: string | undefined } = values;
-
+      const { passwordConfirm, ...params } = values;
       if (!params.password) delete params.password;
-      const data = { id: user?.id, ...params };
+      const filteredData = { id: user?.id, ...params };
 
-      axios
-        .put("/api/user", data)
+      await axios
+        .put("/api/user", filteredData)
         .then(async () => {
-          await signOut({ redirect: false });
           toast.success("Dane zostały zaktualizowane, zaloguj się ponownie");
+          await signOut({ redirect: false });
           router.push("/login");
           router.refresh();
         })
@@ -62,10 +58,10 @@ export default function Data({ user }: { user: User | undefined }) {
   if (!user) return null;
 
   return (
-    <form className={styles.dataForm} onSubmit={handleSubmit(formSubmit)}>
+    <form className={styles.userData} onSubmit={handleSubmit(formSubmit)}>
       <div>
         <label>
-          <p>Nazwa konta</p>
+          <p>Imię i nazwisko</p>
           <input
             {...register("name")}
             autoComplete="name"
@@ -76,7 +72,7 @@ export default function Data({ user }: { user: User | undefined }) {
         </label>
 
         <label>
-          <p>Wyświetlana nazwa</p>
+          <p>Nazwa użytkownika</p>
           <input
             {...register("username")}
             autoComplete="username"

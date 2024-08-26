@@ -27,9 +27,16 @@ export default function LoginButtonComponent({
           <button onClick={() => setShowButtonsList(true)}>
             <p>{user.username ? `@${user.username}` : user.email}</p>
 
-            {user.image && (
-              <Image alt="" src={user.image ?? ""} width={100} height={100} />
-            )}
+            <Image
+              style={{
+                borderColor:
+                  user.role === "admin" ? "var(--gold)" : "var(--white)",
+              }}
+              alt=""
+              src={user.image ?? "/icons/profile.svg"}
+              width={100}
+              height={100}
+            />
           </button>
 
           <div
@@ -40,19 +47,27 @@ export default function LoginButtonComponent({
               <p>Przejdź do profilu</p>
             </Link>
 
-            <Link href="/saved" className="disabled">
+            <Link href="/saved">
               <p>Zapisane gry</p>
             </Link>
 
+            {user.role === "admin" && (
+              <Link href="/admin" style={{ backgroundColor: "var(--gold" }}>
+                <p>Panel administratora</p>
+              </Link>
+            )}
+
             <hr />
 
-            <button onClick={() => signOut()}>
+            <button onClick={async () => await signOut()}>
               <p>Wyloguj się</p>
             </button>
           </div>
         </div>
       ) : (
-        <Link href="/login">Zaloguj się</Link>
+        <Link className="loginButton" href="/login">
+          Zaloguj się
+        </Link>
       )}
     </>
   );

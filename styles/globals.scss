@@ -4,7 +4,7 @@
   --white: #f2f2f2;
   --black: #0a0b0d;
   --yellow: #d9c465;
-  --gold: #b78810;
+  --gold: #a77b0d;
   --red: #ac2c2c;
 
   --primary: #2a2a2a;
@@ -49,101 +49,113 @@ footer {
     justify-content: space-between;
     align-items: center;
   }
-
-  @media (max-width: 768px) {
-    font-size: min(110%, 3.5vw);
-  }
 }
 
-$header-height: min(4rem, 16vw); // also Toast component
-$section-padding: 0.85rem;
+$header-height: min(4rem, 16vw);
 
 header {
-  padding: 0.5rem 2rem;
   height: $header-height;
 
-  @media (max-width: 768px) {
-    padding: min(0.8rem, 1.5vw) 3%;
+  $button-side: min(1rem, 2vw);
+
+  section {
+    padding: 0.5rem calc(min(3rem, 3%) - $button-side);
   }
 
-  div {
-    height: 100%;
-    display: flex;
-    align-items: stretch;
-  }
-
-  h1 {
-    font-size: 120%;
-    font-weight: bold;
+  img {
+    user-select: none;
   }
 
   a,
   button {
     opacity: 90%;
-    padding: 0 1rem;
+    padding: 0 $button-side;
     height: 100%;
     border-radius: 0.6rem;
-    transition: 150ms ease-in-out;
+    transition: 150ms ease-out;
     cursor: pointer;
 
     &:hover {
       opacity: 100%;
       transform: translateY(-1px);
+
+      &.supportButton {
+        color: #00a962;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    font-size: min(110%, 3vw);
+
+    img {
+      padding: min(0.5rem, 2vw) 0;
+      width: auto;
+      height: 100%;
     }
 
-    &.supportButton:hover {
-      color: #00a962;
+    a,
+    button {
+      gap: 2vw;
     }
+  }
 
-    @media (max-width: 768px) {
-      padding: 0 min(1rem, 3vw);
+  .navigation {
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    h1 {
+      font-size: 120%;
+      font-weight: bold;
     }
   }
 
   .loginButton {
+    height: 100%;
     position: relative;
 
-    a,
-    button {
-      width: 100%;
-      gap: 6px;
+    @media (max-width: 768px) {
+      display: none;
     }
 
     img {
       width: 30px;
       height: 30px;
       aspect-ratio: 1/1;
+      border-width: 0.5px;
+      border-style: solid;
       border-radius: 30px;
-      overflow: hidden;
     }
   }
 
   .dropdown {
-    padding: 5px 0;
+    $gap: 5px;
+
     z-index: 1;
+    padding: $gap 0;
     position: absolute;
     top: calc(100% + 0.5rem);
     right: 0;
 
     min-width: 100%;
-    height: unset;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: $gap;
     background-color: var(--primary);
     border-radius: 0 0 15px 15px;
     overflow: hidden;
 
     a,
     button {
-      padding: 0.8rem 1.8rem;
+      padding: 12px 30px;
       background-color: var(--primary);
       border-radius: 0;
       transition: 100ms filter ease-out;
 
       &:hover {
         transform: none;
-        filter: contrast(0.75);
+        filter: contrast(0.8);
       }
 
       p {
@@ -160,30 +172,35 @@ header {
 }
 
 footer {
-  padding: 1.5rem 3rem;
+  font-size: 95%;
 
-  @media (max-width: 768px) {
-    padding: 1.5rem min(3rem, 3vw);
-
-    section {
-      flex-direction: column;
-      gap: 0.5rem;
-      font-size: min(90%, 3vw);
-      text-align: center;
-    }
+  section {
+    padding: min(1.5rem, 5vw) min(3rem, 3%);
   }
 
   p {
     opacity: 80%;
-    font-size: 85%;
+    display: flex;
+    gap: 3px;
+    font-size: 90%;
   }
 
   a {
-    display: unset;
     transition: 100ms filter ease-out;
 
     &:hover {
-      filter: contrast(0.75);
+      filter: contrast(0.8);
+    }
+  }
+
+  @media (max-width: 768px) {
+    section {
+      flex-direction: column;
+      gap: min(0.5rem, 2vw);
+    }
+
+    p {
+      font-size: min(95%, 2.6vw);
     }
   }
 }
@@ -211,14 +228,14 @@ main {
   margin-bottom: min(3rem, 3%);
   position: relative;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
 
   @media (max-width: 768px) {
     display: none;
   }
 
   h1 {
-    font-size: 150%;
+    font-size: 200%;
     font-weight: bold;
   }
 

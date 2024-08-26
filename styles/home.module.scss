@@ -1,16 +1,13 @@
 .buttons {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: 14px;
 
   a {
-    padding: 0.8rem;
-    width: 15rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
+    padding: 14px 21px;
+    width: 16rem;
+    border: none;
+    border-radius: 30px;
   }
 }

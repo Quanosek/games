@@ -86,7 +86,7 @@ export default function LoginForm() {
         </button>
       </form>
 
-      <Providers />
+      <Providers callbackUrl="/" />
     </div>
   );
 }
