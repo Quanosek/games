@@ -3,23 +3,7 @@
 import { useEffect } from "react";
 
 import styles from "./styles.module.scss";
-
-import localFont from "next/font/local";
-const Myriad = localFont({
-  src: [
-    {
-      path: "../../fonts/myriad_pro_semibold.woff2",
-      weight: "normal",
-    },
-    {
-      path: "../../fonts/myriad_pro_bold_cond.woff2",
-      weight: "bold",
-    },
-  ],
-
-  style: "normal",
-  display: "swap",
-});
+import { Myriad } from "@/lib/fonts";
 
 export default function BoardLayout({
   children,

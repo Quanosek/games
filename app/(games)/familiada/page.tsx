@@ -8,12 +8,7 @@ import FormatPoints from "@/lib/formatPoints";
 import toast from "react-hot-toast";
 
 import styles from "./page.module.scss";
-
-import localFont from "next/font/local";
-const dottedFont = localFont({
-  src: "./fonts/familiada_regular.woff2",
-  display: "swap",
-});
+import { Dotted } from "@/lib/fonts";
 
 // local object template
 interface Data {
@@ -207,7 +202,7 @@ export default function FamiliadaPage() {
                 </div>
 
                 {/* board preview */}
-                <div className={`${dottedFont.className} ${styles.preview}`}>
+                <div className={`${Dotted.className} ${styles.preview}`}>
                   {preview[index]?.answers
                     .filter((el) => el.value && el.points)
                     .map((el, i: number) => {

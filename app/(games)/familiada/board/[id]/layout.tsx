@@ -3,12 +3,7 @@
 import { useEffect } from "react";
 
 import styles from "./styles.module.scss";
-
-import localFont from "next/font/local";
-const dottedFont = localFont({
-  src: "../../fonts/familiada_regular.woff2",
-  display: "swap",
-});
+import { Dotted } from "@/lib/fonts";
 
 export default function BoardLayout({
   children,
@@ -30,7 +25,7 @@ export default function BoardLayout({
   }, []);
 
   return (
-    <div className={dottedFont.className}>
+    <div className={Dotted.className}>
       <div className={styles.container}>
         <div className={styles.board}>{children}</div>
 

@@ -37,6 +37,7 @@
   img {
     border: 2px solid var(--white);
     border-radius: 100%;
+    user-select: none;
   }
 
   .params {
@@ -134,7 +135,7 @@
     border-radius: 30px;
 
     &:nth-child(2) {
-      background-color: var(--red);
+      background-color: #ac2c2c;
     }
   }
 }
