@@ -37,7 +37,7 @@ export default function PnmPage() {
 
       scrollTo({ top: 0 });
       setLoading(false);
-    } catch (err) {
+    } catch (error) {
       localStorage.removeItem("pnm");
       router.refresh();
     }

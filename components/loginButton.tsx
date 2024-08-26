@@ -6,7 +6,11 @@ import { useEffect, useState } from "react";
 import { User } from "next-auth";
 import { signOut } from "next-auth/react";
 
-export default function LoginButtonComponent({ user }: { user: User }) {
+export default function LoginButtonComponent({
+  user,
+}: {
+  user: User | undefined;
+}) {
   const [showButtonsList, setShowButtonsList] = useState(false);
 
   useEffect(() => {

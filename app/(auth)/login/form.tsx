@@ -14,7 +14,6 @@ import styles from "@/styles/auth.module.scss";
 
 export default function LoginForm() {
   const router = useRouter();
-  const [submitting, setSubmitting] = useState(false);
 
   const {
     formState: { errors },
@@ -24,6 +23,8 @@ export default function LoginForm() {
   } = useForm<LoginUserInput>({
     resolver: zodResolver(loginUserSchema),
   });
+
+  const [submitting, setSubmitting] = useState(false);
 
   const formSubmit = async ({ email, password }: LoginUserInput) => {
     try {
@@ -56,7 +57,7 @@ export default function LoginForm() {
       <form onSubmit={handleSubmit(formSubmit)}>
         <label>
           <p>E-mail</p>
-          <input {...register("email")} autoComplete="email" maxLength={150} />
+          <input {...register("email")} autoComplete="email" maxLength={100} />
           {errors.email && <span>{errors.email.message}</span>}
         </label>
 

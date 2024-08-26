@@ -75,10 +75,16 @@
       border: none;
       border-radius: 30px;
     }
+
+    span {
+      margin-top: -2px;
+      opacity: 90%;
+      font-size: 90%;
+    }
   }
 
   .locked {
-    pointer-events: none;
+    cursor: not-allowed;
 
     input {
       filter: brightness(0.8) contrast(1.05);

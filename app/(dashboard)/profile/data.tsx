@@ -5,36 +5,51 @@ import { useState } from "react";
 import { User } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { userDataInput, userDataSchema } from "@/lib/zod";
 import axios from "axios";
 import toast from "react-hot-toast";
 import PasswordInput from "@/components/passwordInput";
 
 import styles from "@/styles/dashboard.module.scss";
 
-export default function Data({ user }: { user: User }) {
+export default function Data({ user }: { user: User | undefined }) {
   const router = useRouter();
 
-  const [submitting, setSubmitting] = useState(false);
-  const { handleSubmit, register, reset } = useForm();
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+    reset,
+  } = useForm<userDataInput>({
+    resolver: zodResolver(userDataSchema),
+  });
 
-  const formSubmit = (values: any) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const formSubmit = (values: userDataInput) => {
     try {
       setSubmitting(true);
 
-      const { name, username, passwordNew: password } = values;
-      const data = { id: user.id, name, username, password };
+      const {
+        passwordConfirm,
+        ...params
+      }: { [key: string]: string | undefined } = values;
+
+      if (!params.password) delete params.password;
+      const data = { id: user?.id, ...params };
 
       axios
-        .post("/api/user/data", { ...data })
+        .post("/api/user/data", data)
         .then(async () => {
           await signOut({ redirect: false });
           toast.success("Dane zostały zaktualizowane, zaloguj się ponownie");
           router.push("/login");
           router.refresh();
         })
-        .catch((err) => {
-          reset({ passwordConfirm: "", password: "" });
-          toast.error(err.response.data.message);
+        .catch((error) => {
+          reset({ passwordConfirm: "" });
+          toast.error(error.response.data.message);
         });
     } catch (error) {
       toast.error("Wystąpił nieoczekiwany błąd, spróbuj ponownie");
@@ -44,6 +59,8 @@ export default function Data({ user }: { user: User }) {
     }
   };
 
+  if (!user) return null;
+
   return (
     <form className={styles.dataForm} onSubmit={handleSubmit(formSubmit)}>
       <div>
@@ -52,9 +69,10 @@ export default function Data({ user }: { user: User }) {
           <input
             {...register("name")}
             autoComplete="name"
-            maxLength={250}
+            maxLength={101}
             defaultValue={user.name ?? ""}
           />
+          {errors.name && <span>{errors.name.message}</span>}
         </label>
 
         <label>
@@ -62,19 +80,21 @@ export default function Data({ user }: { user: User }) {
           <input
             {...register("username")}
             autoComplete="username"
-            maxLength={200}
+            maxLength={33}
             defaultValue={user.username ?? ""}
           />
+          {errors.username && <span>{errors.username.message}</span>}
         </label>
       </div>
 
       <label className={styles.locked}>
         <p>E-mail</p>
         <input
-          {...register("email")}
+          name="email"
           autoComplete="email"
-          maxLength={150}
+          maxLength={100}
           defaultValue={user.email ?? ""}
+          disabled
         />
       </label>
 
@@ -82,9 +102,10 @@ export default function Data({ user }: { user: User }) {
         <p>{user.password ? "Nowe hasło" : "Hasło"}</p>
         <PasswordInput
           function={register}
-          name="passwordNew"
+          name="password"
           autocomplete="new-password"
         />
+        {errors.password && <span>{errors.password.message}</span>}
       </label>
 
       <label>
@@ -94,18 +115,10 @@ export default function Data({ user }: { user: User }) {
           name="passwordConfirm"
           autocomplete="off"
         />
+        {errors.passwordConfirm && (
+          <span>{errors.passwordConfirm.message}</span>
+        )}
       </label>
-
-      {user.password && (
-        <label>
-          <p>Obecnie używane hasło</p>
-          <PasswordInput
-            function={register}
-            name="password"
-            autocomplete="current-password"
-          />
-        </label>
-      )}
 
       <button
         className={styles.submitButton}

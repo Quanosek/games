@@ -4,31 +4,34 @@ import { hash } from "bcrypt";
 
 // create new user
 export async function POST(req: Request) {
-  const data = await req.json();
+  const { email, password } = await req.json();
 
   try {
+    // email taken
     const existingUser = await db.user.findUnique({
-      where: { email: data.email },
+      where: { email },
     });
 
     if (existingUser) {
       return NextResponse.json(
-        { message: "Podany adres e-mail jest zajęty" },
+        { message: "Podany adres e-mail jest już zajęty" },
         { status: 409 }
       );
     }
 
-    const password = await hash(data.password, 12);
-
-    const { password: _, ...user } = await db.user.create({
-      data: { email: data.email, password },
+    // secure password
+    const hashPassword = await hash(password, 12);
+    const { password: _, ...result } = await db.user.create({
+      data: { email, password: hashPassword },
     });
 
+    // return response
     return NextResponse.json(
-      { message: "Pomyślnie utworzono nowe konto", user },
+      { message: "Pomyślnie utworzono nowe konto", result },
       { status: 201 }
     );
   } catch (error) {
+    // error response
     return NextResponse.json(
       { message: "Wystąpił nieoczekiwany błąd serwera", error },
       { status: 500 }

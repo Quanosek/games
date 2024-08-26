@@ -28,7 +28,7 @@ export default function QuizyPage() {
 
       scrollTo({ top: 0 });
       setLoading(false);
-    } catch (err) {
+    } catch (error) {
       localStorage.removeItem("quizy");
       router.refresh();
     }

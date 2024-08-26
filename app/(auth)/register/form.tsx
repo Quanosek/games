@@ -15,7 +15,6 @@ import styles from "@/styles/auth.module.scss";
 
 export default function RegisterForm() {
   const router = useRouter();
-  const [submitting, setSubmitting] = useState(false);
 
   const {
     formState: { errors },
@@ -26,6 +25,8 @@ export default function RegisterForm() {
     resolver: zodResolver(registerUserSchema),
   });
 
+  const [submitting, setSubmitting] = useState(false);
+
   const formSubmit = (values: RegisterUserInput) => {
     try {
       setSubmitting(true);
@@ -33,15 +34,15 @@ export default function RegisterForm() {
       axios
         .post("/api/user/create", values)
         .then(async () => {
-          const { email, password } = values;
-          await signIn("credentials", { email, password });
+          const { passwordConfirm, ...params } = values;
+          await signIn("credentials", { ...params, redirect: false });
           toast.success("Pomyślnie utworzono nowe konto");
           router.push("/profile");
           router.refresh();
         })
-        .catch((err) => {
+        .catch((error) => {
           reset({ passwordConfirm: "" });
-          toast.error(err.response.data.message);
+          toast.error(error.response.data.message);
         });
     } catch (error) {
       toast.error("Wystąpił nieoczekiwany błąd, spróbuj ponownie");
@@ -56,7 +57,7 @@ export default function RegisterForm() {
       <form onSubmit={handleSubmit(formSubmit)}>
         <label>
           <p>E-mail</p>
-          <input {...register("email")} autoComplete="email" maxLength={150} />
+          <input {...register("email")} autoComplete="email" maxLength={100} />
           {errors.email && <span>{errors.email.message}</span>}
         </label>
 

@@ -11,9 +11,8 @@ export default async function ProfilePage() {
   return (
     <div className={styles.profileContainer}>
       <h1>Twój profil</h1>
-      <p>Już wkrótce</p>
 
-      {/* <div className={styles.profileLayout}>
+      <div className={styles.profileLayout}>
         <div className={styles.flex}>
           <Image
             alt=""
@@ -32,7 +31,7 @@ export default async function ProfilePage() {
         <hr />
 
         <Data user={user} />
-      </div> */}
+      </div>
     </div>
   );
 }

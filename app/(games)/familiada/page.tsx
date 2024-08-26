@@ -43,7 +43,7 @@ export default function FamiliadaPage() {
 
       scrollTo({ top: 0 });
       setLoading(false);
-    } catch (err) {
+    } catch (error) {
       localStorage.removeItem("familiada");
       router.refresh();
     }
