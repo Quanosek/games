@@ -3,7 +3,7 @@ import { signIn } from "next-auth/react";
 
 import styles from "@/styles/auth.module.scss";
 
-export default function AuthCallbacks({
+export default function AuthProviders({
   callbackUrl,
 }: {
   callbackUrl: string;

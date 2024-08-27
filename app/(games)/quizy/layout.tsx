@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-// milionerzy metadata
 export const metadata: Metadata = {
   title: "Quizy - Pokój gier / klalo.pl",
   description:

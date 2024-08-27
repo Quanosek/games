@@ -1,13 +1,14 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
+import PageLayout from "@/components/wrappers/pageLayout";
+
 import styles from "./page.module.scss";
 
-// local object template
 export interface Data {
   attempts: number;
   time: string;
@@ -18,7 +19,6 @@ export interface Data {
 export default function WisielecPage() {
   const router = useRouter();
 
-  // empty data template
   const emptyData: Data = {
     attempts: 10,
     time: "1m",
@@ -26,7 +26,6 @@ export default function WisielecPage() {
     phrase: "",
   };
 
-  // data state
   const [data, setData] = useState([emptyData]);
   const [loading, setLoading] = useState(true);
 
@@ -49,8 +48,8 @@ export default function WisielecPage() {
     if (!loading) localStorage.setItem("wisielec", JSON.stringify(data));
   }, [loading, data]);
 
-  // words counter formatter
-  const wordsName = (string: string) => {
+  // input phrase counter
+  const phraseStats = (string: string) => {
     const words = string.split(" ").filter((word) => word !== "");
     let result = "";
 
@@ -64,10 +63,10 @@ export default function WisielecPage() {
 
   const vowels = "aąeęioóuy";
 
-  // main page render
+  // main render
   return (
-    <main>
-      <h1 className={styles.pageTitle}>
+    <PageLayout>
+      <h1 className={styles.gameTitle}>
         Gra w <span>wisielca</span>
       </h1>
 
@@ -97,7 +96,7 @@ export default function WisielecPage() {
                 <div className={styles.buttons}>
                   <button
                     type="button"
-                    title="Wyczyść/usuń pytanie"
+                    title="Wyczyść/usuń planszę"
                     onClick={() => {
                       if (data[index].category || data[index].phrase) {
                         if (
@@ -122,7 +121,7 @@ export default function WisielecPage() {
                   >
                     <Image
                       className="icon"
-                      alt="usuń"
+                      alt="kosz"
                       src="/icons/trashcan.svg"
                       width={20}
                       height={20}
@@ -190,7 +189,6 @@ export default function WisielecPage() {
               </div>
 
               <div className={styles.content}>
-                {/* game params */}
                 <div className={styles.params}>
                   <div>
                     <label htmlFor={`${index}-attempts`}>
@@ -242,10 +240,9 @@ export default function WisielecPage() {
                   </div>
                 </div>
 
-                {/* input values */}
                 <div className={styles.inputs}>
                   <div>
-                    <p className={styles.name}>Kategoria:</p>
+                    <h3>Kategoria:</h3>
 
                     <input
                       type="text"
@@ -266,7 +263,7 @@ export default function WisielecPage() {
                   </div>
 
                   <div>
-                    <p className={styles.name}>Hasło:</p>
+                    <h3>Hasło:</h3>
 
                     <input
                       type="text"
@@ -294,9 +291,8 @@ export default function WisielecPage() {
 
                 <hr />
 
-                {/* phrase statistics */}
                 <div className={styles.phraseStats}>
-                  <p>{wordsName(data[index].phrase)}</p>
+                  <p>{phraseStats(data[index].phrase)}</p>
 
                   <p>
                     {
@@ -337,7 +333,6 @@ export default function WisielecPage() {
             </form>
           ))}
 
-          {/* add new board button */}
           <button
             type="button"
             className={styles.addButton}
@@ -347,7 +342,7 @@ export default function WisielecPage() {
                 JSON.stringify(emptyData)
               ) {
                 return toast(
-                  "Uzupełnij poprzednią planszę przed dodaniem nowej."
+                  "Uzupełnij poprzednią planszę przed dodaniem nowej"
                 );
               }
 
@@ -373,6 +368,6 @@ export default function WisielecPage() {
           </button>
         </div>
       )}
-    </main>
+    </PageLayout>
   );
 }

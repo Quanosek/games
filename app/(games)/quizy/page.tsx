@@ -1,12 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useEffect, useState } from "react";
+
+import PageLayout from "@/components/wrappers/pageLayout";
 
 import styles from "./page.module.scss";
 
-// local object template
 export interface Data {
   type: "closed" | "gap" | "open";
   question: string;
@@ -16,7 +17,6 @@ export interface Data {
 export default function QuizyPage() {
   const router = useRouter();
 
-  // data state
   const [data, setData] = useState<Data[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,68 +39,50 @@ export default function QuizyPage() {
     if (!loading) localStorage.setItem("quizy", JSON.stringify(data));
   }, [loading, data]);
 
-  // board type description
-  const boardType = (type: Data["type"]) => {
-    if (type === "closed") {
-      return (
-        <>
-          <Image
-            className="icon"
-            alt=""
-            src="/icons/a_button.svg"
-            width={20}
-            height={20}
-            draggable={false}
-          />
-          <p>Pytanie zamknięte</p>
-        </>
-      );
-    } else if (type === "gap") {
-      return (
-        <>
-          <Image
-            className="icon"
-            alt=""
-            src="/icons/magnifying_glass.svg"
-            width={20}
-            height={20}
-            draggable={false}
-          />
-          <p>Uzupełnij lukę</p>
-        </>
-      );
-    } else if (type === "open") {
-      return (
-        <>
-          <Image
-            className="icon"
-            alt=""
-            src="/icons/thought_balloon.svg"
-            width={20}
-            height={20}
-            draggable={false}
-          />
-          <p>Pytanie otwarte</p>
-        </>
-      );
-    }
-  };
-
   // handle add buttons list show
-  const [showButtonsList, setShowButtonsList] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
-    const hideButtonsList = () => setShowButtonsList(false);
+    const hideButtonsList = () => setShowDropdown(false);
 
-    if (showButtonsList) document.addEventListener("click", hideButtonsList);
+    if (showDropdown) document.addEventListener("click", hideButtonsList);
     return () => document.removeEventListener("click", hideButtonsList);
-  }, [showButtonsList]);
+  }, [showDropdown]);
 
-  // "Pytanie zamknięte" board
+  // PAGE COMPONENTS
+
+  const BoardType = ({ type }: { type: Data["type"] }) => {
+    let data = { src: "", name: "" };
+
+    if (type === "closed") {
+      data = { src: "a_button", name: "Pytanie zamknięte" };
+    }
+    if (type === "gap") {
+      data = { src: "magnifying_glass", name: "Uzupełnij lukę" };
+    }
+    if (type === "open") {
+      data = { src: "thought_balloon", name: "Pytanie otwarte" };
+    }
+
+    return (
+      <div>
+        <Image
+          className="icon"
+          alt=""
+          src={`/icons/${data.src}.svg`}
+          width={20}
+          height={20}
+          draggable={false}
+        />
+        <h2>{data.name}</h2>
+      </div>
+    );
+  };
+
   const ClosedBoard = (i: number) => (
     <div className={styles.inputs}>
       <div>
-        <p className={styles.name}>Pytanie:</p>
+        <h3>Pytanie:</h3>
 
         <input
           type="text"
@@ -108,7 +90,6 @@ export default function QuizyPage() {
           placeholder="Wpisz treść pytania"
           autoComplete="off"
           maxLength={128}
-          className={styles.question}
           value={data[i].question || ""}
           onChange={(e) => {
             setData((prev) => {
@@ -122,16 +103,15 @@ export default function QuizyPage() {
       </div>
 
       <div>
-        <p className={styles.name}>Odpowiedzi (co najmniej jedna poprawna):</p>
+        <h3>Odpowiedzi (co najmniej jedna poprawna):</h3>
 
-        <div className={styles.grid}>
+        <div className={styles.answersGrid}>
           {data[i].answers.map((answer, j) => (
-            <div key={j} className={styles.answers}>
-              {/* answer value input */}
+            <div key={j} className={styles.answerBox}>
               <div
-                className={styles.value}
+                className={styles.formValue}
                 style={{
-                  // disable if prev or curr answer is empty
+                  // disable if prev or current answer is empty
                   pointerEvents:
                     j === 0 ||
                     data[i].answers[j - 1].value ||
@@ -176,7 +156,6 @@ export default function QuizyPage() {
                 />
               </div>
 
-              {/* correct answer checkbox */}
               <div className={styles.checkboxHandler}>
                 <div
                   className={styles.checkbox}
@@ -221,52 +200,50 @@ export default function QuizyPage() {
     </div>
   );
 
-  // "Uzupełnij lukę" board
-  const GapBoard = (index: number) => (
+  const GapBoard = (i: number) => (
     <>
       <input
         type="text"
-        name={`${index}-question`}
-        placeholder="Dodaj zdanie do uzupełnienia"
+        name={`${i}-question`}
+        placeholder="Wpisz zdanie z luką"
         autoComplete="off"
         maxLength={128}
         style={{ marginBottom: "0.5rem" }}
-        value={data[index].question || ""}
+        value={data[i].question || ""}
         onChange={(e) => {
           setData((prev) => {
             const newData = [...prev];
-            newData[index].question = e.target.value;
+            newData[i].question = e.target.value;
             return newData;
           });
         }}
         required
       />
 
-      <p className={styles.instruction}>
+      <p className={styles.instructions}>
         Umieść ukryte fragmenty w kwadratowych nawiasach. Na przykład:{" "}
         {`"Ala ma [kota] i psa"`}.
       </p>
     </>
   );
 
-  // "Pytanie otwarte" board
-  const OpenBoard = (index: number) => (
+  const OpenBoard = (i: number) => (
     <div className={styles.inputs}>
       <div>
-        <p className={styles.name}>Pytanie:</p>
+        <h3>Pytanie:</h3>
 
         <input
           type="text"
-          name={`${index}-question`}
+          name={`${i}-question`}
           placeholder="Wpisz treść pytania"
           autoComplete="off"
           maxLength={128}
           className={styles.question}
-          value={data[index].question || ""}
+          value={data[i].question || ""}
           onChange={(e) => {
             setData((prev) => {
               const newData = [...prev];
-              newData[index].question = e.target.value;
+              newData[i].question = e.target.value;
               return newData;
             });
           }}
@@ -275,20 +252,20 @@ export default function QuizyPage() {
       </div>
 
       <div>
-        <p>Odpowiedź:</p>
+        <h3>Odpowiedź:</h3>
 
         <input
           type="text"
-          name={`${index}-answer`}
+          name={`${i}-answer`}
           placeholder="Wpisz poprawną odpowiedź"
           autoComplete="off"
           maxLength={128}
           className={styles.answer}
-          value={data[index].answers[0].value || ""}
+          value={data[i].answers[0].value || ""}
           onChange={(e) => {
             setData((prev) => {
               const newData = [...prev];
-              data[index].answers[0].value = e.target.value;
+              data[i].answers[0].value = e.target.value;
               return newData;
             });
           }}
@@ -298,10 +275,11 @@ export default function QuizyPage() {
     </div>
   );
 
-  // main page render
+  // MAIN RETURN
+
   return (
-    <main>
-      <h1 className={styles.pageTitle}>
+    <PageLayout>
+      <h1 className={styles.gameTitle}>
         Stwórz własny <span>Quiz</span>
       </h1>
 
@@ -311,35 +289,34 @@ export default function QuizyPage() {
         </div>
       ) : (
         <form
+          style={{ gap: data.length ? "" : "0" }}
           onSubmit={(e) => {
             e.preventDefault();
             open("/quizy/board/0", "game_window", "width=960, height=540");
           }}
         >
-          {/* start game button */}
           {data.length > 0 && (
-            <button type="submit" className={styles.defaultButton}>
+            <button type="submit" className={styles.startButton}>
               <p>Uruchom grę</p>
             </button>
           )}
 
           <div className={styles.container}>
-            {/* board handle */}
             {[...Array(data.length)].map((_, index) => {
-              const type = data[index].type;
+              const { type } = data[index];
 
               return (
                 <div key={index} className={styles.board}>
                   <div className={styles.controls}>
                     <div className={styles.description}>
                       <p>{`${index + 1}/${data.length} •`}</p>
-                      <div>{boardType(type)}</div>
+                      <BoardType type={type} />
                     </div>
 
                     <div className={styles.buttons}>
                       <button
                         type="button"
-                        title="Wyczyść/usuń pytanie"
+                        title="Wyczyść/usuń planszę"
                         onClick={() => {
                           if (
                             data[index].question ||
@@ -356,7 +333,7 @@ export default function QuizyPage() {
                               newData[index] = {
                                 type: data[index].type,
                                 question: "",
-                                answers: data[index].answers.map((_) => ({
+                                answers: data[index].answers.map(() => ({
                                   value: "",
                                   checked: false,
                                 })),
@@ -374,7 +351,7 @@ export default function QuizyPage() {
                       >
                         <Image
                           className="icon"
-                          alt="usuń"
+                          alt="kosz"
                           src="/icons/trashcan.svg"
                           width={20}
                           height={20}
@@ -443,107 +420,106 @@ export default function QuizyPage() {
                 </div>
               );
             })}
+          </div>
 
-            {/* add new board button */}
-            <div className={styles.addButton}>
-              {data.length ? (
-                <button type="button" onClick={() => setShowButtonsList(true)}>
-                  <Image
-                    className="icon"
-                    alt="+"
-                    src="/icons/plus.svg"
-                    width={18}
-                    height={18}
-                    draggable={false}
-                  />
-                  <p>Dodaj...</p>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className={styles.defaultButton}
-                  onClick={() => setShowButtonsList(true)}
-                >
-                  <p>Rozpocznij</p>
-                </button>
-              )}
-
-              <div
-                className={styles.list}
-                style={{ display: showButtonsList ? "block" : "none" }}
+          <div className={styles.addButton}>
+            {data.length ? (
+              <button type="button" onClick={() => setShowDropdown(true)}>
+                <Image
+                  className="icon"
+                  alt="+"
+                  src="/icons/plus.svg"
+                  width={18}
+                  height={18}
+                  draggable={false}
+                />
+                <p>Dodaj...</p>
+              </button>
+            ) : (
+              <button
+                type="button"
+                className={styles.startButton}
+                onClick={() => setShowDropdown(true)}
               >
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollTo({
-                        top: document.body.scrollHeight,
-                        behavior: "smooth",
-                      });
-                    }, 1);
+                <p>Rozpocznij</p>
+              </button>
+            )}
 
-                    setData([
-                      ...data,
-                      {
-                        type: "closed",
-                        question: "",
-                        answers: new Array(4).fill({
-                          value: "",
-                          checked: false,
-                        }),
-                      },
-                    ]);
-                  }}
-                >
-                  <p>pytanie zamknięte</p>
-                </button>
+            <div
+              style={{ display: showDropdown ? "" : "none" }}
+              className={styles.dropdown}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  setTimeout(() => {
+                    scrollTo({
+                      top: document.body.scrollHeight,
+                      behavior: "smooth",
+                    });
+                  }, 1);
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollTo({
-                        top: document.body.scrollHeight,
-                        behavior: "smooth",
-                      });
-                    }, 1);
+                  setData([
+                    ...data,
+                    {
+                      type: "closed",
+                      question: "",
+                      answers: new Array(4).fill({
+                        value: "",
+                        checked: false,
+                      }),
+                    },
+                  ]);
+                }}
+              >
+                <p>pytanie zamknięte</p>
+              </button>
 
-                    setData([
-                      ...data,
-                      { type: "gap", question: "", answers: [] },
-                    ]);
-                  }}
-                >
-                  <p>uzupełnij lukę</p>
-                </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setTimeout(() => {
+                    scrollTo({
+                      top: document.body.scrollHeight,
+                      behavior: "smooth",
+                    });
+                  }, 1);
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTimeout(() => {
-                      scrollTo({
-                        top: document.body.scrollHeight,
-                        behavior: "smooth",
-                      });
-                    }, 1);
+                  setData([
+                    ...data,
+                    { type: "gap", question: "", answers: [] },
+                  ]);
+                }}
+              >
+                <p>uzupełnij lukę</p>
+              </button>
 
-                    setData([
-                      ...data,
-                      {
-                        type: "open",
-                        question: "",
-                        answers: [{ value: "", checked: false }],
-                      },
-                    ]);
-                  }}
-                >
-                  <p>pytanie otwarte</p>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setTimeout(() => {
+                    scrollTo({
+                      top: document.body.scrollHeight,
+                      behavior: "smooth",
+                    });
+                  }, 1);
+
+                  setData([
+                    ...data,
+                    {
+                      type: "open",
+                      question: "",
+                      answers: [{ value: "", checked: false }],
+                    },
+                  ]);
+                }}
+              >
+                <p>pytanie otwarte</p>
+              </button>
             </div>
           </div>
         </form>
       )}
-    </main>
+    </PageLayout>
   );
 }

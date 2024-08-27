@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
+
 import { auth } from "@/lib/auth";
+import PageLayout from "@/components/wrappers/pageLayout";
 
 export default async function AuthLayout({
   children,
@@ -11,5 +13,5 @@ export default async function AuthLayout({
 
   if (user) return redirect("/");
 
-  return <main>{children}</main>;
+  return <PageLayout>{children}</PageLayout>;
 }

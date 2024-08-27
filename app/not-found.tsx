@@ -1,8 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+
+import PageLayout from "@/components/wrappers/pageLayout";
 
 export default function NotFoundPage() {
   const router = useRouter();
@@ -18,12 +20,12 @@ export default function NotFoundPage() {
   }, [router, seconds]);
 
   return (
-    <main>
+    <PageLayout>
       <h1>Nie znaleziono strony!</h1>
 
       <Link className="button" href="/">
         🏠 Powrót na stronę główną <span>[{seconds}]</span>
       </Link>
-    </main>
+    </PageLayout>
   );
 }

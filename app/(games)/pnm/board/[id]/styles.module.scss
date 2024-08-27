@@ -1,4 +1,4 @@
-// LAYOUT STYLES
+// Board layout
 
 .container {
   z-index: 1;
@@ -9,7 +9,7 @@
   height: auto;
 
   background-color: #000000;
-  overflow: hidden;
+  overflow-x: hidden;
   user-select: none;
   letter-spacing: 0.05vw;
 }
@@ -34,7 +34,7 @@
   text-align: center;
 }
 
-// PLAY INTRO VIDEO
+// Game elements
 
 .introVideo {
   z-index: 1;
@@ -68,9 +68,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-
       background: none;
-      border: none;
 
       img {
         width: 100%;
@@ -98,8 +96,6 @@
   }
 }
 
-// GAME START LAYOUT
-
 .startLayout {
   aspect-ratio: 16/9;
   background-image: url("/pnm/images/background.webp");
@@ -114,8 +110,8 @@
     padding: 2.5vw 8vw;
     font-size: 3vw;
     text-transform: uppercase;
-    border-radius: 1.5vw;
     background-color: rgba(#1a1c49, 0.8);
+    border-radius: 1.5vw;
     backdrop-filter: blur(0.8vw);
     transition: all 0s, filter 200ms;
     cursor: pointer;
@@ -126,8 +122,6 @@
     height: 100%;
   }
 }
-
-// CATEGORY SELECT LAYOUT
 
 .categorySelect {
   aspect-ratio: 16/9;
@@ -152,8 +146,8 @@
       width: 56vw;
       text-align: center;
       font-weight: bold;
-      border-radius: 1.5vw;
       background-color: #cdd0e2;
+      border-radius: 1.5vw;
       transition: all 0s, filter 200ms, bottom 150ms ease-in-out,
         transform 250ms ease-in, top 300ms ease-in;
 
@@ -168,8 +162,6 @@
     }
   }
 }
-
-// GAME BOARD
 
 .boxes {
   display: flex;

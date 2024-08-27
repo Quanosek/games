@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
+
 import { auth } from "@/lib/auth";
-import UserData from "./userData";
 import ActionButtons from "./actionButtons";
+import UserData from "./userData";
 
 import styles from "@/styles/dashboard.module.scss";
 

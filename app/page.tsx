@@ -1,11 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import PageLayout from "@/components/wrappers/pageLayout";
+
 import styles from "@/styles/home.module.scss";
 
 export default function HomePage() {
   return (
-    <main>
+    <PageLayout>
       <h1>Wybierz grę</h1>
 
       <div className={styles.buttons}>
@@ -53,6 +55,6 @@ export default function HomePage() {
           <p>{`"Postaw na milion"`}</p>
         </Link>
       </div>
-    </main>
+    </PageLayout>
   );
 }

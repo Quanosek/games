@@ -28,7 +28,6 @@
     text-align: center;
     background-color: rgba(#ffffff, 0.1);
     border-radius: 0.8vw;
-    border: none;
     cursor: pointer;
   }
 }
@@ -86,14 +85,12 @@
   }
 }
 
-// Keyboard input field
+// Game elements
 
 .globalKeyboard {
   position: absolute;
   top: -100%;
 }
-
-// Question layout
 
 .content {
   width: 100%;

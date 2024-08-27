@@ -65,8 +65,7 @@
     }
 
     .savedButton {
-      padding: 14px 32px;
-      min-width: 12rem;
+      padding: 14px 34px;
       background-color: var(--primary);
       border-radius: 30px;
     }
@@ -98,7 +97,6 @@
     input {
       padding: 14px 21px;
       width: 100%;
-      border: none;
       border-radius: 30px;
     }
 
@@ -116,9 +114,8 @@
 
   .submitButton {
     margin-top: 1.5rem;
-    padding: 14px 32px;
+    padding: 14px 34px;
     width: 16rem;
-    border: none;
     border-radius: 30px;
   }
 }
@@ -129,9 +126,8 @@
   gap: 20px;
 
   button {
-    padding: 14px 32px;
+    padding: 14px 34px;
     width: 14rem;
-    border: none;
     border-radius: 30px;
 
     &:nth-child(2) {

@@ -5,9 +5,10 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RegisterUserInput, registerUserSchema } from "@/lib/zod";
 import axios from "axios";
 import toast from "react-hot-toast";
+
+import { RegisterUserInput, registerUserSchema } from "@/lib/zod";
 import PasswordInput from "@/components/passwordInput";
 import Providers from "../providers";
 

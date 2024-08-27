@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-// wisielec metadata
 export const metadata: Metadata = {
   title: "Wisielec - Pokój gier / klalo.pl",
   description:

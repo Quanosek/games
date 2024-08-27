@@ -2,10 +2,11 @@ import type { Metadata, Viewport } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Toaster } from "react-hot-toast";
+
 import { auth } from "@/lib/auth";
+import Wrapper from "@/components/wrappers/session";
 import Analytics from "@/components/analytics";
 import LoginButton from "@/components/loginButton";
-import Wrapper from "@/components/wrapper";
 
 import "the-new-css-reset/css/reset.css";
 import "@/styles/globals.scss";
@@ -71,35 +72,7 @@ export default async function RootLayout({
             </section>
           </header>
 
-          <section>
-            <div className="mobileView">
-              <p>
-                Wybrana strona nie jest dostępna
-                <br />
-                dla urządzeń mobilnych.
-              </p>
-            </div>
-
-            {children}
-          </section>
-
-          <footer>
-            <section>
-              <p>
-                Stworzone z 💙 przez{" "}
-                <Link href="https://github.com/quanosek" target="_blank">
-                  Jakuba Kłało
-                </Link>
-              </p>
-
-              <p>
-                Wszelkie prawa zastrzeżone &#169; 2024 | domena{" "}
-                <Link href="https://www.klalo.pl/" target="_blank">
-                  klalo.pl
-                </Link>
-              </p>
-            </section>
-          </footer>
+          {children}
         </Wrapper>
 
         <Toaster

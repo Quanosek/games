@@ -15,11 +15,15 @@
   }
 }
 
+.showButton {
+  padding: 14px 34px;
+}
+
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 14px;
 }
 
 .board {
@@ -29,7 +33,8 @@
   gap: 1.5rem;
 
   background-color: var(--background);
-  border-radius: 0.6rem;
+  border-radius: 0.4rem;
+  overflow: hidden;
 }
 
 .question {
@@ -37,7 +42,6 @@
   width: 100%;
   font-size: 150%;
   font-weight: bold;
-  border: none;
   background-color: var(--background);
   border-bottom: 1px solid var(--white);
 
@@ -153,18 +157,26 @@
 }
 
 .addButton {
-  margin: 1rem 0 4rem;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  margin-top: calc(1.5rem - 14px);
+  padding: 14px 34px;
+  width: 16rem;
 }
 
 .credits {
   opacity: 35%;
-  position: absolute;
-  bottom: 0;
-  font-size: 80%;
-  text-align: center;
+  margin-top: 3rem;
+  width: 100%;
+  height: 100%;
+
+  p {
+    padding: 0 min(5rem, 5%);
+    position: absolute;
+    right: 0;
+    bottom: 1rem;
+    width: 100%;
+    font-size: 80%;
+    text-align: center;
+  }
 
   a {
     display: unset;

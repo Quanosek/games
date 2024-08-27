@@ -6,14 +6,15 @@ import { User } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { userDataInput, userDataSchema } from "@/lib/zod";
 import axios from "axios";
 import toast from "react-hot-toast";
+
+import { userDataInput, userDataSchema } from "@/lib/zod";
 import PasswordInput from "@/components/passwordInput";
 
 import styles from "@/styles/dashboard.module.scss";
 
-export default function Data({ user }: { user: User | undefined }) {
+export default function UserData({ user }: { user: User | undefined }) {
   const router = useRouter();
 
   const {

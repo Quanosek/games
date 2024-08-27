@@ -1,14 +1,15 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState, Fragment } from "react";
 import toast from "react-hot-toast";
 
+import PageLayout from "@/components/wrappers/pageLayout";
+
 import styles from "./page.module.scss";
 
-// local object template
 export interface Data {
   category: string;
   question: string;
@@ -18,14 +19,12 @@ export interface Data {
 export default function PnmPage() {
   const router = useRouter();
 
-  // empty data template
   const newStage: Data[] = new Array(2).fill({
     category: "",
     question: "",
     answers: new Array(4).fill({ value: "", checked: false }),
   });
 
-  // data state
   const [data, setData] = useState([newStage]);
   const [loading, setLoading] = useState(true);
 
@@ -48,9 +47,9 @@ export default function PnmPage() {
     if (!loading) localStorage.setItem("pnm", JSON.stringify(data));
   }, [loading, data]);
 
-  // main page render
+  // main render
   return (
-    <main>
+    <PageLayout>
       <div style={{ userSelect: "none" }}>
         <Image
           alt="Postaw na milion"
@@ -73,23 +72,20 @@ export default function PnmPage() {
             open("/pnm/board/0", "game_window", "width=960, height=540");
           }}
         >
-          {/* start game button */}
-          <button type="submit" className={styles.defaultButton}>
+          <button type="submit" className={styles.startButton}>
             <p>Uruchom grę</p>
           </button>
 
           <div className={styles.container}>
             {[...Array(data.length)].map((_, i) => (
               <div key={i} className={styles.board}>
-                {/* board navbar */}
                 <div className={styles.controls}>
                   <p>{`Etap ${i + 1}/${data.length}`}</p>
 
-                  {/* quick settings */}
                   <div className={styles.buttons}>
                     <button
                       type="button"
-                      title="Wyczyść/usuń pytanie"
+                      title="Wyczyść/usuń planszę"
                       onClick={() => {
                         if (
                           JSON.stringify(data[i]) !== JSON.stringify(newStage)
@@ -116,7 +112,7 @@ export default function PnmPage() {
                     >
                       <Image
                         className="icon"
-                        alt="usuń"
+                        alt="kosz"
                         src="/icons/trashcan.svg"
                         width={20}
                         height={20}
@@ -182,7 +178,7 @@ export default function PnmPage() {
                     <Fragment key={j}>
                       <div className={styles.inputs}>
                         <div>
-                          <p className={styles.name}>Kategoria:</p>
+                          <h3>Kategoria:</h3>
 
                           <input
                             type="text"
@@ -206,7 +202,7 @@ export default function PnmPage() {
                         </div>
 
                         <div>
-                          <p className={styles.name}>Pytanie:</p>
+                          <h3>Pytanie:</h3>
 
                           <input
                             type="text"
@@ -230,14 +226,12 @@ export default function PnmPage() {
                         </div>
 
                         <div>
-                          <p className={styles.name}>
-                            Odpowiedzi (jedna poprawna):
-                          </p>
+                          <h3>Odpowiedzi (jedna poprawna):</h3>
 
                           {stage.answers.map((answer, k) => (
                             <div
                               key={k}
-                              className={styles.answers}
+                              className={styles.answer}
                               style={{
                                 // disable if prev or curr answer is empty
                                 pointerEvents:
@@ -314,7 +308,6 @@ export default function PnmPage() {
               </div>
             ))}
 
-            {/* add new board button */}
             <button
               type="button"
               className={styles.addButton}
@@ -324,7 +317,7 @@ export default function PnmPage() {
                   JSON.stringify(newStage)
                 ) {
                   return toast(
-                    "Uzupełnij poprzednią planszę przed dodaniem nowej."
+                    "Uzupełnij poprzednią planszę przed dodaniem nowej"
                   );
                 }
 
@@ -352,22 +345,24 @@ export default function PnmPage() {
         </form>
       )}
 
-      <p className={styles.credits}>
-        Gra została stworzona na podstawie polskiego teleturnieju{" "}
-        <Link
-          href="https://pl.wikipedia.org/wiki/Postaw_na_milion"
-          target="_blank"
-        >{`"Postaw na milion"`}</Link>
-        , emitowanego na antenach{" "}
-        <Link
-          href="https://pl.wikipedia.org/wiki/Telewizja_Polska"
-          target="_blank"
-        >
-          Telewizji Polskiej
-        </Link>
-        . Wszystkie prawa do emisji oraz znaki towarowe należą do ich prawnych
-        właścicieli.
-      </p>
-    </main>
+      <div className={styles.credits}>
+        <p>
+          Gra została stworzona na podstawie polskiego teleturnieju{" "}
+          <Link
+            href="https://pl.wikipedia.org/wiki/Postaw_na_milion"
+            target="_blank"
+          >{`"Postaw na milion"`}</Link>
+          , emitowanego na antenach{" "}
+          <Link
+            href="https://pl.wikipedia.org/wiki/Telewizja_Polska"
+            target="_blank"
+          >
+            Telewizji Polskiej
+          </Link>
+          . Wszystkie prawa do emisji oraz znaki towarowe należą do ich prawnych
+          właścicieli.
+        </p>
+      </div>
+    </PageLayout>
   );
 }

@@ -1,16 +1,17 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import FormatPoints from "@/lib/formatPoints";
 import toast from "react-hot-toast";
+
+import FormatPoints from "@/lib/formatPoints";
+import PageLayout from "@/components/wrappers/pageLayout";
 
 import styles from "./page.module.scss";
 import { Dotted } from "@/lib/fonts";
 
-// local object template
 interface Data {
   question: string;
   answers: Array<{ value: string; points: number }>;
@@ -19,13 +20,11 @@ interface Data {
 export default function FamiliadaPage() {
   const router = useRouter();
 
-  // empty data template
   const emptyData: Data = {
     question: "",
     answers: new Array(6).fill({ value: "", points: null }),
   };
 
-  // data state
   const [preview, setPreview] = useState<Data[]>([]);
   const [data, setData] = useState([emptyData]);
   const [loading, setLoading] = useState(true);
@@ -63,9 +62,9 @@ export default function FamiliadaPage() {
     });
   };
 
-  // main page render
+  // main render
   return (
-    <main>
+    <PageLayout>
       <div style={{ userSelect: "none" }}>
         <Image
           alt="FAMILIADA"
@@ -105,6 +104,7 @@ export default function FamiliadaPage() {
       </div>
 
       <button
+        className={styles.showButton}
         onClick={() => {
           open("/familiada/board/0", "game_window", "width=960, height=540");
         }}
@@ -120,7 +120,6 @@ export default function FamiliadaPage() {
         <div className={styles.container}>
           {[...Array(data.length)].map((_, index) => (
             <div key={index} className={styles.board}>
-              {/* question input */}
               <input
                 name={`${index}-question`}
                 placeholder={`Pytanie ${index + 1}`}
@@ -138,11 +137,9 @@ export default function FamiliadaPage() {
               />
 
               <div className={styles.content}>
-                {/* input form */}
                 <div className={styles.answers}>
                   {data[index].answers.map((answer, i) => (
                     <div key={i} className={styles.list}>
-                      {/* answer value input */}
                       <div className={styles.answer}>
                         <p>Odpowiedź {i + 1}:</p>
 
@@ -201,7 +198,6 @@ export default function FamiliadaPage() {
                   ))}
                 </div>
 
-                {/* board preview */}
                 <div className={`${Dotted.className} ${styles.preview}`}>
                   {preview[index]?.answers
                     .filter((el) => el.value && el.points)
@@ -230,7 +226,6 @@ export default function FamiliadaPage() {
                 </div>
               </div>
 
-              {/* bottom buttons */}
               <div className={styles.buttons}>
                 <div className={styles.controls}>
                   <button
@@ -315,7 +310,7 @@ export default function FamiliadaPage() {
                   >
                     <Image
                       className="icon"
-                      alt="usuń"
+                      alt="kosz"
                       src="/icons/trashcan.svg"
                       width={22}
                       height={22}
@@ -391,13 +386,12 @@ export default function FamiliadaPage() {
             </div>
           ))}
 
-          {/* add new board button */}
           <button
             className={styles.addButton}
             onClick={() => {
               if (emptyQuestionCheck(data[data.length - 1])) {
                 return toast(
-                  "Uzupełnij poprzednią planszę przed dodaniem nowej."
+                  "Uzupełnij poprzednią planszę przed dodaniem nowej"
                 );
               }
 
@@ -424,19 +418,21 @@ export default function FamiliadaPage() {
         </div>
       )}
 
-      <p className={styles.credits}>
-        Gra została stworzona na podstawie polskiego teleturnieju{" "}
-        <Link
-          href="https://pl.wikipedia.org/wiki/Familiada"
-          target="_blank"
-        >{`"Familiada"`}</Link>
-        , emitowanego na antenie{" "}
-        <Link href="https://pl.wikipedia.org/wiki/TVP2" target="_blank">
-          TVP2
-        </Link>
-        . Wszystkie prawa do emisji oraz znaki towarowe należą do ich prawnych
-        właścicieli.
-      </p>
-    </main>
+      <div className={styles.credits}>
+        <p>
+          Gra została stworzona na podstawie polskiego teleturnieju{" "}
+          <Link
+            href="https://pl.wikipedia.org/wiki/Familiada"
+            target="_blank"
+          >{`"Familiada"`}</Link>
+          , emitowanego na antenie{" "}
+          <Link href="https://pl.wikipedia.org/wiki/TVP2" target="_blank">
+            TVP2
+          </Link>
+          . Wszystkie prawa do emisji oraz znaki towarowe należą do ich prawnych
+          właścicieli.
+        </p>
+      </div>
+    </PageLayout>
   );
 }

@@ -11,64 +11,60 @@ export default function LoginButtonComponent({
 }: {
   user: User | undefined;
 }) {
-  const [showButtonsList, setShowButtonsList] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
-    const hideButtonsList = () => setShowButtonsList(false);
+    const hideButtonsList = () => setShowDropdown(false);
 
-    if (showButtonsList) document.addEventListener("click", hideButtonsList);
+    if (showDropdown) document.addEventListener("click", hideButtonsList);
     return () => document.removeEventListener("click", hideButtonsList);
-  }, [showButtonsList]);
+  }, [showDropdown]);
+
+  if (!user) {
+    return (
+      <Link className="loginButton" href="/login">
+        Zaloguj się
+      </Link>
+    );
+  }
 
   return (
-    <>
-      {user ? (
-        <div className="loginButton">
-          <button onClick={() => setShowButtonsList(true)}>
-            <p>{user.username ? `@${user.username}` : user.email}</p>
+    <div className="loginButton">
+      <button onClick={() => setShowDropdown(true)}>
+        <p>{user.username ? `@${user.username}` : user.email}</p>
 
-            <Image
-              style={{
-                borderColor:
-                  user.role === "admin" ? "var(--gold)" : "var(--white)",
-              }}
-              alt=""
-              src={user.image ?? "/icons/profile.svg"}
-              width={100}
-              height={100}
-            />
-          </button>
+        <Image
+          style={{
+            borderColor: user.role === "admin" ? "var(--gold)" : "var(--white)",
+          }}
+          alt=""
+          src={user.image ?? "/icons/profile.svg"}
+          width={100}
+          height={100}
+        />
+      </button>
 
-          <div
-            className="dropdown"
-            style={{ display: showButtonsList ? "" : "none" }}
-          >
-            <Link href="/profile">
-              <p>Przejdź do profilu</p>
-            </Link>
-
-            <Link href="/saved">
-              <p>Zapisane gry</p>
-            </Link>
-
-            {user.role === "admin" && (
-              <Link href="/admin" style={{ backgroundColor: "var(--gold" }}>
-                <p>Panel administratora</p>
-              </Link>
-            )}
-
-            <hr />
-
-            <button onClick={async () => await signOut()}>
-              <p>Wyloguj się</p>
-            </button>
-          </div>
-        </div>
-      ) : (
-        <Link className="loginButton" href="/login">
-          Zaloguj się
+      <div className="dropdown" style={{ display: showDropdown ? "" : "none" }}>
+        <Link href="/profile">
+          <p>Przejdź do profilu</p>
         </Link>
-      )}
-    </>
+
+        <Link href="/saved">
+          <p>Zapisane gry</p>
+        </Link>
+
+        {user.role === "admin" && (
+          <Link href="/admin" style={{ backgroundColor: "var(--gold" }}>
+            <p>Panel administratora</p>
+          </Link>
+        )}
+
+        <hr />
+
+        <button onClick={async () => await signOut()}>
+          <p>Wyloguj się</p>
+        </button>
+      </div>
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-// LAYOUT STYLES
+// Board layout
 
 .container {
   z-index: 1;
@@ -8,7 +8,7 @@
   width: 100svw;
   height: auto;
 
-  background-color: black;
+  background-color: 000000;
   overflow-x: hidden;
   user-select: none;
 }
@@ -34,7 +34,7 @@
   text-align: center;
 }
 
-// PAGE COMPONENT STYLES
+// Game elements
 
 .titleBoard {
   width: 100%;
