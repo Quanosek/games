@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import PageLayout from "@/components/wrappers/pageLayout";
@@ -21,11 +20,11 @@ export default function NotFoundPage() {
 
   return (
     <PageLayout>
-      <h1>Nie znaleziono strony!</h1>
+      <h1>Nie znaleziono strony</h1>
 
-      <Link className="button" href="/">
+      <button onClick={() => router.push("/")}>
         🏠 Powrót na stronę główną <span>[{seconds}]</span>
-      </Link>
+      </button>
     </PageLayout>
   );
 }

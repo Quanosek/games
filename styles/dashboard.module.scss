@@ -65,7 +65,7 @@
     }
 
     .savedButton {
-      padding: 14px 34px;
+      padding: 14px 32px;
       background-color: var(--primary);
       border-radius: 30px;
     }
@@ -114,9 +114,7 @@
 
   .submitButton {
     margin-top: 1.5rem;
-    padding: 14px 34px;
     width: 16rem;
-    border-radius: 30px;
   }
 }
 
@@ -126,23 +124,10 @@
   gap: 20px;
 
   button {
-    padding: 14px 34px;
     width: 14rem;
-    border-radius: 30px;
 
     &:nth-child(2) {
       background-color: #ac2c2c;
     }
-  }
-}
-
-.placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-
-  p {
-    opacity: 80%;
   }
 }

@@ -187,9 +187,7 @@ export default function WisielecBoardID({
           <p className={styles.mistakes}>
             Błędy:{" "}
             <span
-              style={{
-                color: Mistakes(data) === data.attempts ? "red" : "",
-              }}
+              style={{ color: Mistakes(data) === data.attempts ? "red" : "" }}
             >
               {Mistakes(data)}/{data.attempts}
             </span>

@@ -11,7 +11,7 @@ export default function HomePage() {
       <h1>Wybierz grę</h1>
 
       <div className={styles.buttons}>
-        <Link className="button" href="/quizy">
+        <Link href="/quizy">
           <Image
             alt="❔"
             src="/favicons/white_question_mark.svg"
@@ -22,7 +22,7 @@ export default function HomePage() {
           <p>Quizy</p>
         </Link>
 
-        <Link className="button" href="/wisielec">
+        <Link href="/wisielec">
           <Image
             alt="🪢"
             src="/favicons/knot.svg"
@@ -33,7 +33,7 @@ export default function HomePage() {
           <p>Wisielec</p>
         </Link>
 
-        <Link className="button" href="/familiada">
+        <Link href="/familiada">
           <Image
             alt="💰"
             src="/favicons/money_bag.svg"
@@ -44,7 +44,7 @@ export default function HomePage() {
           <p>{`"Familiada"`}</p>
         </Link>
 
-        <Link className="button disabled" href="/pnm">
+        <Link className="disabled" href="/pnm">
           <Image
             alt="💸"
             src="/favicons/dollar_banknote.svg"

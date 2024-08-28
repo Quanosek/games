@@ -46,7 +46,7 @@
   background-color: #000000;
 
   button {
-    transition: all 0s, filter 200ms;
+    transition: all 100ms ease, filter 150ms ease-out;
   }
 
   .controls {
@@ -113,7 +113,7 @@
     background-color: rgba(#1a1c49, 0.8);
     border-radius: 1.5vw;
     backdrop-filter: blur(0.8vw);
-    transition: all 0s, filter 200ms;
+    transition: all 200s ease, filter 150ms ease-out;
     cursor: pointer;
   }
 
@@ -148,8 +148,8 @@
       font-weight: bold;
       background-color: #cdd0e2;
       border-radius: 1.5vw;
-      transition: all 0s, filter 200ms, bottom 150ms ease-in-out,
-        transform 250ms ease-in, top 300ms ease-in;
+      transition: all 200ms ease, filter 150ms ease-out,
+        transform 150ms ease-in-out, top 300ms ease-in, bottom 150ms ease-in-out;
 
       p {
         color: #060512;

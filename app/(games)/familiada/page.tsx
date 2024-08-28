@@ -194,7 +194,7 @@ export default function FamiliadaPage() {
 
           <div className={styles.pointsAmount}>
             <p>
-              Suma punktów:{" "}
+              Suma:{" "}
               {data[index].answers.reduce((acc, curr) => {
                 return acc + (curr.points || 0);
               }, 0)}

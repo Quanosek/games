@@ -220,7 +220,7 @@ export default function QuizyPage() {
         required
       />
 
-      <p className={styles.instructions}>
+      <p className={styles.instruction}>
         Umieść ukryte fragmenty w kwadratowych nawiasach. Na przykład:{" "}
         {`"Ala ma [kota] i psa"`}.
       </p>

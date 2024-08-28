@@ -19,7 +19,7 @@ export default function FamiliadaRulesPage() {
           style={{ rotate: "-90deg" }}
           className="icon"
           src="/icons/arrow.svg"
-          alt="strzałka w lewo"
+          alt="w lewo"
           width={25}
           height={25}
         />

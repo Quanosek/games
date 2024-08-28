@@ -13,9 +13,9 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
 }
 
 .startButton {
-  padding: 14px 34px;
   width: 16rem;
   background-color: #2c288c;
+  border-radius: 6px;
 }
 
 .container {
@@ -33,17 +33,13 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
   gap: 1rem;
 
   background-color: var(--background);
-  border-radius: 0.4rem;
+  border-radius: 15px;
   overflow: hidden;
-
-  input {
-    padding: 0.8rem 1rem;
-  }
 }
 
 .controls {
   position: relative;
-  padding: 0.8rem 2rem;
+  padding: 0.8rem 1.5rem;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -64,16 +60,13 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
     background-color: var(--black);
   }
 
-  div {
-    z-index: 1;
-  }
-
   .description {
     &,
     & > * {
+      z-index: 1;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
   }
 
@@ -86,12 +79,13 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
       opacity: 80%;
       padding: 6px;
       background: none;
+      border-radius: 5px;
     }
   }
 }
 
 .content {
-  padding: 0.5rem 2rem 2rem;
+  padding: 0.5rem 1.5rem 1.5rem;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -100,6 +94,17 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
 
   input {
     width: 100%;
+  }
+}
+
+.inputs {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  h3 {
+    margin: -0.25rem 0 0.5rem;
   }
 }
 
@@ -112,8 +117,9 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
   text-align: center;
 
   button {
-    padding: 14px 34px;
+    padding: 14px 32px;
     width: 100%;
+    border-radius: 6px;
   }
 
   .dropdown {
@@ -129,7 +135,7 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
     flex-direction: column;
     gap: $gap;
     background-color: var(--primary);
-    border-radius: 0 0 0.4rem 0.4rem;
+    border-radius: 0 0 6px 6px;
     overflow: hidden;
 
     button {
@@ -145,17 +151,6 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
 
 // Boards components
 
-.inputs {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  h3 {
-    margin: -0.25rem 0 0.5rem;
-  }
-}
-
 .answersGrid {
   width: 100%;
   display: grid;
@@ -166,6 +161,12 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
 .answerBox {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  border-radius: 5px;
+
+  input {
+    box-shadow: none;
+  }
 }
 
 .formValue {
@@ -185,6 +186,7 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
 
   input {
     padding-left: calc(2.5 * $padding-left);
+    border-radius: 0;
   }
 }
 
@@ -230,7 +232,7 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
 
       &:checked + .check svg path {
         stroke-dashoffset: 60;
-        transition: all 300ms;
+        transition: all 200ms ease;
       }
 
       &:checked + .check svg polyline {
@@ -272,8 +274,8 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0);
   }
 }
 
-.instructions {
-  opacity: 60%;
+.instruction {
+  opacity: 55%;
   margin: -0.25rem 0 -0.25rem;
   font-size: 90%;
 }

@@ -54,7 +54,7 @@ export default function LoginButtonComponent({
         </Link>
 
         {user.role === "admin" && (
-          <Link href="/admin" style={{ backgroundColor: "var(--gold" }}>
+          <Link href="/admin" style={{ backgroundColor: "var(--gold)" }}>
             <p>Panel administratora</p>
           </Link>
         )}

@@ -289,7 +289,7 @@ export default function WisielecPage() {
                   </div>
                 </div>
 
-                <hr />
+                <hr style={{ marginTop: "0.25rem" }} />
 
                 <div className={styles.phraseStats}>
                   <p>{phraseStats(data[index].phrase)}</p>

@@ -240,7 +240,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
                 className={styles.box}
                 style={{
                   opacity: counter >= index + 1 ? 1 : 0,
-                  transition: "opacity 0.3s ease-in-out",
+                  transition: "opacity 300ms ease-in-out",
                 }}
               >
                 <h2 className={styles.answer}>{answer.value}</h2>
@@ -322,7 +322,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
             className={styles.info}
             style={{
               opacity: counter >= 5 ? 1 : 0,
-              transition: "opacity 0.3s ease-in-out",
+              transition: "opacity 300ms ease-in-out",
             }}
           >
             <p>{selectedQuestion.question}</p>

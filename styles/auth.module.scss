@@ -23,7 +23,7 @@
   a {
     opacity: 90%;
     border-radius: 3px;
-    transition: 100ms filter ease-out;
+    transition: filter 150ms ease-out;
 
     &:hover {
       filter: contrast(0.8);
@@ -62,7 +62,7 @@
 
     span {
       margin-top: -2px;
-      opacity: 90%;
+      opacity: 80%;
       font-size: 90%;
     }
   }
@@ -83,9 +83,7 @@
 
   .submitButton {
     margin-top: 1.5rem;
-    padding: 14px 34px;
     width: 16rem;
-    border-radius: 30px;
   }
 }
 
