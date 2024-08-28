@@ -365,10 +365,10 @@ export default function FamiliadaPage() {
     <PageLayout>
       <div style={{ userSelect: "none" }}>
         <Image
-          alt="FAMILIADA"
-          src="/familiada/images/title.png"
-          width={636}
-          height={151}
+          alt="Familiada"
+          src="/familiada/images/logo.svg"
+          width={800}
+          height={130}
           draggable={false}
           priority
         />

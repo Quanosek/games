@@ -5,7 +5,6 @@ import { Toaster } from "react-hot-toast";
 
 import { auth } from "@/lib/auth";
 import Wrapper from "@/components/wrappers/session";
-import Analytics from "@/components/analytics";
 import LoginButton from "@/components/loginButton";
 
 import "the-new-css-reset/css/reset.css";
@@ -37,8 +36,6 @@ export default async function RootLayout({
   return (
     <html lang="pl" className={Nexa.className}>
       <body>
-        {process.env.NODE_ENV !== "development" && <Analytics />}
-
         <Wrapper>
           <header>
             <section>

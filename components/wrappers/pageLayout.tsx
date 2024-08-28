@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import Analytics from "@/components/analytics";
+
 export default function PageLayoutWrapper({
   children,
 }: {
@@ -7,6 +9,8 @@ export default function PageLayoutWrapper({
 }) {
   return (
     <>
+      {process.env.NODE_ENV !== "development" && <Analytics />}
+
       <section>
         <div className="mobileView">
           <p>
