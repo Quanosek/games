@@ -4,11 +4,11 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     minimumCacheTTL: 60,
-    domains: [
-      "lh3.googleusercontent.com",
-      "platform-lookaside.fbsbx.com",
-      "avatars.githubusercontent.com",
-      "cdn.discordapp.com",
+    remotePatterns: [
+      { hostname: "lh3.googleusercontent.com" },
+      { hostname: "platform-lookaside.fbsbx.com" },
+      { hostname: "avatars.githubusercontent.com" },
+      { hostname: "cdn.discordapp.com" },
     ],
   },
 };
