@@ -7,7 +7,7 @@ import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 import ms from "ms";
 
 import type { Data } from "../../page";
-import styles from "./styles.module.scss";
+import styles from "./board.module.scss";
 
 export default function WisielecBoardID({
   params,

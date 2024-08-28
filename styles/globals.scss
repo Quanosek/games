@@ -3,7 +3,6 @@
 
   --white: #f2f2f2;
   --black: #0a0b0d;
-  --yellow: #d9c465;
   --gold: #a77b0d;
 
   --primary: #2a2a2a;
@@ -270,6 +269,7 @@ main {
     }
 
     &:disabled {
+      transform: none;
       filter: brightness(0.8) contrast(1.05) !important;
       cursor: not-allowed;
     }

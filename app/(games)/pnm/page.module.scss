@@ -142,7 +142,7 @@ $gradient: linear-gradient(45deg, #ee8e8e, #bd0808);
   height: 100%;
 
   p {
-    padding: 0 min(5rem, 5%);
+    padding: 0 min(3rem, 3%);
     position: absolute;
     right: 0;
     bottom: 1rem;
@@ -153,6 +153,7 @@ $gradient: linear-gradient(45deg, #ee8e8e, #bd0808);
 
   a {
     display: unset;
+    border-radius: 3px;
     text-decoration: underline;
   }
 }

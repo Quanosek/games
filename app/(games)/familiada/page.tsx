@@ -6,36 +6,35 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-import FormatPoints from "@/lib/formatPoints";
 import PageLayout from "@/components/wrappers/pageLayout";
 
-import styles from "./page.module.scss";
-import { Dotted } from "@/lib/fonts";
+import styles from "./styles.module.scss";
 
-interface Data {
+export interface Data {
+  checked: boolean;
   question: string;
   answers: Array<{ value: string; points: number }>;
+  multiply: number | undefined;
 }
 
 export default function FamiliadaPage() {
   const router = useRouter();
 
   const emptyData: Data = {
+    checked: false,
     question: "",
-    answers: new Array(6).fill({ value: "", points: null }),
+    answers: new Array(6).fill({ value: "", points: 0 }),
+    multiply: undefined,
   };
 
-  const [preview, setPreview] = useState<Data[]>([]);
-  const [data, setData] = useState([emptyData]);
+  const [data, setData] = useState<Data[]>([emptyData]);
   const [loading, setLoading] = useState(true);
 
-  // load data on start
+  // load game data
   useEffect(() => {
     try {
       const storedData = localStorage.getItem("familiada");
       if (storedData) setData(JSON.parse(storedData));
-
-      scrollTo({ top: 0 });
       setLoading(false);
     } catch (error) {
       localStorage.removeItem("familiada");
@@ -45,24 +44,323 @@ export default function FamiliadaPage() {
 
   // save data on change
   useEffect(() => {
-    if (!loading) localStorage.setItem("familiada", JSON.stringify(data));
+    if (loading) return;
+    localStorage.setItem("familiada", JSON.stringify(data));
   }, [loading, data]);
 
-  // check if question is empty
-  const emptyQuestionCheck = (question: Data) => {
-    return JSON.stringify(question) === JSON.stringify(emptyData);
+  // check if board is empty
+  const emptyBoardCheck = (data: Data) => {
+    const { multiply, ...rest } = data;
+    return JSON.stringify(rest) === JSON.stringify(emptyData);
   };
 
-  // clear preview
-  const clearPreview = (index: number) => {
-    setPreview((prev) => {
-      const newData = [...prev];
-      newData[index] = undefined as any;
-      return newData;
-    });
-  };
+  // ROUND COMPONENT
 
-  // main render
+  const RoundBoard = (index: number) => (
+    <form
+      id={index.toString()}
+      key={index}
+      className={styles.board}
+      onSubmit={(e) => {
+        e.preventDefault();
+
+        const answers = data[index].answers;
+
+        // form validation
+        if (answers.filter((el) => el.value && el.points).length < 3) {
+          return toast.error(
+            "Plansza musi zawierać co najmniej 3 uzupełnione odpowiedzi z punktami"
+          );
+        } else if (answers.some((el) => el.value && !el.points)) {
+          return toast.error(
+            "Niektóre odpowiedzi nie mają przydzielonych punktów"
+          );
+        } else if (answers.some((el) => !el.value && el.points)) {
+          return toast.error(
+            "Niektóre odpowiedzi nie mają wypełnionych odpowiedzi"
+          );
+        } else {
+          toast.success("Plansza jest gotowa do prezentacji");
+        }
+
+        // sort answers by points
+        const sorted = answers.sort((a, b) => {
+          return b.points - a.points;
+        });
+
+        // count filled answers
+        const filled = answers.filter((el) => {
+          return el.value && el.points;
+        }).length;
+
+        // update saved data
+        setData((prev) => {
+          const newData = [...prev];
+          newData[index] = data[index];
+          newData[index].checked = true;
+          newData[index].answers = sorted;
+
+          if (filled === 6) {
+            newData[index].multiply = 1;
+          } else if (filled === 5) {
+            newData[index].multiply = 2;
+          } else {
+            newData[index].multiply = 3;
+          }
+
+          return newData;
+        });
+      }}
+    >
+      <div className={styles.content}>
+        <label className={styles.question}>
+          <p>{index + 1}.</p>
+
+          <input
+            name={`${index}-question`}
+            placeholder={`Pytanie ${index + 1}`}
+            autoComplete="off"
+            maxLength={100}
+            value={data[index].question || ""}
+            onChange={(e) => {
+              setData((prev) => {
+                const newData = [...prev];
+                newData[index].question = e.target.value;
+                return newData;
+              });
+            }}
+          />
+        </label>
+
+        <div className={styles.answersList}>
+          {data[index].answers.map((answer, i) => (
+            <div key={i} className={styles.answer}>
+              <label className={styles.value}>
+                <p>Odpowiedź {i + 1}:</p>
+
+                <input
+                  name={`${index}-${i}-answer`}
+                  autoComplete="off"
+                  maxLength={17} // board limit
+                  value={answer.value || ""}
+                  onChange={(e) => {
+                    // validate input
+                    const value = e.target.value
+                      .toUpperCase()
+                      .replace(/[^A-ZĄĆĘŁŃÓŚŹŻ\s.-]/g, "");
+
+                    // update data
+                    setData((prev) => {
+                      const newData = [...prev];
+                      newData[index].checked = false;
+                      newData[index].answers[i] = {
+                        ...newData[index].answers[i],
+                        value,
+                      };
+                      return newData;
+                    });
+                  }}
+                />
+              </label>
+
+              <label className={styles.points}>
+                <p>punkty:</p>
+                <input
+                  name={`${index}-${i}-points`}
+                  autoComplete="off"
+                  maxLength={2} // board limit
+                  value={answer.points || ""}
+                  onChange={(e) => {
+                    // validate input
+                    const points = Number(
+                      e.target.value.replace(/[^0-9]/g, "")
+                    );
+
+                    // update data
+                    setData((prev) => {
+                      const newData = [...prev];
+                      newData[index].checked = false;
+                      newData[index].answers[i] = {
+                        ...newData[index].answers[i],
+                        points,
+                      };
+                      return newData;
+                    });
+                  }}
+                />
+              </label>
+            </div>
+          ))}
+
+          <div className={styles.pointsAmount}>
+            <p>
+              Suma punktów:{" "}
+              {data[index].answers.reduce((acc, curr) => {
+                return acc + (curr.points || 0);
+              }, 0)}
+              /100
+            </p>
+
+            <select
+              style={{ display: data[index].checked ? "" : "none" }}
+              className={styles.multiply}
+              name={`${index}-multiply`}
+              title="Mnożnik punktów (zależny od ilości odpowiedzi)"
+              value={data[index].multiply}
+              onChange={(e) => {
+                setData((prev) => {
+                  const newData = [...prev];
+                  newData[index].multiply = parseInt(e.target.value);
+                  return newData;
+                });
+              }}
+            >
+              <option value={1}>× 1</option>
+              <option value={2}>× 2</option>
+              <option value={3}>× 3</option>
+              <option value={4}>× 4</option>
+            </select>
+          </div>
+        </div>
+
+        <div className={styles.bottomButtons}>
+          <div className={styles.controls}>
+            {/* delete button */}
+            <button
+              type="button"
+              disabled={data.length === 1 && emptyBoardCheck(data[index])}
+              title={
+                data.length === 1 && emptyBoardCheck(data[index])
+                  ? "Nie można usunąć ostatniej planszy"
+                  : ""
+              }
+              onClick={() => {
+                if (!emptyBoardCheck(data[index])) {
+                  if (!confirm("Czy na pewno chcesz wyczyścić pytanie?")) {
+                    return;
+                  }
+
+                  setData((prev) => {
+                    const newData = [...prev];
+                    newData[index] = emptyData;
+
+                    return newData;
+                  });
+                } else {
+                  setData((prev) => {
+                    const newData = [...prev];
+                    newData[index].checked = false;
+                    if (newData.length > 1) newData.splice(index, 1);
+
+                    setTimeout(() => {
+                      document
+                        .getElementById((data.length - 2).toString())
+                        ?.scrollIntoView({
+                          behavior: "smooth",
+                          block: "center",
+                        });
+                    }, 1);
+
+                    return newData;
+                  });
+                }
+              }}
+            >
+              <Image
+                className="icon"
+                alt="kosz"
+                src="/icons/trashcan.svg"
+                width={22}
+                height={22}
+                draggable={false}
+              />
+            </button>
+
+            {/* move down button */}
+            <button
+              type="button"
+              disabled={index + 1 === data.length}
+              onClick={() => {
+                data[index].multiply === undefined;
+                data[index + 1].multiply === undefined;
+
+                setData((prev) => {
+                  const newData = [...prev];
+                  const temp = newData[index];
+                  newData[index] = newData[index + 1];
+                  newData[index + 1] = temp;
+                  return newData;
+                });
+              }}
+            >
+              <Image
+                style={{ rotate: "180deg" }}
+                className="icon"
+                alt="w dół"
+                src="/icons/arrow.svg"
+                width={22}
+                height={22}
+                draggable={false}
+              />
+            </button>
+
+            {/* move up button */}
+            <button
+              type="button"
+              disabled={index === 0}
+              onClick={() => {
+                data[index - 1].multiply === undefined;
+                data[index].multiply === undefined;
+
+                setData((prev) => {
+                  const newData = [...prev];
+                  const temp = newData[index];
+                  newData[index] = newData[index - 1];
+                  newData[index - 1] = temp;
+                  return newData;
+                });
+              }}
+            >
+              <Image
+                className="icon"
+                alt="w górę"
+                src="/icons/arrow.svg"
+                width={22}
+                height={22}
+                draggable={false}
+              />
+            </button>
+          </div>
+
+          <div>
+            <button type="submit">
+              <p>{"🔎 Sprawdź"}</p>
+            </button>
+
+            <button
+              type="button"
+              disabled={!data[index].checked}
+              title={
+                !data[index].checked ? "Plansza nie została sprawdzona" : ""
+              }
+              onClick={() => {
+                open(
+                  `/familiada/board/${index + 1}`,
+                  "game_window",
+                  "width=960, height=540"
+                );
+              }}
+            >
+              <p>{"🖥️ Prezentuj"}</p>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  );
+
+  // MAIN RETURN
+
   return (
     <PageLayout>
       <div style={{ userSelect: "none" }}>
@@ -76,41 +374,23 @@ export default function FamiliadaPage() {
         />
       </div>
 
-      <div className={styles.description}>
-        <p>
-          Dodaj plansze, uzupełnij je pytaniami i punktami, następnie kliknij
-          przycisk {`"Podgląd"`}, aby zobaczyć posortowaną planszę obok i
-          zapisać ją na swoim urządzeniu.
-          <br />
-          Aby wyświetlić tablicę wyników należy wybrać przycisk {`"Pokaż"`},
-          który otworzy ją w zewnętrznym oknie,
-          <br />
-          które najlepiej jest ustawić w trybie pełnoekranowym na drugim ekranie
-          poprzez użycie klawisza <span>[f11]</span>.
-        </p>
+      <div className={styles.actionButtons}>
+        <Link href="/familiada/rules">
+          <p>{"📖 Zasady gry"}</p>
+        </Link>
 
-        <p>
-          Klawisze numeryczne <span>[1-6]</span> odpowiadają za odkrywanie
-          odpowiedzi. Wciśnięcie ich z użyciem klawisza <span>[Ctrl]</span>{" "}
-          odkrywa odpowiedź bez przydzielania punktów.
-          <br />
-          Klawisze <span>[Q, W, R, T]</span> odpowiadają za przydzielanie{" "}
-          {`"X"`} za błędne odpowiedzi, gdzie <span>[Q]</span> i{" "}
-          <span>[T]</span> to {`"duży X"`}, a <span>[W]</span> i{" "}
-          <span>[R]</span> to {`"małe x"`}.
-          <br />
-          Klawisz <span>[E]</span> usuwa wszystkie błędy widoczne na tablicy.
-        </p>
+        <button
+          onClick={() => {
+            return open(
+              "/familiada/board/0",
+              "game_window",
+              "width=960, height=540"
+            );
+          }}
+        >
+          <p>{"✨ Tablica tytułowa"}</p>
+        </button>
       </div>
-
-      <button
-        className={styles.showButton}
-        onClick={() => {
-          open("/familiada/board/0", "game_window", "width=960, height=540");
-        }}
-      >
-        <p>{"✨ Pokaż tablicę tytułową"}</p>
-      </button>
 
       {loading ? (
         <div className="loading">
@@ -118,290 +398,26 @@ export default function FamiliadaPage() {
         </div>
       ) : (
         <div className={styles.container}>
-          {[...Array(data.length)].map((_, index) => (
-            <div key={index} className={styles.board}>
-              <input
-                name={`${index}-question`}
-                placeholder={`Pytanie ${index + 1}`}
-                autoComplete="off"
-                maxLength={128}
-                className={styles.question}
-                value={data[index].question || ""}
-                onChange={(e) => {
-                  setData((prev) => {
-                    const newData = [...prev];
-                    newData[index].question = e.target.value;
-                    return newData;
-                  });
-                }}
-              />
-
-              <div className={styles.content}>
-                <div className={styles.answers}>
-                  {data[index].answers.map((answer, i) => (
-                    <div key={i} className={styles.list}>
-                      <div className={styles.answer}>
-                        <p>Odpowiedź {i + 1}:</p>
-
-                        <input
-                          type="text"
-                          name={`${index}-${i}-answer`}
-                          autoComplete="off"
-                          maxLength={17} // 17 characters board limit
-                          value={answer.value || ""}
-                          onChange={(e) => {
-                            const value = e.target.value.replace(
-                              /[^a-zA-Z\s.]/g,
-                              ""
-                            );
-
-                            clearPreview(index);
-                            setData((prev) => {
-                              const newData = [...prev];
-                              newData[index].answers[i] = {
-                                ...newData[index].answers[i],
-                                value,
-                              };
-                              return newData;
-                            });
-                          }}
-                        />
-                      </div>
-
-                      <div className={styles.points}>
-                        <p>Liczba punktów:</p>
-
-                        <input
-                          type="text"
-                          name={`${index}-${i}-points`}
-                          autoComplete="off"
-                          maxLength={2} // 2 characters board limit
-                          value={answer.points || ""}
-                          onChange={(e) => {
-                            const points = Number(
-                              e.target.value.replace(/[^0-9]/g, "")
-                            );
-
-                            clearPreview(index);
-                            setData((prev) => {
-                              const newData = [...prev];
-                              newData[index].answers[i] = {
-                                ...newData[index].answers[i],
-                                points,
-                              };
-                              return newData;
-                            });
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className={`${Dotted.className} ${styles.preview}`}>
-                  {preview[index]?.answers
-                    .filter((el) => el.value && el.points)
-                    .map((el, i: number) => {
-                      const answer = el.value.split("");
-                      const points = FormatPoints(el.points);
-
-                      return (
-                        <div key={i}>
-                          <p>{i + 1}</p>
-
-                          <div className={styles.answer}>
-                            {answer.map((value: string, i: number) => {
-                              return <p key={i}>{value}</p>;
-                            })}
-                          </div>
-
-                          <div className={styles.points}>
-                            {points.map((value: string, i: number) => {
-                              return <p key={i}>{value}</p>;
-                            })}
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              </div>
-
-              <div className={styles.buttons}>
-                <div className={styles.controls}>
-                  <button
-                    className={index === 0 ? "disabled" : ""}
-                    tabIndex={index === 0 ? -1 : 0}
-                    onClick={() => {
-                      clearPreview(index - 1);
-                      clearPreview(index);
-
-                      setData((prev) => {
-                        const newData = [...prev];
-                        const temp = newData[index];
-                        newData[index] = newData[index - 1];
-                        newData[index - 1] = temp;
-                        return newData;
-                      });
-                    }}
-                  >
-                    <Image
-                      className="icon"
-                      alt="w górę"
-                      src="/icons/arrow.svg"
-                      width={22}
-                      height={22}
-                      draggable={false}
-                    />
-                    <p>W górę</p>
-                  </button>
-
-                  <button
-                    className={index + 1 === data.length ? "disabled" : ""}
-                    tabIndex={index + 1 === data.length ? -1 : 0}
-                    onClick={() => {
-                      clearPreview(index);
-                      clearPreview(index + 1);
-
-                      setData((prev) => {
-                        const newData = [...prev];
-                        const temp = newData[index];
-                        newData[index] = newData[index + 1];
-                        newData[index + 1] = temp;
-                        return newData;
-                      });
-                    }}
-                  >
-                    <Image
-                      style={{ rotate: "180deg" }}
-                      className="icon"
-                      alt="w dół"
-                      src="/icons/arrow.svg"
-                      width={22}
-                      height={22}
-                      draggable={false}
-                    />
-                    <p>W dół</p>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      if (!emptyQuestionCheck(data[index])) {
-                        if (
-                          !confirm("Czy na pewno chcesz wyczyścić pytanie?")
-                        ) {
-                          return;
-                        }
-
-                        setData((prev) => {
-                          const newData = [...prev];
-                          newData[index] = emptyData;
-                          return newData;
-                        });
-                      } else {
-                        clearPreview(index);
-
-                        setData((prev) => {
-                          const newData = [...prev];
-                          if (newData.length > 1) newData.splice(index, 1);
-                          return newData;
-                        });
-                      }
-                    }}
-                  >
-                    <Image
-                      className="icon"
-                      alt="kosz"
-                      src="/icons/trashcan.svg"
-                      width={22}
-                      height={22}
-                      draggable={false}
-                    />
-                    <p>Usuń</p>
-                  </button>
-                </div>
-
-                <div>
-                  <button
-                    onClick={() => {
-                      const answers = data[index].answers;
-
-                      if (
-                        answers.filter((el) => el.value && el.points).length < 3
-                      ) {
-                        return toast(
-                          "Plansza musi mieć przynajmniej 3 wypełnione odpowiedzi z punktami!"
-                        );
-                      } else if (answers.some((el) => el.value && !el.points)) {
-                        return toast(
-                          "Niektóre odpowiedzi nie mają przydzielonych punktów!"
-                        );
-                      } else if (answers.some((el) => !el.value && el.points)) {
-                        return toast(
-                          "Niektóre odpowiedzi nie mają wypełnionych odpowiedzi!"
-                        );
-                      }
-
-                      // sort answers by points
-                      const sorted = answers.sort((a, b) => {
-                        return b.points - a.points;
-                      });
-
-                      setPreview((prev) => {
-                        const newData = [...prev];
-                        newData[index] = data[index];
-                        newData[index].answers = sorted;
-                        return newData;
-                      });
-
-                      setData((prev) => {
-                        const newData = [...prev];
-                        newData[index] = data[index];
-                        newData[index].answers = sorted;
-                        return newData;
-                      });
-                    }}
-                  >
-                    <p>{"🔎 Sprawdź"}</p>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      if (!preview[index]) {
-                        return toast(
-                          "Nie sprawdzono danych dla wybranej planszy!"
-                        );
-                      }
-
-                      open(
-                        `/familiada/board/${index + 1}`,
-                        "game_window",
-                        "width=960, height=540"
-                      );
-                    }}
-                  >
-                    <p>{"🖥️ Prezentuj"}</p>
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+          {[...Array(data.length)].map((_, index) => RoundBoard(index))}
 
           <button
             className={styles.addButton}
+            disabled={emptyBoardCheck(data[data.length - 1])}
+            title={
+              emptyBoardCheck(data[data.length - 1])
+                ? "Uzupełnij poprzednią planszę przed dodaniem nowej"
+                : ""
+            }
             onClick={() => {
-              if (emptyQuestionCheck(data[data.length - 1])) {
-                return toast(
-                  "Uzupełnij poprzednią planszę przed dodaniem nowej"
-                );
-              }
-
               setData([...data, emptyData]);
 
               setTimeout(() => {
-                scrollTo({
-                  top: document.body.scrollHeight,
-                  behavior: "smooth",
-                });
+                document
+                  .getElementById(data.length.toString())
+                  ?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                  });
               }, 1);
             }}
           >
@@ -413,7 +429,7 @@ export default function FamiliadaPage() {
               height={18}
               draggable={false}
             />
-            <p>Dodaj planszę</p>
+            <p>Nowe pytanie</p>
           </button>
         </div>
       )}

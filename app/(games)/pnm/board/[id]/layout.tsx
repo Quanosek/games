@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import styles from "./styles.module.scss";
+import styles from "./board.module.scss";
 import { Myriad } from "@/lib/fonts";
 
 export default function BoardLayout({

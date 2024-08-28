@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
-import FormatPoints from "@/lib/formatPoints";
+import FormatPoints from "./formatPoints";
 
-import styles from "./styles.module.scss";
+import type { Data } from "../../page";
+import styles from "./board.module.scss";
 
 export default function FamiliadaBoardID({
   params,
@@ -13,8 +14,8 @@ export default function FamiliadaBoardID({
 }) {
   const id = Number(params.id);
 
-  const [data, setData] = useState<any>();
-  const [show, setShow] = useState<Array<number>>([]);
+  const [data, setData] = useState<Data>();
+  const [visible, setVisible] = useState<Array<number>>([]);
 
   const pointsAmount = useRef(0);
   const mainScore = useRef(0);
@@ -27,23 +28,24 @@ export default function FamiliadaBoardID({
   const audioGood = useRef<HTMLAudioElement>(null);
   const audioWrong = useRef<HTMLAudioElement>(null);
 
-  // get data on load
+  // load board data
   useEffect(() => {
     const storedData = localStorage.getItem("familiada") || "[]";
-    const data = JSON.parse(storedData)[id - 1];
+    let data = JSON.parse(storedData)[id - 1] as Data;
 
     if (data) {
       // filter empty answers
-      const answers = data.answers.filter(
-        (el: { value: string }) => el.value !== ""
-      );
+      const answers = data.answers.filter((el) => el.value !== "");
 
-      setData(answers);
+      data = { ...data, answers };
+      setData(data);
     }
   }, [id]);
 
-  // keyboard navigation
+  // keyboard interactions
   useEffect(() => {
+    if (!data) return;
+
     const KeyupEvent = (event: KeyboardEvent) => {
       if (event.shiftKey || event.altKey || event.metaKey) {
         return;
@@ -54,20 +56,18 @@ export default function FamiliadaBoardID({
         event.preventDefault();
 
         const number = Number(event.key);
-        if (!data[number - 1]) return;
+        if (!data.answers[number - 1]) return;
 
-        if (!show.includes(number)) {
+        if (!visible.includes(number)) {
           audioGood.current && audioGood.current.play();
-          setShow([...show, number]);
+          setVisible([...visible, number]);
 
           if (!event.ctrlKey) {
-            const points = data[number - 1].points;
-            pointsAmount.current += points;
+            const points = data.answers[number - 1].points;
+            const multiply = data.multiply || 1;
 
-            let score = points;
-            if (data.length === 5) score = points * 2;
-            if (data.length < 5) score = points * 3;
-            mainScore.current += score;
+            pointsAmount.current += points;
+            mainScore.current += points * multiply;
           }
         }
       }
@@ -105,7 +105,7 @@ export default function FamiliadaBoardID({
 
     document.addEventListener("keyup", KeyupEvent);
     return () => document.removeEventListener("keyup", KeyupEvent);
-  }, [data, show, blueMistakes, redMistakes]);
+  }, [data, visible, blueMistakes, redMistakes]);
 
   const handleMistakes = (teamCounter: number) => {
     return (
@@ -169,41 +169,43 @@ export default function FamiliadaBoardID({
           <div className={styles.mistakes}>{handleMistakes(redMistakes)}</div>
 
           <div className={styles.main}>
-            {data.map((el: { value: string; points: number }, i: number) => {
-              const answer = el.value.split("");
-              const points = FormatPoints(el.points);
-              const dots = Array(17).fill("...");
+            {data.answers.map(
+              (el: { value: string; points: number }, i: number) => {
+                const answer = el.value.split("");
+                const points = FormatPoints(el.points);
+                const dots = Array(17).fill("...");
 
-              return (
-                <div key={i}>
-                  <p>{i + 1}</p>
+                return (
+                  <div key={i}>
+                    <p>{i + 1}</p>
 
-                  {(show.includes(i + 1) && (
-                    // show answer
-                    <>
-                      <div className={styles.answer}>
-                        {answer.map((word: string, i: number) => {
-                          return <p key={i}>{word}</p>;
+                    {(visible.includes(i + 1) && (
+                      // show answer
+                      <>
+                        <div className={styles.answer}>
+                          {answer.map((word: string, i: number) => {
+                            return <p key={i}>{word}</p>;
+                          })}
+                        </div>
+
+                        <div className={styles.points}>
+                          {points.map((word: string, i: number) => {
+                            return <p key={i}>{word}</p>;
+                          })}
+                        </div>
+                      </>
+                    )) || (
+                      // show dots
+                      <div className={styles.dots}>
+                        {dots.map((cell: string, i: number) => {
+                          return <p key={i}>{cell}</p>;
                         })}
                       </div>
-
-                      <div className={styles.points}>
-                        {points.map((word: string, i: number) => {
-                          return <p key={i}>{word}</p>;
-                        })}
-                      </div>
-                    </>
-                  )) || (
-                    // show dots
-                    <div className={styles.dots}>
-                      {dots.map((cell: string, i: number) => {
-                        return <p key={i}>{cell}</p>;
-                      })}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                    )}
+                  </div>
+                );
+              }
+            )}
 
             <div className={styles.pointsAmount}>
               <div>

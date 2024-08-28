@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 
 import type { Data } from "../../page";
-import styles from "./styles.module.scss";
+import styles from "./board.module.scss";
 
 export default function PnmBoardID({ params }: { params: { id: number } }) {
   const id = Number(params.id);
