@@ -4,14 +4,6 @@ declare module "next-auth" {
     password: string?;
     role: string["user" | "admin"];
   }
-
-  interface Account {
-    //
-  }
-
-  interface Session {
-    //
-  }
 }
 
 import { JWT } from "next-auth/jwt";

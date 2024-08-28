@@ -22,6 +22,7 @@
 
 html,
 body {
+  padding: 0 !important; // prevent AdSense custom padding
   color: var(--white);
   background-color: var(--black);
   -webkit-tap-highlight-color: transparent;
@@ -324,4 +325,9 @@ button {
   opacity: 35% !important;
   user-select: none !important;
   pointer-events: none !important;
+}
+
+// hide AdSense floating toolbar
+#ft-floating-toolbar {
+  display: none !important;
 }
