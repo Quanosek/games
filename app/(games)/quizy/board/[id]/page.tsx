@@ -9,7 +9,7 @@ import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 import type { Data } from "../../page";
 import styles from "./board.module.scss";
 
-export default function QuizyBoardID({ params }: { params: { id: number } }) {
+export default function QuizyIdBoard({ params }: { params: { id: number } }) {
   const id = Number(params.id);
   const router = useRouter();
 
@@ -53,9 +53,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
   }, [data, router, id]);
 
   // type: "closed"
-  function ClosedBoard(params: { data: Data }) {
-    const data = params.data;
-
+  function ClosedBoard({ data }: { data: Data }) {
     const [selected, setSelected] = useState(0); // id + 1
 
     // init confetti animation
@@ -97,9 +95,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
   }
 
   // type: "gap"
-  function GapBoard(params: { data: Data }) {
-    const data = params.data;
-
+  function GapBoard({ data }: { data: Data }) {
     const [showHint, setShowHint] = useState(false);
     const [reveal, setReveal] = useState(false);
 
@@ -113,40 +109,37 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
       <>
         <div className={styles.centerDiv}>
           <h1>
-            {parseText(data.question).map((part, index) => {
-              if (index % 2 === 0) return part;
-              else {
-                if (!reveal) {
-                  if (!showHint) {
-                    // empty underlined space
-                    return (
-                      <span key={index}>
-                        {new String("_").repeat(part.length)}
-                      </span>
-                    );
-                  } else {
-                    // show hint
-                    return (
-                      <span key={index} className={styles.gapHints}>
-                        {part.replace(/[^\s]/g, "_")}
-                        <p className={styles.hint}>{part[0]}</p>
-                      </span>
-                    );
-                  }
-                } else {
-                  // show answer
+            {parseText(data.question).map((part, i) => {
+              if (i % 2 === 0) return part;
+
+              if (!reveal) {
+                if (!showHint) {
+                  // empty underlined space
                   return (
-                    <span
-                      key={index}
-                      style={{
-                        fontWeight: "normal",
-                        textDecoration: "underline",
-                      }}
-                    >
-                      {part}
+                    <span key={i}>{new String("_").repeat(part.length)}</span>
+                  );
+                } else {
+                  // show hint
+                  return (
+                    <span key={i} className={styles.gapHints}>
+                      {part.replace(/[^\s]/g, "_")}
+                      <p className={styles.hint}>{part[0]}</p>
                     </span>
                   );
                 }
+              } else {
+                // show answer
+                return (
+                  <span
+                    key={i}
+                    style={{
+                      fontWeight: "normal",
+                      textDecoration: "underline",
+                    }}
+                  >
+                    {part}
+                  </span>
+                );
               }
             })}
           </h1>
@@ -188,9 +181,7 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
   }
 
   // type: "open"
-  function OpenBoard(params: { data: Data }) {
-    const data = params.data;
-
+  function OpenBoard({ data }: { data: Data }) {
     const [showAnswer, setShowAnswer] = useState(false);
 
     return (
@@ -229,45 +220,49 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
           <div className={styles.spinner} />
         </div>
       );
-    } else if (id === 0) {
+    }
+
+    if (id === 0) {
       // start screen
       return (
         <div className={styles.simpleLayout}>
-          <h1>Rozpocznij quiz</h1>
+          <h1>Rozpocznij Quiz</h1>
 
           <button onClick={() => router.push("/quizy/board/1")}>
-            <p>Zagraj</p>
+            <p>Graj</p>
           </button>
-        </div>
-      );
-    } else if (!data) {
-      // end screen
-      return (
-        <div className={styles.simpleLayout}>
-          <h1>Koniec quizu</h1>
-
-          <button onClick={() => window.close()}>
-            <p>Wyjdź</p>
-          </button>
-        </div>
-      );
-    } else {
-      return (
-        <div className={styles.content}>
-          {data.type === "closed" && <ClosedBoard data={data} />}
-          {data.type === "gap" && <GapBoard data={data} />}
-          {data.type === "open" && <OpenBoard data={data} />}
         </div>
       );
     }
+
+    if (!data) {
+      // end screen
+      return (
+        <div className={styles.simpleLayout}>
+          <h1>Koniec</h1>
+
+          <button onClick={() => window.close()}>
+            <p>Zakończ</p>
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      // default dynamic content
+      <div className={styles.content}>
+        {data.type === "closed" && <ClosedBoard data={data} />}
+        {data.type === "gap" && <GapBoard data={data} />}
+        {data.type === "open" && <OpenBoard data={data} />}
+      </div>
+    );
   }
 
+  // main return
   return (
-    <>
-      {/* Page content */}
+    <div className={styles.container}>
       <DynamicRender />
 
-      {/* Default navigation buttons */}
       <div className={styles.navigation}>
         <button
           title="Poprzednia plansza [🡨]"
@@ -301,6 +296,6 @@ export default function QuizyBoardID({ params }: { params: { id: number } }) {
           />
         </button>
       </div>
-    </>
+    </div>
   );
 }

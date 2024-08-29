@@ -2,10 +2,10 @@
 
 import { useEffect } from "react";
 
-import styles from "./board.module.scss";
+import styles from "./styles.module.scss";
 import { Myriad } from "@/lib/fonts";
 
-export default function BoardLayout({
+export default function PnmBoardLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -25,9 +25,12 @@ export default function BoardLayout({
   }, []);
 
   return (
-    <div className={`${Myriad.className} ${styles.container}`}>
-      <div className={styles.board}>{children}</div>
-      <p className={styles.credits}>Stworzone na stronie games.klalo.pl</p>
+    <div className={styles.layout}>
+      <div className={styles.container}>{children}</div>
+
+      <div className={styles.credits}>
+        <p className={Myriad.className}>Stworzone na stronie games.klalo.pl</p>
+      </div>
     </div>
   );
 }

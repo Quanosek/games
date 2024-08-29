@@ -67,7 +67,7 @@ $gradient: linear-gradient(45deg, #e93838, #9b136e);
     button {
       $padding-space: 6px;
 
-      opacity: 80%;
+      opacity: 90%;
       padding: $padding-space;
       background: none;
       border-radius: 5px;
@@ -119,15 +119,15 @@ $gradient: linear-gradient(45deg, #e93838, #9b136e);
   display: flex;
   gap: 1rem;
 
-  select {
-    min-width: 3rem;
-    padding: 5px 0.5rem;
-  }
-
-  div {
+  label {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+  }
+
+  select {
+    min-width: 3rem;
+    padding: 5px 0.5rem;
   }
 }
 

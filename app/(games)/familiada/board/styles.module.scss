@@ -29,7 +29,7 @@
 .board {
   width: 100%;
   height: 100%;
-  background-image: ""; // custom styling
+  // background-image: "";
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -107,13 +107,11 @@ $yellow: #d4c26e;
   position: absolute;
   top: 1.05vw;
   left: 0vw;
-
   width: 100%;
   display: flex;
   justify-content: center;
-
-  font-size: 8.7vw;
   color: $yellow;
+  font-size: 8.7vw;
   filter: contrast(1.5) saturate(0.9);
 
   div {
@@ -139,13 +137,10 @@ $yellow: #d4c26e;
   position: relative;
   top: 17.41vw;
   left: 13.85vw;
-
   height: 35.35vw;
   display: flex;
   gap: calc($cell-width + 2 * $cell-space);
-
   color: $yellow;
-  text-transform: uppercase;
 
   div {
     display: flex;
@@ -178,16 +173,16 @@ $yellow: #d4c26e;
       padding-top: calc(2 * $top-space);
     }
 
-    .answer,
-    .dots {
-      margin-left: $save-space;
-      width: calc(16 * ($save-space) - $cell-space);
-    }
-
     p {
       width: $cell-width;
       display: flex;
       align-items: center;
+    }
+
+    .answer,
+    .dots {
+      margin-left: $save-space;
+      width: calc(16 * ($save-space) - $cell-space);
     }
 
     .answer {
@@ -212,7 +207,6 @@ $yellow: #d4c26e;
     .pointsAmount {
       padding-top: $top-space;
       padding-left: calc(14 * ($save-space));
-
       display: flex;
       gap: calc($cell-width + 2 * $cell-space);
     }

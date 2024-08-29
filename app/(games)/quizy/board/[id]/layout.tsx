@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import styles from "./board.module.scss";
 
-export default function BoardLayout({
+export default function QuizyBoardLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -23,10 +23,14 @@ export default function BoardLayout({
     return () => document.removeEventListener("keyup", KeyupEvent);
   }, []);
 
+  // main return
   return (
-    <div className={styles.container}>
-      <div className={styles.board}>{children}</div>
-      <p className={styles.credits}>Stworzone na stronie games.klalo.pl</p>
+    <div className={styles.layout}>
+      <>{children}</>
+
+      <div className={styles.credits}>
+        <p>Stworzone na stronie games.klalo.pl</p>
+      </div>
     </div>
   );
 }

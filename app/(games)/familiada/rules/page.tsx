@@ -14,19 +14,21 @@ const Nunito = Nunito_Sans({
 export default function FamiliadaRulesPage() {
   return (
     <PageLayout>
-      <Link href="/familiada" className={styles.backButton}>
-        <Image
-          style={{ rotate: "-90deg" }}
-          className="icon"
-          src="/icons/arrow.svg"
-          alt="w lewo"
-          width={25}
-          height={25}
-        />
-        <p>Powrót</p>
-      </Link>
+      <div className={styles.rulesTitle}>
+        <Link href="/familiada" className={styles.backButton}>
+          <Image
+            style={{ rotate: "-90deg" }}
+            className="icon"
+            src="/icons/arrow.svg"
+            alt="w lewo"
+            width={25}
+            height={25}
+          />
+          <p>Powrót</p>
+        </Link>
 
-      <h1>Zasady gry</h1>
+        <h1>Zasady gry</h1>
+      </div>
 
       <div className={`${Nunito.className} ${styles.rulesContainer}`}>
         <p>

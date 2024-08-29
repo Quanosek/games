@@ -1,76 +1,72 @@
-// Board layout
+// BOARD LAYOUT
 
-.container {
-  z-index: 1;
+.layout {
   position: absolute;
   top: 0;
   left: 0;
   width: 100svw;
   height: auto;
-
   background-color: #000000;
   overflow-x: hidden;
   user-select: none;
   letter-spacing: 0.05vw;
 }
 
-.board {
+.container {
   width: 100%;
   height: 100%;
   aspect-ratio: 16/9;
-
-  background-size: contain;
-  background-repeat: no-repeat;
-  overflow: hidden;
 }
 
 .credits {
   opacity: 45%;
   position: absolute;
   bottom: min(1vw, 3vh);
-
   width: 100%;
   font-size: 1vw;
   text-align: center;
 }
 
-// Game elements
+// START BOARD
 
-.introVideo {
+.introComponent {
   z-index: 1;
-  position: absolute;
-  top: 0;
-
+  position: relative;
   width: 100%;
   height: 100%;
-  background-color: #000000;
+  overflow: hidden;
 
-  button {
-    transition: all 100ms ease, filter 150ms ease-out;
-  }
-
-  .controls {
-    z-index: 99;
+  .videoOverlay {
+    z-index: 1;
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     display: flex;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      transition: filter 150ms ease-out;
+
+      &:hover {
+        filter: contrast(0.8);
+      }
+    }
+
+    $background: rgba(#2a2a2a, 0.7);
 
     .playButton {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-
-      padding: 1vw;
-      width: 12vw;
+      padding: 2.5vw;
+      width: 10vw;
       aspect-ratio: 1/1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: none;
+      background: $background;
+      border-radius: 100%;
 
       img {
+        position: relative;
+        left: 0.5vw;
         width: 100%;
         height: auto;
       }
@@ -83,9 +79,8 @@
       font-size: 1.5vw;
 
       button {
-        position: static;
-        padding: 1vw 2.8vw 1vw 3.2vw;
-        background: rgba(#000000, 0.65);
+        padding: 1.2vw 3.5vw 1.2vw 4vw;
+        background: $background;
         border-radius: 1vw 0 0 1vw;
       }
     }
@@ -97,31 +92,27 @@
 }
 
 .startLayout {
-  aspect-ratio: 16/9;
+  width: 100%;
+  height: 100%;
   background-image: url("/pnm/images/background.webp");
   background-size: contain;
   background-repeat: no-repeat;
 
-  button {
+  a {
+    padding: 2.5vw 8vw;
     position: absolute;
     bottom: 13vw;
     left: 16vw;
-
-    padding: 2.5vw 8vw;
     font-size: 3vw;
     text-transform: uppercase;
     background-color: rgba(#1a1c49, 0.8);
     border-radius: 1.5vw;
     backdrop-filter: blur(0.8vw);
-    transition: all 200s ease, filter 150ms ease-out;
     cursor: pointer;
   }
-
-  .background {
-    width: 100%;
-    height: 100%;
-  }
 }
+
+// ID BOARD
 
 .categorySelect {
   aspect-ratio: 16/9;
@@ -132,7 +123,6 @@
   .selectButtons {
     position: absolute;
     top: 17vw;
-
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -140,9 +130,9 @@
     gap: 5.5vw;
 
     button {
+      padding: 0.8vw 4.5vw;
       position: relative;
       top: 0;
-      padding: 0.8vw 4.5vw;
       width: 56vw;
       text-align: center;
       font-weight: bold;

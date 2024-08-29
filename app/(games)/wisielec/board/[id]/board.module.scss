@@ -1,7 +1,6 @@
 // Board layout
 
-.container {
-  z-index: 1;
+.layout {
   position: absolute;
   top: 0;
   left: 0;
@@ -15,28 +14,12 @@
   user-select: none;
 }
 
-.board {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2vh;
-
-  button {
-    font-size: 110%;
-    text-align: center;
-    background-color: rgba(#ffffff, 0.1);
-    border-radius: 0.8vw;
-    cursor: pointer;
-  }
-}
-
 .credits {
   opacity: 25%;
   position: absolute;
   bottom: 3vh;
   font-size: 1vw;
+  text-align: center;
 }
 
 // Loading screen
@@ -87,12 +70,7 @@
 
 // Game elements
 
-.globalKeyboard {
-  position: absolute;
-  top: -100%;
-}
-
-.content {
+.container {
   width: 100%;
   height: 100%;
   display: flex;
@@ -100,6 +78,23 @@
   justify-content: space-between;
   align-items: center;
   text-align: center;
+
+  button {
+    font-size: 110%;
+    background-color: rgba(#ffffff, 0.1);
+    border-radius: 0.8vw;
+    transition: filter 150ms ease-out, transform 150ms ease-in-out;
+
+    &:hover {
+      transform: translateY(-1.5px);
+      filter: contrast(0.8);
+    }
+  }
+}
+
+.globalKeyboard {
+  position: absolute;
+  top: -100%;
 }
 
 .topDiv {
@@ -150,7 +145,7 @@
   }
 }
 
-.bgImage {
+.backgroundImage {
   opacity: 8%;
   position: absolute;
   top: 0;

@@ -4,11 +4,10 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, Fragment } from "react";
-import toast from "react-hot-toast";
 
 import PageLayout from "@/components/wrappers/pageLayout";
 
-import styles from "./page.module.scss";
+import styles from "./styles.module.scss";
 
 export interface Data {
   category: string;
@@ -28,13 +27,11 @@ export default function PnmPage() {
   const [data, setData] = useState([newStage]);
   const [loading, setLoading] = useState(true);
 
-  // load data on start
+  // load game data
   useEffect(() => {
     try {
       const storedData = localStorage.getItem("pnm");
       if (storedData) setData(JSON.parse(storedData));
-
-      scrollTo({ top: 0 });
       setLoading(false);
     } catch (error) {
       localStorage.removeItem("pnm");
@@ -44,13 +41,268 @@ export default function PnmPage() {
 
   // save data on change
   useEffect(() => {
-    if (!loading) localStorage.setItem("pnm", JSON.stringify(data));
+    if (loading) return;
+    localStorage.setItem("pnm", JSON.stringify(data));
   }, [loading, data]);
 
-  // main render
+  // check if board is empty
+  const emptyBoardCheck = (data: Data[]) => {
+    return JSON.stringify(data) === JSON.stringify(newStage);
+  };
+
+  // MAIN COMPONENT
+  const FormBoard = (i: number) => {
+    return (
+      <form
+        key={i}
+        id={i.toString()}
+        className={styles.board}
+        onSubmit={(e) => {
+          e.preventDefault();
+          open(`/pnm/board/${i + 1}`, "game_window", "width=960, height=540");
+        }}
+      >
+        <div className={styles.controls}>
+          <h2>{`Etap ${i + 1}/${data.length}`}</h2>
+
+          <div className={styles.buttons}>
+            {/* delete button */}
+            <button
+              type="button"
+              disabled={data.length === 1 && emptyBoardCheck(data[i])}
+              title={
+                data.length === 1 && emptyBoardCheck(data[i])
+                  ? "Nie można usunąć ostatniej planszy"
+                  : "Wyczyść/usuń planszę"
+              }
+              onClick={() => {
+                if (!emptyBoardCheck(data[i])) {
+                  if (!confirm("Czy na pewno chcesz wyczyścić planszę?")) {
+                    return;
+                  }
+
+                  setData((prev) => {
+                    const newData = [...prev];
+                    newData[i] = newStage;
+                    return newData;
+                  });
+                } else {
+                  setData((prev) => {
+                    const newData = [...prev];
+                    if (newData.length > 1) newData.splice(i, 1);
+
+                    setTimeout(() => {
+                      document.getElementById(i.toString())?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      });
+                    }, 1);
+
+                    return newData;
+                  });
+                }
+              }}
+            >
+              <Image
+                className="icon"
+                alt="kosz"
+                src="/icons/trashcan.svg"
+                width={20}
+                height={20}
+                draggable={false}
+              />
+            </button>
+
+            {/* move down button */}
+            <button
+              type="button"
+              title="Przenieś w dół"
+              disabled={i + 1 === data.length}
+              onClick={() => {
+                setData((prev) => {
+                  const newData = [...prev];
+                  const temp = newData[i];
+                  newData[i] = newData[i + 1];
+                  newData[i + 1] = temp;
+                  return newData;
+                });
+              }}
+            >
+              <Image
+                style={{ rotate: "180deg" }}
+                className="icon"
+                alt="w dół"
+                src="/icons/arrow.svg"
+                width={20}
+                height={20}
+                draggable={false}
+              />
+            </button>
+
+            {/* move up button */}
+            <button
+              type="button"
+              title="Przenieś do góry"
+              disabled={i === 0}
+              onClick={() => {
+                setData((prev) => {
+                  const newData = [...prev];
+                  const temp = newData[i];
+                  newData[i] = newData[i - 1];
+                  newData[i - 1] = temp;
+                  return newData;
+                });
+              }}
+            >
+              <Image
+                className="icon"
+                alt="w górę"
+                src="/icons/arrow.svg"
+                width={20}
+                height={20}
+                draggable={false}
+              />
+            </button>
+
+            <p>{"•"}</p>
+
+            <button type="submit">
+              <p>Prezentuj</p>
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.content}>
+          {data[i].map((stage, j) => (
+            <Fragment key={j}>
+              <div className={styles.inputs}>
+                <label>
+                  <h3>Kategoria:</h3>
+
+                  <input
+                    name={`${i}-${j}-category`}
+                    placeholder="Wpisz kategorię"
+                    autoComplete="off"
+                    maxLength={128}
+                    value={stage.category || ""}
+                    required
+                    onChange={(e) => {
+                      setData((prev) => {
+                        const newData = [...prev];
+                        newData[i][j] = {
+                          ...newData[i][j],
+                          category: e.target.value,
+                        };
+                        return newData;
+                      });
+                    }}
+                  />
+                </label>
+
+                <label>
+                  <h3>Pytanie:</h3>
+
+                  <input
+                    name={`${i}-${j}-question`}
+                    placeholder="Wpisz pytanie"
+                    autoComplete="off"
+                    maxLength={128}
+                    value={stage.question || ""}
+                    required
+                    onChange={(e) => {
+                      setData((prev) => {
+                        const newData = [...prev];
+                        newData[i][j] = {
+                          ...newData[i][j],
+                          question: e.target.value,
+                        };
+                        return newData;
+                      });
+                    }}
+                  />
+                </label>
+
+                <div>
+                  <h3>Odpowiedzi (jedna poprawna):</h3>
+
+                  {stage.answers.map((answer, k) => (
+                    <div
+                      key={k}
+                      className={styles.answer}
+                      style={{
+                        // disable if prev or curr answer is empty
+                        pointerEvents:
+                          k === 0 ||
+                          data[i][j].answers[k - 1].value ||
+                          data[i][j].answers[k].value
+                            ? "unset"
+                            : "none",
+                      }}
+                    >
+                      <input
+                        name={`${i}-${j}-${k}-answer`}
+                        placeholder={`Odpowiedź ${k + 1}`}
+                        autoComplete="off"
+                        maxLength={64}
+                        value={answer.value || ""}
+                        required={k < 2}
+                        onChange={(e) => {
+                          setData((prev) => {
+                            const newData = [...prev];
+                            newData[i][j] = {
+                              ...newData[i][j],
+                              answers: newData[i][j].answers.map((a, l) => {
+                                // find specific answer and add value
+                                return l === k
+                                  ? { ...a, value: e.target.value }
+                                  : a;
+                              }),
+                            };
+                            return newData;
+                          });
+                        }}
+                      />
+
+                      <input
+                        style={{
+                          // disable if answer is empty
+                          pointerEvents: answer.value ? "unset" : "none",
+                        }}
+                        type="radio"
+                        name={`${i}-${j}-check`}
+                        checked={answer.checked}
+                        required
+                        onChange={() => {
+                          setData((prev) => {
+                            const newData = [...prev];
+                            newData[i][j] = {
+                              ...newData[i][j],
+                              answers: newData[i][j].answers.map((a, l) => {
+                                // find specific answer and check it
+                                return { ...a, checked: l === k };
+                              }),
+                            };
+                            return newData;
+                          });
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {j === 0 && <hr />}
+            </Fragment>
+          ))}
+        </div>
+      </form>
+    );
+  };
+
+  // MAIN RETURN
   return (
     <PageLayout>
-      <div style={{ userSelect: "none" }}>
+      <div className={styles.gameLogo}>
         <Image
           alt="Postaw na milion"
           src="/pnm/images/logo.webp"
@@ -61,288 +313,64 @@ export default function PnmPage() {
         />
       </div>
 
+      <div className={styles.actionButtons}>
+        <Link href="/pnm/rules">
+          <p>{"📖 Zasady gry"}</p>
+        </Link>
+
+        <button
+          onClick={() => {
+            return open(
+              "/pnm/board/start",
+              "game_window",
+              "width=960, height=540"
+            );
+          }}
+        >
+          <p>{"✨ Tablica tytułowa"}</p>
+        </button>
+      </div>
+
       {loading ? (
         <div className="loading">
           <p>Trwa ładowanie...</p>
         </div>
       ) : (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            open("/pnm/board/0", "game_window", "width=960, height=540");
-          }}
-        >
-          <button type="submit" className={styles.startButton}>
-            <p>Uruchom grę</p>
-          </button>
+        <div className={styles.container}>
+          {[...Array(data.length)].map((_, index) => FormBoard(index))}
 
-          <div className={styles.container}>
-            {[...Array(data.length)].map((_, i) => (
-              <div key={i} className={styles.board}>
-                <div className={styles.controls}>
-                  <p>{`Etap ${i + 1}/${data.length}`}</p>
+          <button
+            className={styles.addButton}
+            disabled={emptyBoardCheck(data[data.length - 1])}
+            title={
+              emptyBoardCheck(data[data.length - 1])
+                ? "Uzupełnij poprzednią planszę przed dodaniem nowej"
+                : ""
+            }
+            onClick={() => {
+              setData([...data, newStage]);
 
-                  <div className={styles.buttons}>
-                    <button
-                      type="button"
-                      title="Wyczyść/usuń planszę"
-                      onClick={() => {
-                        if (
-                          JSON.stringify(data[i]) !== JSON.stringify(newStage)
-                        ) {
-                          if (
-                            !confirm("Czy na pewno chcesz wyczyścić planszę?")
-                          ) {
-                            return;
-                          }
-
-                          setData((prev) => {
-                            const newData = [...prev];
-                            newData[i] = newStage;
-                            return newData;
-                          });
-                        } else {
-                          setData((prev) => {
-                            const newData = [...prev];
-                            if (newData.length > 1) newData.splice(i, 1);
-                            return newData;
-                          });
-                        }
-                      }}
-                    >
-                      <Image
-                        className="icon"
-                        alt="kosz"
-                        src="/icons/trashcan.svg"
-                        width={20}
-                        height={20}
-                        draggable={false}
-                      />
-                    </button>
-
-                    <button
-                      type="button"
-                      title="Przenieś w dół"
-                      className={i + 1 === data.length ? "disabled" : ""}
-                      tabIndex={i + 1 === data.length ? -1 : 0}
-                      onClick={() => {
-                        setData((prev) => {
-                          const newData = [...prev];
-                          const temp = newData[i];
-                          newData[i] = newData[i + 1];
-                          newData[i + 1] = temp;
-                          return newData;
-                        });
-                      }}
-                    >
-                      <Image
-                        style={{ rotate: "180deg" }}
-                        className="icon"
-                        alt="w dół"
-                        src="/icons/arrow.svg"
-                        width={20}
-                        height={20}
-                        draggable={false}
-                      />
-                    </button>
-
-                    <button
-                      type="button"
-                      title="Przenieś do góry"
-                      className={i === 0 ? "disabled" : ""}
-                      tabIndex={i === 0 ? -1 : 0}
-                      onClick={() => {
-                        setData((prev) => {
-                          const newData = [...prev];
-                          const temp = newData[i];
-                          newData[i] = newData[i - 1];
-                          newData[i - 1] = temp;
-                          return newData;
-                        });
-                      }}
-                    >
-                      <Image
-                        className="icon"
-                        alt="w górę"
-                        src="/icons/arrow.svg"
-                        width={20}
-                        height={20}
-                        draggable={false}
-                      />
-                    </button>
-                  </div>
-                </div>
-
-                <div className={styles.content}>
-                  {data[i].map((stage, j) => (
-                    <Fragment key={j}>
-                      <div className={styles.inputs}>
-                        <div>
-                          <h3>Kategoria:</h3>
-
-                          <input
-                            type="text"
-                            name={`${i}-${j}-category`}
-                            placeholder="Wpisz kategorię"
-                            autoComplete="off"
-                            maxLength={128}
-                            value={stage.category || ""}
-                            onChange={(e) => {
-                              setData((prev) => {
-                                const newData = [...prev];
-                                newData[i][j] = {
-                                  ...newData[i][j],
-                                  category: e.target.value,
-                                };
-                                return newData;
-                              });
-                            }}
-                            required
-                          />
-                        </div>
-
-                        <div>
-                          <h3>Pytanie:</h3>
-
-                          <input
-                            type="text"
-                            name={`${i}-${j}-question`}
-                            placeholder="Wpisz pytanie"
-                            autoComplete="off"
-                            maxLength={128}
-                            value={stage.question || ""}
-                            onChange={(e) => {
-                              setData((prev) => {
-                                const newData = [...prev];
-                                newData[i][j] = {
-                                  ...newData[i][j],
-                                  question: e.target.value,
-                                };
-                                return newData;
-                              });
-                            }}
-                            required
-                          />
-                        </div>
-
-                        <div>
-                          <h3>Odpowiedzi (jedna poprawna):</h3>
-
-                          {stage.answers.map((answer, k) => (
-                            <div
-                              key={k}
-                              className={styles.answer}
-                              style={{
-                                // disable if prev or curr answer is empty
-                                pointerEvents:
-                                  k === 0 ||
-                                  data[i][j].answers[k - 1].value ||
-                                  data[i][j].answers[k].value
-                                    ? "unset"
-                                    : "none",
-                              }}
-                            >
-                              <input
-                                type="text"
-                                name={`${i}-${j}-${k}-answer`}
-                                placeholder={`Odpowiedź ${k + 1}`}
-                                autoComplete="off"
-                                maxLength={64}
-                                value={answer.value || ""}
-                                onChange={(e) => {
-                                  setData((prev) => {
-                                    const newData = [...prev];
-                                    newData[i][j] = {
-                                      ...newData[i][j],
-                                      answers: newData[i][j].answers.map(
-                                        (a, l) => {
-                                          // find specific answer and add value
-                                          return l === k
-                                            ? { ...a, value: e.target.value }
-                                            : a;
-                                        }
-                                      ),
-                                    };
-                                    return newData;
-                                  });
-                                }}
-                                required={k < 2}
-                              />
-
-                              <input
-                                type="radio"
-                                name={`${i}-${j}-check`}
-                                checked={answer.checked}
-                                onChange={() => {
-                                  setData((prev) => {
-                                    const newData = [...prev];
-                                    newData[i][j] = {
-                                      ...newData[i][j],
-                                      answers: newData[i][j].answers.map(
-                                        (a, l) => {
-                                          // find specific answer and check it
-                                          return { ...a, checked: l === k };
-                                        }
-                                      ),
-                                    };
-                                    return newData;
-                                  });
-                                }}
-                                required
-                                style={{
-                                  // disable if answer is empty
-                                  pointerEvents: answer.value
-                                    ? "unset"
-                                    : "none",
-                                }}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {j === 0 && <hr />}
-                    </Fragment>
-                  ))}
-                </div>
-              </div>
-            ))}
-
-            <button
-              type="button"
-              className={styles.addButton}
-              onClick={() => {
-                if (
-                  JSON.stringify(data[data.length - 1]) ===
-                  JSON.stringify(newStage)
-                ) {
-                  return toast(
-                    "Uzupełnij poprzednią planszę przed dodaniem nowej"
-                  );
-                }
-
-                setData([...data, newStage]);
-
-                setTimeout(() => {
-                  scrollTo({
-                    top: document.body.scrollHeight,
+              setTimeout(() => {
+                document
+                  .getElementById(data.length.toString())
+                  ?.scrollIntoView({
                     behavior: "smooth",
+                    block: "center",
                   });
-                }, 1);
-              }}
-            >
-              <Image
-                className="icon"
-                alt="+"
-                src="/icons/plus.svg"
-                width={18}
-                height={18}
-                draggable={false}
-              />
-              <p>Dodaj etap</p>
-            </button>
-          </div>
-        </form>
+              }, 1);
+            }}
+          >
+            <Image
+              className="icon"
+              alt="+"
+              src="/icons/plus.svg"
+              width={18}
+              height={18}
+              draggable={false}
+            />
+            <p>Kolejny etap</p>
+          </button>
+        </div>
       )}
 
       <div className={styles.credits}>

@@ -1,9 +1,25 @@
-$gradient: linear-gradient(45deg, #ee8e8e, #bd0808);
+.gameLogo {
+  margin-top: min(0.5rem, 0.5vw);
+  user-select: none;
+}
 
-.startButton {
-  width: 16rem;
-  background-color: #591a1a;
-  border-radius: 6px;
+.actionButtons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  a {
+    // same as button global styling
+    padding: 14px 32px;
+    background-color: var(--primary);
+    border-radius: 30px;
+    transition: filter 150ms ease-out, transform 150ms ease-in-out;
+
+    &:hover {
+      transform: translateY(-1.5px);
+      filter: contrast(0.8);
+    }
+  }
 }
 
 .container {
@@ -33,7 +49,7 @@ $gradient: linear-gradient(45deg, #ee8e8e, #bd0808);
   justify-content: space-between;
   align-items: center;
 
-  background: $gradient;
+  background: linear-gradient(45deg, #ee8e8e, #bd0808);
   border-bottom: 1px solid var(--black);
 
   &::before {
@@ -58,10 +74,19 @@ $gradient: linear-gradient(45deg, #ee8e8e, #bd0808);
     gap: 8px;
 
     button {
+      $padding-space: 6px;
+
       opacity: 90%;
-      padding: 6px;
+      padding: $padding-space;
       background: none;
       border-radius: 5px;
+
+      &[type="submit"] {
+        margin-left: $padding-space;
+        padding: 6px 16px;
+        border: 1px solid var(--white);
+        background-color: rgba(#ffffff, 0.1);
+      }
     }
   }
 }
@@ -153,4 +178,32 @@ $gradient: linear-gradient(45deg, #ee8e8e, #bd0808);
     border-radius: 3px;
     text-decoration: underline;
   }
+}
+
+// RULES PAGE
+
+.rulesTitle {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .backButton {
+    opacity: 90%;
+    position: absolute;
+    left: 0;
+    display: flex;
+    align-items: center;
+    border-radius: 3px;
+    transition: filter 150ms ease-out;
+
+    &:hover {
+      filter: contrast(0.8);
+    }
+  }
+}
+
+.rulesContainer {
+  font-size: 110%;
 }

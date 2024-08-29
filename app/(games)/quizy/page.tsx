@@ -20,13 +20,11 @@ export default function QuizyPage() {
   const [data, setData] = useState<Data[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // load data on start
+  // load game data
   useEffect(() => {
     try {
       const storedData = localStorage.getItem("quizy");
       if (storedData) setData(JSON.parse(storedData));
-
-      scrollTo({ top: 0 });
       setLoading(false);
     } catch (error) {
       localStorage.removeItem("quizy");
@@ -36,7 +34,8 @@ export default function QuizyPage() {
 
   // save data on change
   useEffect(() => {
-    if (!loading) localStorage.setItem("quizy", JSON.stringify(data));
+    if (loading) return;
+    localStorage.setItem("quizy", JSON.stringify(data));
   }, [loading, data]);
 
   // handle add buttons list show
@@ -54,14 +53,16 @@ export default function QuizyPage() {
   const BoardType = ({ type }: { type: Data["type"] }) => {
     let data = { src: "", name: "" };
 
-    if (type === "closed") {
-      data = { src: "a_button", name: "Pytanie zamknięte" };
-    }
-    if (type === "gap") {
-      data = { src: "magnifying_glass", name: "Uzupełnij lukę" };
-    }
-    if (type === "open") {
-      data = { src: "thought_balloon", name: "Pytanie otwarte" };
+    switch (type) {
+      case "closed":
+        data = { src: "a_button", name: "Pytanie zamknięte" };
+        break;
+      case "gap":
+        data = { src: "magnifying_glass", name: "Uzupełnij lukę" };
+        break;
+      case "open":
+        data = { src: "thought_balloon", name: "Pytanie otwarte" };
+        break;
     }
 
     return (
@@ -74,6 +75,7 @@ export default function QuizyPage() {
           height={20}
           draggable={false}
         />
+
         <h2>{data.name}</h2>
       </div>
     );
@@ -81,16 +83,16 @@ export default function QuizyPage() {
 
   const ClosedBoard = (i: number) => (
     <div className={styles.inputs}>
-      <div>
+      <label>
         <h3>Pytanie:</h3>
 
         <input
-          type="text"
           name={`${i}-question`}
           placeholder="Wpisz treść pytania"
           autoComplete="off"
           maxLength={128}
           value={data[i].question || ""}
+          required
           onChange={(e) => {
             setData((prev) => {
               const newData = [...prev];
@@ -98,9 +100,8 @@ export default function QuizyPage() {
               return newData;
             });
           }}
-          required
         />
-      </div>
+      </label>
 
       <div>
         <h3>Odpowiedzi (co najmniej jedna poprawna):</h3>
@@ -124,11 +125,11 @@ export default function QuizyPage() {
 
                 <input
                   name={`${i}-${j}-answer`}
-                  type="text"
-                  autoComplete="off"
                   placeholder="Wpisz odpowiedź"
-                  value={answer.value || ""}
+                  autoComplete="off"
                   maxLength={64}
+                  value={answer.value || ""}
+                  required={j < 2}
                   onChange={(e) => {
                     setData((prev) => {
                       const newData = [...prev];
@@ -152,7 +153,6 @@ export default function QuizyPage() {
                       });
                     }
                   }}
-                  required={j < 2}
                 />
               </div>
 
@@ -165,8 +165,8 @@ export default function QuizyPage() {
                   }}
                 >
                   <input
-                    id={`${i}-${j}-checkbox`}
                     type="checkbox"
+                    id={`${i}-${j}-checkbox`}
                     checked={answer.checked || false}
                     onChange={(e) => {
                       setData((prev) => {
@@ -203,13 +203,13 @@ export default function QuizyPage() {
   const GapBoard = (i: number) => (
     <>
       <input
-        type="text"
+        style={{ marginBottom: "0.5rem" }}
         name={`${i}-question`}
         placeholder="Wpisz zdanie z luką"
         autoComplete="off"
         maxLength={128}
-        style={{ marginBottom: "0.5rem" }}
         value={data[i].question || ""}
+        required
         onChange={(e) => {
           setData((prev) => {
             const newData = [...prev];
@@ -217,7 +217,6 @@ export default function QuizyPage() {
             return newData;
           });
         }}
-        required
       />
 
       <p className={styles.instruction}>
@@ -229,17 +228,17 @@ export default function QuizyPage() {
 
   const OpenBoard = (i: number) => (
     <div className={styles.inputs}>
-      <div>
+      <label>
         <h3>Pytanie:</h3>
 
         <input
-          type="text"
           name={`${i}-question`}
           placeholder="Wpisz treść pytania"
           autoComplete="off"
           maxLength={128}
           className={styles.question}
           value={data[i].question || ""}
+          required
           onChange={(e) => {
             setData((prev) => {
               const newData = [...prev];
@@ -247,21 +246,20 @@ export default function QuizyPage() {
               return newData;
             });
           }}
-          required
         />
-      </div>
+      </label>
 
-      <div>
+      <label>
         <h3>Odpowiedź:</h3>
 
         <input
-          type="text"
           name={`${i}-answer`}
           placeholder="Wpisz poprawną odpowiedź"
           autoComplete="off"
           maxLength={128}
           className={styles.answer}
           value={data[i].answers[0].value || ""}
+          required
           onChange={(e) => {
             setData((prev) => {
               const newData = [...prev];
@@ -269,9 +267,8 @@ export default function QuizyPage() {
               return newData;
             });
           }}
-          required
         />
-      </div>
+      </label>
     </div>
   );
 
@@ -306,7 +303,7 @@ export default function QuizyPage() {
               const { type } = data[index];
 
               return (
-                <div key={index} className={styles.board}>
+                <div key={index} id={index.toString()} className={styles.board}>
                   <div className={styles.controls}>
                     <div className={styles.description}>
                       <p>{`${index + 1}/${data.length} •`}</p>
@@ -314,6 +311,7 @@ export default function QuizyPage() {
                     </div>
 
                     <div className={styles.buttons}>
+                      {/* delete button */}
                       <button
                         type="button"
                         title="Wyczyść/usuń planszę"
@@ -344,6 +342,16 @@ export default function QuizyPage() {
                             setData((prev) => {
                               const newData = [...prev];
                               newData.splice(index, 1);
+
+                              setTimeout(() => {
+                                document
+                                  .getElementById(index.toString())
+                                  ?.scrollIntoView({
+                                    behavior: "smooth",
+                                    block: "start",
+                                  });
+                              }, 1);
+
                               return newData;
                             });
                           }
@@ -359,11 +367,11 @@ export default function QuizyPage() {
                         />
                       </button>
 
+                      {/* move down button */}
                       <button
                         type="button"
                         title="Przenieś w dół"
-                        className={index + 1 === data.length ? "disabled" : ""}
-                        tabIndex={index + 1 === data.length ? -1 : 0}
+                        disabled={index + 1 === data.length}
                         onClick={() => {
                           setData((prev) => {
                             const newData = [...prev];
@@ -385,11 +393,11 @@ export default function QuizyPage() {
                         />
                       </button>
 
+                      {/* move up button */}
                       <button
                         type="button"
                         title="Przenieś do góry"
-                        className={index === 0 ? "disabled" : ""}
-                        tabIndex={index === 0 ? -1 : 0}
+                        disabled={index === 0}
                         onClick={() => {
                           setData((prev) => {
                             const newData = [...prev];
@@ -452,13 +460,6 @@ export default function QuizyPage() {
               <button
                 type="button"
                 onClick={() => {
-                  setTimeout(() => {
-                    scrollTo({
-                      top: document.body.scrollHeight,
-                      behavior: "smooth",
-                    });
-                  }, 1);
-
                   setData([
                     ...data,
                     {
@@ -470,6 +471,15 @@ export default function QuizyPage() {
                       }),
                     },
                   ]);
+
+                  setTimeout(() => {
+                    document
+                      .getElementById(data.length.toString())
+                      ?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      });
+                  }, 1);
                 }}
               >
                 <p>pytanie zamknięte</p>
@@ -478,17 +488,19 @@ export default function QuizyPage() {
               <button
                 type="button"
                 onClick={() => {
-                  setTimeout(() => {
-                    scrollTo({
-                      top: document.body.scrollHeight,
-                      behavior: "smooth",
-                    });
-                  }, 1);
-
                   setData([
                     ...data,
                     { type: "gap", question: "", answers: [] },
                   ]);
+
+                  setTimeout(() => {
+                    document
+                      .getElementById(data.length.toString())
+                      ?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      });
+                  }, 1);
                 }}
               >
                 <p>uzupełnij lukę</p>
@@ -497,13 +509,6 @@ export default function QuizyPage() {
               <button
                 type="button"
                 onClick={() => {
-                  setTimeout(() => {
-                    scrollTo({
-                      top: document.body.scrollHeight,
-                      behavior: "smooth",
-                    });
-                  }, 1);
-
                   setData([
                     ...data,
                     {
@@ -512,6 +517,15 @@ export default function QuizyPage() {
                       answers: [{ value: "", checked: false }],
                     },
                   ]);
+
+                  setTimeout(() => {
+                    document
+                      .getElementById(data.length.toString())
+                      ?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      });
+                  }, 1);
                 }}
               >
                 <p>pytanie otwarte</p>

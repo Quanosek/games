@@ -9,7 +9,7 @@ import ms from "ms";
 import type { Data } from "../../page";
 import styles from "./board.module.scss";
 
-export default function WisielecBoardID({
+export default function WisielecIdBoard({
   params,
 }: {
   params: { id: number };
@@ -114,25 +114,26 @@ export default function WisielecBoardID({
   const polishAlphabet = "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż";
   const vowels = "aąeęioóuy";
 
+  // loading screen
   if (loading) {
-    // loading screen
     return (
       <div className={styles.loading}>
         <div className={styles.spinner} />
       </div>
     );
-  } else if (!data) {
-    // no data screen
-    return null;
   }
 
-  // page content
+  // no data found
+  if (!data) return null;
+
+  // main return
   return (
-    <>
+    <div className={styles.container}>
       {/* hidden input for keyboard interactions */}
       <input
         className={styles.globalKeyboard}
         ref={(input) => input?.focus()}
+        onBlur={(e) => e.target.focus()}
         onChange={(e) => {
           if (endGame) return;
 
@@ -146,83 +147,78 @@ export default function WisielecBoardID({
           // clear input
           e.target.value = "";
         }}
-        onBlur={(e) => e.target.focus()}
       />
 
-      {/* complete confetti */}
       <Fireworks onInit={onInit} />
 
-      {/* board content  */}
-      <div className={styles.content}>
-        <div className={styles.topDiv}>
-          <p>
-            Kategoria: <span>{data.category}</span>
-          </p>
+      <div className={styles.topDiv}>
+        <p>
+          Kategoria: <span>{data.category}</span>
+        </p>
 
-          {remainingTime >= 0 && (
-            <>
-              <p>{"•"}</p>
+        {remainingTime >= 0 && (
+          <>
+            <p>{"•"}</p>
 
-              <p>
-                Pozostały czas:{" "}
-                <span style={{ color: remainingTime === 0 ? "red" : "" }}>
-                  {`${Math.floor(remainingTime / 60_000)
-                    .toString()
-                    .padStart(2, "0")}:${Math.floor(
-                    (remainingTime % 60_000) / 1_000
-                  )
-                    .toString()
-                    .padStart(2, "0")}`}
-                </span>
-              </p>
-            </>
-          )}
-        </div>
-
-        <div className={styles.phrase}>
-          <h1>{Phrase(data)}</h1>
-        </div>
-
-        <div className={styles.bottomDiv}>
-          <p className={styles.mistakes}>
-            Błędy:{" "}
-            <span
-              style={{ color: Mistakes(data) === data.attempts ? "red" : "" }}
-            >
-              {Mistakes(data)}/{data.attempts}
-            </span>
-          </p>
-
-          <div className={styles.letters}>
-            {polishAlphabet.split("").map((letter) => (
-              <button
-                key={letter}
-                className={`${styles.letter} ${
-                  vowels.includes(letter) && styles.vowel
-                } ${(letters.includes(letter) || endGame) && "disabled"}`}
-                onClick={() => setLetters([...letters, letter])}
-              >
-                <p>{letter.toUpperCase()}</p>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* dynamic image in background */}
-        {Mistakes(data) > 0 && (
-          <div className={styles.bgImage}>
-            <Image
-              alt="wisielec"
-              src={`/wisielec/${Math.ceil(
-                (15 / data.attempts) * Mistakes(data)
-              )}.svg`}
-              width={800}
-              height={750}
-              draggable={false}
-            />
-          </div>
+            <p>
+              Pozostały czas:{" "}
+              <span style={{ color: remainingTime === 0 ? "red" : "" }}>
+                {`${Math.floor(remainingTime / 60_000)
+                  .toString()
+                  .padStart(2, "0")}:${Math.floor(
+                  (remainingTime % 60_000) / 1_000
+                )
+                  .toString()
+                  .padStart(2, "0")}`}
+              </span>
+            </p>
+          </>
         )}
       </div>
-    </>
+
+      <div className={styles.phrase}>
+        <h1>{Phrase(data)}</h1>
+      </div>
+
+      <div className={styles.bottomDiv}>
+        <p className={styles.mistakes}>
+          Błędy:{" "}
+          <span
+            style={{ color: Mistakes(data) === data.attempts ? "red" : "" }}
+          >
+            {Mistakes(data)}/{data.attempts}
+          </span>
+        </p>
+
+        <div className={styles.letters}>
+          {polishAlphabet.split("").map((letter) => (
+            <button
+              key={letter}
+              className={`${vowels.includes(letter) && styles.vowel} ${
+                (letters.includes(letter) || endGame) && "disabled"
+              }`}
+              onClick={() => setLetters([...letters, letter])}
+            >
+              <p>{letter.toUpperCase()}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {Mistakes(data) > 0 && (
+        // dynamic background image
+        <div className={styles.backgroundImage}>
+          <Image
+            alt="wisielec"
+            src={`/wisielec/${Math.ceil(
+              (15 / data.attempts) * Mistakes(data)
+            )}.svg`}
+            width={800}
+            height={750}
+            draggable={false}
+          />
+        </div>
+      )}
+    </div>
   );
 }

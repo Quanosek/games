@@ -54,9 +54,8 @@ export default function FamiliadaPage() {
     return JSON.stringify(rest) === JSON.stringify(emptyData);
   };
 
-  // ROUND COMPONENT
-
-  const RoundBoard = (index: number) => (
+  // MAIN COMPONENT
+  const FormBoard = (index: number) => (
     <form
       id={index.toString()}
       key={index}
@@ -70,14 +69,6 @@ export default function FamiliadaPage() {
         if (answers.filter((el) => el.value && el.points).length < 3) {
           return toast.error(
             "Plansza musi zawierać co najmniej 3 uzupełnione odpowiedzi z punktami"
-          );
-        } else if (answers.some((el) => el.value && !el.points)) {
-          return toast.error(
-            "Niektóre odpowiedzi nie mają przydzielonych punktów"
-          );
-        } else if (answers.some((el) => !el.value && el.points)) {
-          return toast.error(
-            "Niektóre odpowiedzi nie mają wypełnionych odpowiedzi"
           );
         } else {
           toast.success("Plansza jest gotowa do prezentacji");
@@ -170,6 +161,7 @@ export default function FamiliadaPage() {
                   autoComplete="off"
                   maxLength={2} // board limit
                   value={answer.points || ""}
+                  required={Boolean(answer.value)}
                   onChange={(e) => {
                     // validate input
                     const points = Number(
@@ -232,7 +224,7 @@ export default function FamiliadaPage() {
               title={
                 data.length === 1 && emptyBoardCheck(data[index])
                   ? "Nie można usunąć ostatniej planszy"
-                  : ""
+                  : "Wyczyść/usuń planszę"
               }
               onClick={() => {
                 if (!emptyBoardCheck(data[index])) {
@@ -243,7 +235,6 @@ export default function FamiliadaPage() {
                   setData((prev) => {
                     const newData = [...prev];
                     newData[index] = emptyData;
-
                     return newData;
                   });
                 } else {
@@ -254,7 +245,7 @@ export default function FamiliadaPage() {
 
                     setTimeout(() => {
                       document
-                        .getElementById((data.length - 2).toString())
+                        .getElementById(index.toString())
                         ?.scrollIntoView({
                           behavior: "smooth",
                           block: "center",
@@ -279,6 +270,7 @@ export default function FamiliadaPage() {
             {/* move down button */}
             <button
               type="button"
+              title="Przenieś w dół"
               disabled={index + 1 === data.length}
               onClick={() => {
                 data[index].multiply === undefined;
@@ -307,6 +299,7 @@ export default function FamiliadaPage() {
             {/* move up button */}
             <button
               type="button"
+              title="Przenieś do góry"
               disabled={index === 0}
               onClick={() => {
                 data[index - 1].multiply === undefined;
@@ -360,7 +353,6 @@ export default function FamiliadaPage() {
   );
 
   // MAIN RETURN
-
   return (
     <PageLayout>
       <div className={styles.gameLogo}>
@@ -398,7 +390,7 @@ export default function FamiliadaPage() {
         </div>
       ) : (
         <div className={styles.container}>
-          {[...Array(data.length)].map((_, index) => RoundBoard(index))}
+          {[...Array(data.length)].map((_, index) => FormBoard(index))}
 
           <button
             className={styles.addButton}
