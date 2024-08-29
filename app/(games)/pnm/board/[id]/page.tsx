@@ -104,7 +104,7 @@ export default function PnmBoardID({ params }: { params: { id: number } }) {
             onEnded={hideVideo}
           >
             <source src="/pnm/video/intro.mp4" type="video/mp4" />
-            Twoja przeglądarka nie obsługuje odtwarzacza wideo.
+            <p>Twoja przeglądarka nie obsługuje odtwarzania plików wideo</p>
           </video>
         </div>
       );

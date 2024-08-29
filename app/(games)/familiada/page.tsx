@@ -102,7 +102,7 @@ export default function FamiliadaPage() {
 
           if (filled === 6) {
             newData[index].multiply = 1;
-          } else if (filled === 5) {
+          } else if (filled > 3) {
             newData[index].multiply = 2;
           } else {
             newData[index].multiply = 3;
@@ -363,7 +363,7 @@ export default function FamiliadaPage() {
 
   return (
     <PageLayout>
-      <div style={{ userSelect: "none" }}>
+      <div className={styles.gameLogo}>
         <Image
           alt="Familiada"
           src="/familiada/images/logo.svg"
@@ -382,7 +382,7 @@ export default function FamiliadaPage() {
         <button
           onClick={() => {
             return open(
-              "/familiada/board/0",
+              "/familiada/board/start",
               "game_window",
               "width=960, height=540"
             );

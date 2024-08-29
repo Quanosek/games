@@ -1,6 +1,7 @@
 $gradient: linear-gradient(45deg, #e93838, #9b136e);
 
 .gameTitle {
+  margin-top: max(-1rem, -1vw);
   font-size: 500%;
   white-space: nowrap;
 
