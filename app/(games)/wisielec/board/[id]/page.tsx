@@ -128,7 +128,7 @@ export default function WisielecIdBoard({
 
   // main return
   return (
-    <div className={styles.container}>
+    <div className={styles.board}>
       {/* hidden input for keyboard interactions */}
       <input
         className={styles.globalKeyboard}

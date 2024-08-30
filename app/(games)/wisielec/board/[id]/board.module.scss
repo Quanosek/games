@@ -4,20 +4,23 @@
   position: absolute;
   top: 0;
   left: 0;
-  padding: 6vh 6vw 10vh 6vw;
   width: 100svw;
-  height: 100svh;
-  display: flex;
-  justify-content: center;
-  font-size: 2vw;
+  height: auto;
   background: radial-gradient(at bottom right, #2e0117, #000000);
   user-select: none;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16/9;
 }
 
 .credits {
   opacity: 25%;
   position: absolute;
-  bottom: 3vh;
+  bottom: min(1vw, 3vh);
+  width: 100%;
   font-size: 1vw;
   text-align: center;
 }
@@ -70,7 +73,8 @@
 
 // Game elements
 
-.container {
+.board {
+  padding: 5vw;
   width: 100%;
   height: 100%;
   display: flex;
@@ -78,18 +82,7 @@
   justify-content: space-between;
   align-items: center;
   text-align: center;
-
-  button {
-    font-size: 110%;
-    background-color: rgba(#ffffff, 0.1);
-    border-radius: 0.8vw;
-    transition: filter 150ms ease-out, transform 150ms ease-in-out;
-
-    &:hover {
-      transform: translateY(-1.5px);
-      filter: contrast(0.8);
-    }
-  }
+  font-size: 2vw;
 }
 
 .globalKeyboard {
@@ -120,23 +113,31 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2vh;
+  gap: 1.5vw;
 
   .mistakes {
-    opacity: 75%;
-    font-size: 85%;
+    opacity: 80%;
+    font-size: 90%;
   }
 
   .letters {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 1vh 0.5vw;
+    gap: 0.5vw;
 
     button {
-      padding: 2vh 0;
+      padding: 1vw 0;
       width: 4vw;
+      font-size: 110%;
+      background-color: rgba(#ffffff, 0.1);
       border-radius: 0.5vw;
+      transition: filter 150ms ease-out, transform 150ms ease-in-out;
+
+      &:hover {
+        transform: translateY(-1.5px);
+        filter: contrast(0.8);
+      }
 
       &.vowel {
         background-color: rgba(#ffffff, 0.15);
@@ -146,18 +147,17 @@
 }
 
 .backgroundImage {
-  opacity: 8%;
+  opacity: 10%;
   position: absolute;
   top: 0;
-  right: 0;
-  bottom: 0;
   left: 0;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 
   img {
     position: relative;
-    top: min(4vh, 10vw);
+    top: 6vw;
     left: 35vw;
     width: 48vw;
     height: auto;

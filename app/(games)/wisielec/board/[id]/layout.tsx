@@ -26,7 +26,7 @@ export default function WisielecBoardLayout({
   // main return
   return (
     <div className={styles.layout}>
-      <>{children}</>
+      <div className={styles.container}>{children}</div>
 
       <div className={styles.credits}>
         <p>Stworzone na stronie games.klalo.pl</p>

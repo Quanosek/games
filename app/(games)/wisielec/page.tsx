@@ -234,6 +234,7 @@ export default function WisielecPage() {
                 <option value="1m">1 min</option>
                 <option value="2m">2 min</option>
                 <option value="3m">3 min</option>
+                <option value="4m">4 min</option>
                 <option value="5m">5 min</option>
                 <option value="10m">10 min</option>
               </select>
