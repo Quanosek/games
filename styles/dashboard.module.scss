@@ -61,6 +61,11 @@
         padding: 6px 18px;
         background-color: var(--gold);
         border-radius: 30px;
+        transition: filter 150ms ease-out;
+
+        &:hover {
+          filter: contrast(0.8);
+        }
       }
     }
 
@@ -68,6 +73,12 @@
       padding: 14px 32px;
       background-color: var(--primary);
       border-radius: 30px;
+      transition: filter 150ms ease-out, transform 150ms ease-in-out;
+
+      &:hover {
+        transform: translateY(-1.5px);
+        filter: contrast(0.8);
+      }
     }
   }
 }

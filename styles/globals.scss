@@ -70,7 +70,8 @@ header {
     padding: 0 $button-side;
     height: 100%;
     border-radius: 6px;
-    transition: all 200ms ease, transform 150ms ease-in-out;
+    transition: all 200ms ease, filter 150ms ease-out,
+      transform 150ms ease-in-out;
 
     &:hover {
       opacity: 100%;

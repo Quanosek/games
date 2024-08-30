@@ -53,18 +53,29 @@ export default function WisielecPage() {
 
   // MAIN COMPONENT
   const FormBoard = (index: number) => {
-    // input phrase counter
-    const phraseStats = (string: string) => {
+    const wordName = (string: string) => {
       const words = string.split(" ").filter((word) => word !== "");
-      let result = "";
 
-      if (words.length === 1) result = "1 wyraz";
-      else if (words.length > 1 && words.length < 5) {
-        result = `${words.length} wyrazy`;
-      } else result = `${words.length} wyrazów`;
+      let wordName = "";
+      const lastDigit = words.length % 10;
 
-      return result;
+      if (words.length === 1) {
+        wordName = "wyraz";
+      } else if (words.length > 20 && lastDigit > 1 && lastDigit < 5) {
+        wordName = "wyrazy";
+      } else {
+        wordName = "wyrazów";
+      }
+
+      return `${words.length} ${wordName}`;
     };
+
+    const polishAlphabet = "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż";
+    const vowels = "aąeęioóuy";
+
+    const phraseLetters = data[index].phrase.split("").filter((letter) => {
+      return polishAlphabet.includes(letter.toLowerCase());
+    });
 
     return (
       <form
@@ -253,7 +264,9 @@ export default function WisielecPage() {
                 value={data[index].category || ""}
                 required
                 onChange={(e) => {
-                  e.target.value = e.target.value.replace(/\s\s/g, " ");
+                  e.target.value = e.target.value
+                    .replace(/\s\s/g, " ") // double space
+                    .replace(/^[\s]/, ""); // space as first character
 
                   setData((prev) => {
                     const newData = [...prev];
@@ -275,7 +288,9 @@ export default function WisielecPage() {
                 value={data[index].phrase || ""}
                 required
                 onChange={(e) => {
-                  e.target.value = e.target.value.replace(/\s\s/g, " ");
+                  e.target.value = e.target.value
+                    .replace(/\s\s/g, " ") // double space
+                    .replace(/^[\s]/, ""); // space as first character
 
                   setData((prev) => {
                     const newData = [...prev];
@@ -290,36 +305,22 @@ export default function WisielecPage() {
           <hr style={{ marginTop: "0.25rem" }} />
 
           <div className={styles.phraseStats}>
-            <p>{phraseStats(data[index].phrase)}</p>
-
+            <p>{wordName(data[index].phrase)}</p>
+            <p>{new Set(phraseLetters).size} różnych liter, w tym:</p>
             <p>
               {
                 new Set(
-                  data[index].phrase.split("").filter((letter) => {
-                    return letter !== " ";
-                  })
-                ).size
-              }{" "}
-              różnych liter, w tym:
-            </p>
-
-            <p>
-              {
-                new Set(
-                  data[index].phrase.split("").filter((letter) => {
-                    if (letter !== " ") {
-                      return !vowels.split("").includes(letter);
-                    }
+                  phraseLetters.filter((letter) => {
+                    return !vowels.split("").includes(letter);
                   })
                 ).size
               }{" "}
               spółgłosek
             </p>
-
             <p>
               {
                 new Set(
-                  data[index].phrase.split("").filter((letter) => {
+                  phraseLetters.filter((letter) => {
                     return vowels.split("").includes(letter);
                   })
                 ).size
@@ -333,7 +334,6 @@ export default function WisielecPage() {
   };
 
   // MAIN RETURN
-  const vowels = "aąeęioóuy";
 
   return (
     <PageLayout>
