@@ -86,8 +86,10 @@
 }
 
 .globalKeyboard {
-  position: absolute;
-  top: -100%;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  pointer-events: none;
 }
 
 .topDiv {
@@ -102,11 +104,41 @@
   }
 }
 
-.phrase {
+.phraseContainer {
   position: relative;
-  right: 1.5vw;
-  font-size: 150%;
-  letter-spacing: 0.5vw;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.phrase {
+  position: absolute;
+  left: 0;
+  width: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2vw;
+
+  div {
+    display: flex;
+    gap: 0.5vw;
+
+    p {
+      padding-bottom: 0.2vw;
+      height: 3.5vw;
+      display: flex;
+      justify-content: center;
+      font-size: 150%;
+
+      &.letter {
+        width: 2.4vw;
+        border-bottom: 0.1vw solid #ffffff;
+      }
+    }
+  }
 }
 
 .bottomDiv {
@@ -121,6 +153,7 @@
   }
 
   .letters {
+    width: 95%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -147,7 +180,7 @@
 }
 
 .backgroundImage {
-  opacity: 10%;
+  opacity: 15%;
   position: absolute;
   top: 0;
   left: 0;

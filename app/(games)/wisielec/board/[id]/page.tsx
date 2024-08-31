@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { TConductorInstance } from "react-canvas-confetti/dist/types";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 import ms from "ms";
@@ -19,11 +19,12 @@ export default function WisielecIdBoard({
   const [data, setData] = useState<Data>();
   const [loading, setLoading] = useState(true);
 
+  const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
+  const [mistakes, setMistakes] = useState(0);
   const [remainingTime, setRemainingTime] = useState(0);
-  const [letters, setLetters] = useState<string[]>([]);
   const [endGame, setEndGame] = useState<"win" | "lose">();
 
-  // get data on load
+  // load board data
   useEffect(() => {
     const storedData = localStorage.getItem("wisielec") || "[]";
     const data = JSON.parse(storedData)[id - 1];
@@ -54,40 +55,6 @@ export default function WisielecIdBoard({
     return () => clearInterval(interval);
   }, [endGame]);
 
-  // phrase completion
-  const Phrase = useCallback(
-    (data: Data) => {
-      return data.phrase
-        .split(" ")
-        .map((word) => {
-          // add uppercase letters to array
-          const array = [...letters, ...letters.map((l) => l.toUpperCase())];
-
-          return word
-            .split("")
-            .map((letter) => {
-              // if letter is not in polish alphabet, return it
-              if (!/[a-zA-ZąĄćĆęĘłŁńŃóÓśŚźŹżŻ]/.test(letter)) return letter;
-              // hide letters
-              return array.includes(letter) || endGame ? letter : "_";
-            })
-            .join("");
-        })
-        .join(" ");
-    },
-    [letters, endGame]
-  );
-
-  // mistakes counter
-  const Mistakes = useCallback(
-    (data: Data) => {
-      return letters.filter((letter) => {
-        return !data.phrase.includes(letter);
-      }).length;
-    },
-    [letters]
-  );
-
   // init confetti animation
   const [conductor, setConductor] = useState<TConductorInstance>();
   const onInit = ({ conductor }: { conductor: TConductorInstance }) => {
@@ -96,23 +63,41 @@ export default function WisielecIdBoard({
 
   // end of game detection
   useEffect(() => {
-    if (!data || endGame) return;
+    if (!data) return;
 
     // all attempts used
-    if (data && Mistakes(data) === data.attempts) {
+    if (mistakes === data.attempts) {
       return setEndGame("lose");
     }
 
     // no more letters to guess
-    if (!Phrase(data).includes("_")) {
-      conductor?.shoot();
+    const lettersToGuess = data.phrase.split("").filter((value: string) => {
+      return value.match(/[A-ZĄĆĘŁŃÓŚŹŻ]/) && !guessedLetters.includes(value);
+    });
+
+    if (!lettersToGuess.length) {
+      for (let i = 0; i < 2; i++) {
+        setTimeout(() => {
+          if (conductor) conductor?.shoot();
+        }, i * 600);
+      }
+
       return setEndGame("win");
     }
-  }, [data, endGame, Mistakes, Phrase, conductor]);
+  }, [data, mistakes, guessedLetters, conductor]);
 
-  // letters of alphabet
-  const polishAlphabet = "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż";
-  const vowels = "aąeęioóuy";
+  // on letter click handler
+  const checkLetter = (letter: string) => {
+    if (guessedLetters.includes(letter)) return;
+
+    setGuessedLetters([...guessedLetters, letter]);
+
+    if (!data?.phrase.includes(letter)) setMistakes(mistakes + 1);
+  };
+
+  // allowed letters
+  const polishAlphabet = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ";
+  const vowels = "AĄEĘIOÓUY";
 
   // loading screen
   if (loading) {
@@ -134,18 +119,15 @@ export default function WisielecIdBoard({
         className={styles.globalKeyboard}
         ref={(input) => input?.focus()}
         onBlur={(e) => e.target.focus()}
-        onChange={(e) => {
+        onInput={(e) => {
           if (endGame) return;
 
-          const value = e.target.value.toLowerCase();
+          const input = e.target as HTMLInputElement;
+          const value = input.value.toUpperCase();
 
-          // add to letters array
-          if (polishAlphabet.includes(value) && !letters.includes(value)) {
-            setLetters([...letters, value]);
-          }
+          if (polishAlphabet.includes(value)) checkLetter(value);
 
-          // clear input
-          e.target.value = "";
+          input.value = "";
         }}
       />
 
@@ -176,43 +158,65 @@ export default function WisielecIdBoard({
         )}
       </div>
 
-      <div className={styles.phrase}>
-        <h1>{Phrase(data)}</h1>
+      <div className={styles.phraseContainer}>
+        <div className={styles.phrase}>
+          {data.phrase.split(" ").map((word, i) => (
+            <div key={i}>
+              {word.split("").map((sign, j) => {
+                const isLetter = sign.match(/[A-ZĄĆĘŁŃÓŚŹŻ]/);
+
+                if (isLetter) {
+                  return (
+                    <p
+                      key={j}
+                      style={{ color: endGame === "win" ? "green" : "" }}
+                      className={styles.letter}
+                    >
+                      {guessedLetters.includes(sign) || endGame ? sign : ""}
+                    </p>
+                  );
+                } else {
+                  return (
+                    <p key={j} className={styles.sign}>
+                      {sign}
+                    </p>
+                  );
+                }
+              })}
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className={styles.bottomDiv}>
         <p className={styles.mistakes}>
           Błędy:{" "}
-          <span
-            style={{ color: Mistakes(data) === data.attempts ? "red" : "" }}
-          >
-            {Mistakes(data)}/{data.attempts}
+          <span style={{ color: mistakes === data.attempts ? "red" : "" }}>
+            {mistakes}/{data.attempts}
           </span>
         </p>
 
         <div className={styles.letters}>
-          {polishAlphabet.split("").map((letter) => (
+          {polishAlphabet.split("").map((letter, index) => (
             <button
-              key={letter}
+              key={index}
               className={`${vowels.includes(letter) && styles.vowel} ${
-                (letters.includes(letter) || endGame) && "disabled"
+                (guessedLetters.includes(letter) || endGame) && "disabled"
               }`}
-              onClick={() => setLetters([...letters, letter])}
+              onClick={() => checkLetter(letter)}
             >
-              <p>{letter.toUpperCase()}</p>
+              <p>{letter}</p>
             </button>
           ))}
         </div>
       </div>
 
-      {Mistakes(data) > 0 && (
+      {mistakes > 0 && (
         // dynamic background image
         <div className={styles.backgroundImage}>
           <Image
             alt="wisielec"
-            src={`/wisielec/${Math.ceil(
-              (15 / data.attempts) * Mistakes(data)
-            )}.svg`}
+            src={`/wisielec/${Math.ceil((15 / data.attempts) * mistakes)}.svg`}
             width={800}
             height={750}
             draggable={false}

@@ -265,6 +265,7 @@ export default function WisielecPage() {
                 required
                 onChange={(e) => {
                   e.target.value = e.target.value
+                    .toUpperCase() // capitalize
                     .replace(/\s\s/g, " ") // double space
                     .replace(/^[\s]/, ""); // space as first character
 
@@ -289,6 +290,7 @@ export default function WisielecPage() {
                 required
                 onChange={(e) => {
                   e.target.value = e.target.value
+                    .toUpperCase() // capitalize
                     .replace(/\s\s/g, " ") // double space
                     .replace(/^[\s]/, ""); // space as first character
 
