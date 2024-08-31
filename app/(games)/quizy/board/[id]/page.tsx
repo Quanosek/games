@@ -16,7 +16,7 @@ export default function QuizyIdBoard({ params }: { params: { id: number } }) {
   const [data, setData] = useState<Data>();
   const [loading, setLoading] = useState(true);
 
-  // get data on load
+  // load board data
   useEffect(() => {
     const storedData = localStorage.getItem("quizy") || "[]";
     const data = JSON.parse(storedData)[id - 1];
@@ -40,7 +40,7 @@ export default function QuizyIdBoard({ params }: { params: { id: number } }) {
         return;
       }
 
-      if (event.key === "ArrowLeft" && id !== 0) {
+      if (event.key === "ArrowLeft" && id > 0) {
         router.push(`/quizy/board/${[id - 1]}`);
       }
       if (event.key === "ArrowRight" && (id === 0 || data)) {
@@ -54,7 +54,7 @@ export default function QuizyIdBoard({ params }: { params: { id: number } }) {
 
   // type: "closed"
   function ClosedBoard({ data }: { data: Data }) {
-    const [selected, setSelected] = useState(0); // id + 1
+    const [selected, setSelected] = useState(0); // index + 1
 
     // init confetti animation
     const [conductor, setConductor] = useState<TConductorInstance>();
@@ -66,27 +66,36 @@ export default function QuizyIdBoard({ params }: { params: { id: number } }) {
       <>
         <Fireworks onInit={onInit} />
 
-        <h1 className={styles.centerDiv}>{data.question}</h1>
+        <h1 className={styles.question}>
+          {`${id}. `}
+          {data.question}
+        </h1>
 
         <div
           style={{ pointerEvents: selected ? "none" : "unset" }}
           className={styles.answersGrid}
         >
-          {data.answers.map((el, i) => (
+          {data.answers.map((answer, i) => (
             <button
               key={i}
               className={
-                // show selected and correct answers
                 selected && data.answers[i].checked
                   ? styles.correct
                   : (selected === i + 1 && styles.selected) || ""
               }
               onClick={() => {
-                if (data.answers[i].checked) conductor?.shoot();
                 setSelected(i + 1);
+
+                if (data.answers[i].checked) {
+                  for (let i = 0; i < 2; i++) {
+                    setTimeout(() => {
+                      if (conductor) conductor?.shoot();
+                    }, i * 500);
+                  }
+                }
               }}
             >
-              <p>{`${["A", "B", "C", "D"][i]}: ${el.value}`}</p>
+              <p>{`${["A", "B", "C", "D"][i]}: ${answer.value}`}</p>
             </button>
           ))}
         </div>
@@ -100,15 +109,14 @@ export default function QuizyIdBoard({ params }: { params: { id: number } }) {
     const [reveal, setReveal] = useState(false);
 
     const parseText = (text: string) => {
-      const regex = /\[([^\]]*)\]/g;
-      const parts = text.split(regex);
-      return parts;
+      return text.split(/\[([^\]]*)\]/g);
     };
 
     return (
       <>
         <div className={styles.centerDiv}>
           <h1>
+            {`${id}. `}
             {parseText(data.question).map((part, i) => {
               if (i % 2 === 0) return part;
 
@@ -186,7 +194,10 @@ export default function QuizyIdBoard({ params }: { params: { id: number } }) {
 
     return (
       <>
-        <h1 className={styles.centerDiv}>{data.question}</h1>
+        <h1 className={styles.question}>
+          {`${id}. `}
+          {data.question}
+        </h1>
 
         {showAnswer && (
           <h2 className={styles.openAnswer}>{data.answers[0].value}</h2>
@@ -212,56 +223,43 @@ export default function QuizyIdBoard({ params }: { params: { id: number } }) {
     );
   }
 
-  function DynamicRender() {
-    if (loading) {
-      // loading screen
-      return (
-        <div className={styles.loading}>
-          <div className={styles.spinner} />
-        </div>
-      );
-    }
-
-    if (id === 0) {
-      // start screen
-      return (
-        <div className={styles.simpleLayout}>
-          <h1>Rozpocznij Quiz</h1>
-
-          <button onClick={() => router.push("/quizy/board/1")}>
-            <p>Graj</p>
-          </button>
-        </div>
-      );
-    }
-
-    if (!data) {
-      // end screen
-      return (
-        <div className={styles.simpleLayout}>
-          <h1>Koniec</h1>
-
-          <button onClick={() => window.close()}>
-            <p>Zakończ</p>
-          </button>
-        </div>
-      );
-    }
-
+  // loading screen
+  if (loading) {
     return (
-      // default dynamic content
-      <div className={styles.content}>
-        {data.type === "closed" && <ClosedBoard data={data} />}
-        {data.type === "gap" && <GapBoard data={data} />}
-        {data.type === "open" && <OpenBoard data={data} />}
+      <div className={styles.loading}>
+        <div className={styles.spinner} />
       </div>
     );
   }
 
   // main return
   return (
-    <div className={styles.container}>
-      <DynamicRender />
+    <div className={styles.board}>
+      <div className={styles.content}>
+        {id === 0 && (
+          <div className={styles.simpleLayout}>
+            <h1>Rozpocznij Quiz</h1>
+
+            <button onClick={() => router.push("/quizy/board/1")}>
+              <p>Graj</p>
+            </button>
+          </div>
+        )}
+
+        {id > 0 && !data && (
+          <div className={styles.simpleLayout}>
+            <h1>Koniec</h1>
+
+            <button onClick={() => window.close()}>
+              <p>Zakończ</p>
+            </button>
+          </div>
+        )}
+
+        {data?.type === "closed" && <ClosedBoard data={data} />}
+        {data?.type === "gap" && <GapBoard data={data} />}
+        {data?.type === "open" && <OpenBoard data={data} />}
+      </div>
 
       <div className={styles.navigation}>
         <button
