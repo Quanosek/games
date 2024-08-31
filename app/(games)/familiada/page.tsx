@@ -138,7 +138,7 @@ export default function FamiliadaPage() {
                     // validate input
                     const value = e.target.value
                       .toUpperCase()
-                      .replace(/[^A-ZĄĆĘŁŃÓŚŹŻ\s.-]/g, "");
+                      .replace(/[^A-ZĄĆĘŁŃÓŚŹŻ\s!"-~]/g, "");
 
                     // update data
                     setData((prev) => {
