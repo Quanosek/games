@@ -212,9 +212,12 @@ export default function WisielecPage() {
                 id={`${index}-attempts`}
                 value={data[index].attempts}
                 onChange={(e) => {
+                  const value = parseInt(e.target.value);
+
+                  // update data
                   setData((prev) => {
                     const newData = [...prev];
-                    newData[index].attempts = parseInt(e.target.value);
+                    newData[index].attempts = value;
                     return newData;
                   });
                 }}
@@ -234,9 +237,12 @@ export default function WisielecPage() {
                 id={`${index}-time`}
                 value={data[index].time}
                 onChange={(e) => {
+                  const value = e.target.value;
+
+                  // update data
                   setData((prev) => {
                     const newData = [...prev];
-                    newData[index].time = e.target.value;
+                    newData[index].time = value;
                     return newData;
                   });
                 }}
@@ -264,14 +270,16 @@ export default function WisielecPage() {
                 value={data[index].category || ""}
                 required
                 onChange={(e) => {
-                  e.target.value = e.target.value
+                  // validate input
+                  const value = e.target.value
                     .toUpperCase() // capitalize
                     .replace(/\s\s/g, " ") // double space
                     .replace(/^[\s]/, ""); // space as first character
 
+                  // update data
                   setData((prev) => {
                     const newData = [...prev];
-                    newData[index].category = e.target.value;
+                    newData[index].category = value;
                     return newData;
                   });
                 }}
@@ -289,14 +297,16 @@ export default function WisielecPage() {
                 value={data[index].phrase || ""}
                 required
                 onChange={(e) => {
-                  e.target.value = e.target.value
+                  // validate input
+                  const value = e.target.value
                     .toUpperCase() // capitalize
                     .replace(/\s\s/g, " ") // double space
                     .replace(/^[\s]/, ""); // space as first character
 
+                  // update data
                   setData((prev) => {
                     const newData = [...prev];
-                    newData[index].phrase = e.target.value;
+                    newData[index].phrase = value;
                     return newData;
                   });
                 }}

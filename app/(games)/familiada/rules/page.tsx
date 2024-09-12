@@ -39,8 +39,7 @@ export default function FamiliadaRulesPage() {
           dzieli się na dwa etapy: pierwszy, który trwa tak długo, aż jedna z
           drużyn zdobędzie łącznie przynajmniej 300 punktów (składa się zatem z
           dowolnej liczby rund; w praktyce najczęściej pięciu, czasem czterech
-          lub sześciu) oraz finał. Każda drużyna ma swój kolor – czerwony lub
-          niebieski.
+          lub sześciu). Każda drużyna ma swój kolor – czerwony lub niebieski.
         </p>
 
         <section>
@@ -140,42 +139,6 @@ export default function FamiliadaRulesPage() {
               następne osoby w kolejce). Punktacja w pierwszych trzech rundach
               pozostaje standardowa, w czwartej rundzie liczbę punktów mnoży się
               przez 2, a od piątej mnoży się przez 3.
-            </p>
-          </div>
-        </section>
-
-        <section>
-          <h2 className={Nexa.className}>Finał</h2>
-
-          <div className={styles.description}>
-            <p>
-              Do udziału w finale zwycięska grupa wyznacza dwóch reprezentantów.
-            </p>
-
-            <p>
-              Pierwsza osoba odpowiada na pytania, podczas gdy druga słucha
-              muzyki w tzw. kąciku muzycznym (aby nie słyszeć pytań ani
-              odpowiedzi). Zawodnik ma 15 sekund, aby odpowiedzieć na pięć pytań
-              czytanych przez prowadzącego. Każde pytanie może pominąć, mówiąc
-              komendę „dalej” – wtedy prowadzący czyta kolejne pytanie, a po
-              przeczytaniu wszystkich wraca do pominiętych. Po udzieleniu
-              odpowiedzi na wszystkie pytania lub po upływie czasu następuje
-              sprawdzenie liczby punktów zdobytych przez pierwszego finalistę
-              (za nieudzielenie odpowiedzi liczy się 0 punktów).
-            </p>
-
-            <p>
-              Drugi finalista, opuściwszy „kącik muzyczny”, widzi tylko sumę
-              punktów zdobytych przez poprzednika. Prowadzący czyta te same
-              pytania, a zegar odlicza tym razem 20 sekund. Większa ilość czasu
-              wynika z tego, że jeśli gracz poda taką samą odpowiedź co
-              poprzednik, wtedy usłyszy charakterystyczny dźwięk i musi podać
-              inną. Również drugi finalista może pomijać pytania.
-            </p>
-
-            <p>
-              Jeśli drużyna łącznie zdobędzie przynajmniej 200 punktów, wygrywa
-              finał.
             </p>
           </div>
         </section>

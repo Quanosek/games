@@ -204,5 +204,14 @@
 }
 
 .rulesContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 2rem;
   font-size: 110%;
+
+  span {
+    opacity: 60%;
+    font-weight: bold;
+  }
 }

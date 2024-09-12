@@ -114,9 +114,15 @@ export default function FamiliadaPage() {
             maxLength={100}
             value={data[index].question || ""}
             onChange={(e) => {
+              // validate input
+              const value = e.target.value
+                .replace(/\s\s/g, " ") // double space
+                .replace(/^[\s]/, ""); // space as first character
+
+              // update data
               setData((prev) => {
                 const newData = [...prev];
-                newData[index].question = e.target.value;
+                newData[index].question = value;
                 return newData;
               });
             }}
@@ -134,11 +140,12 @@ export default function FamiliadaPage() {
                   autoComplete="off"
                   maxLength={17} // board limit
                   value={answer.value || ""}
+                  required={Boolean(answer.points)}
                   onChange={(e) => {
                     // validate input
                     const value = e.target.value
                       .toUpperCase()
-                      .replace(/[^A-ZĄĆĘŁŃÓŚŹŻ\s!"-~]/g, "");
+                      .replace(/[^A-ZĄĆĘŁŃÓŚŹŻ!-/:-@\[-`{-~]/g, ""); // letters & unicode ranges
 
                     // update data
                     setData((prev) => {
@@ -200,9 +207,12 @@ export default function FamiliadaPage() {
               title="Mnożnik punktów (zależny od ilości odpowiedzi)"
               value={data[index].multiply}
               onChange={(e) => {
+                const value = parseInt(e.target.value);
+
+                // update data
                 setData((prev) => {
                   const newData = [...prev];
-                  newData[index].multiply = parseInt(e.target.value);
+                  newData[index].multiply = value;
                   return newData;
                 });
               }}

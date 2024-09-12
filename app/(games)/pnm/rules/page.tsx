@@ -30,7 +30,19 @@ export default function PnmRulesPage() {
       </div>
 
       <div className={`${Nunito.className} ${styles.rulesContainer}`}>
-        <p style={{ opacity: "90%" }}>Już wkrótce</p>
+        <p>
+          Po uruchomieniu planszy etapu wybór kategorii możliwy jest przez
+          kliknięcie w odpowiednią nazwę lub wciśnięcie odpowiednio klawiszy{" "}
+          <span>[1]</span> lub <span>[2]</span>. Następnie po pojawieniu się
+          wszystkich możliwych odpowiedzi należy włączyć odliczanie czasu przez
+          wciśnięcie klawisza <span>[Spacji]</span>. Pieniądze przydziela się do
+          odpowiedzi przez wciskanie lub wciśnięcie i przytrzymanie przycisków -
+          i + na ekranie. Po zakończeniu odliczania czasu, aby wyświetlić
+          poprawną odpowiedź (uruchomić zapadnie) należy ponownie wcisnąć
+          klawisz <span>[Spacji]</span> i poczekać na animację.
+        </p>
+
+        <p style={{ opacity: "90%" }}>Więcej zasad już wkrótce...</p>
       </div>
     </PageLayout>
   );

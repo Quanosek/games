@@ -94,9 +94,15 @@ export default function QuizyPage() {
           value={data[i].question || ""}
           required
           onChange={(e) => {
+            // validate input
+            const value = e.target.value
+              .replace(/\s\s/g, " ") // double space
+              .replace(/^[\s]/, ""); // space as first character
+
+            // update data
             setData((prev) => {
               const newData = [...prev];
-              newData[i].question = e.target.value;
+              newData[i].question = value;
               return newData;
             });
           }}
@@ -131,11 +137,17 @@ export default function QuizyPage() {
                   value={answer.value || ""}
                   required={j < 2}
                   onChange={(e) => {
+                    // validate input
+                    const value = e.target.value
+                      .replace(/\s\s/g, " ") // double space
+                      .replace(/^[\s]/, ""); // space as first character
+
+                    // update data
                     setData((prev) => {
                       const newData = [...prev];
                       newData[i].answers[j] = {
                         ...newData[i].answers[j],
-                        value: e.target.value,
+                        value,
                       };
                       return newData;
                     });
@@ -169,11 +181,13 @@ export default function QuizyPage() {
                     id={`${i}-${j}-checkbox`}
                     checked={answer.checked || false}
                     onChange={(e) => {
+                      const checked = e.target.checked;
+
                       setData((prev) => {
                         const newData = [...prev];
                         newData[i].answers[j] = {
                           ...newData[i].answers[j],
-                          checked: e.target.checked,
+                          checked,
                         };
                         return newData;
                       });
@@ -211,9 +225,15 @@ export default function QuizyPage() {
         value={data[i].question || ""}
         required
         onChange={(e) => {
+          // validate input
+          const value = e.target.value
+            .replace(/\s\s/g, " ") // double space
+            .replace(/^[\s]/, ""); // space as first character
+
+          // update data
           setData((prev) => {
             const newData = [...prev];
-            newData[i].question = e.target.value;
+            newData[i].question = value;
             return newData;
           });
         }}
@@ -240,9 +260,15 @@ export default function QuizyPage() {
           value={data[i].question || ""}
           required
           onChange={(e) => {
+            // validate input
+            const value = e.target.value
+              .replace(/\s\s/g, " ") // double space
+              .replace(/^[\s]/, ""); // space as first character
+
+            // update data
             setData((prev) => {
               const newData = [...prev];
-              newData[i].question = e.target.value;
+              newData[i].question = value;
               return newData;
             });
           }}
@@ -261,9 +287,15 @@ export default function QuizyPage() {
           value={data[i].answers[0].value || ""}
           required
           onChange={(e) => {
+            // validate input
+            const value = e.target.value
+              .replace(/\s\s/g, " ") // double space
+              .replace(/^[\s]/, ""); // space as first character
+
+            // update data
             setData((prev) => {
               const newData = [...prev];
-              data[i].answers[0].value = e.target.value;
+              data[i].answers[0].value = value;
               return newData;
             });
           }}

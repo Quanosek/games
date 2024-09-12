@@ -183,15 +183,21 @@ export default function PnmPage() {
                     name={`${i}-${j}-category`}
                     placeholder="Wpisz kategorię"
                     autoComplete="off"
-                    maxLength={128}
+                    maxLength={20} // board responsiveness limit
                     value={stage.category || ""}
                     required
                     onChange={(e) => {
+                      // validate input
+                      const category = e.target.value
+                        .replace(/\s\s/g, " ") // double space
+                        .replace(/^[\s]/, ""); // space as first character
+
+                      // update data
                       setData((prev) => {
                         const newData = [...prev];
                         newData[i][j] = {
                           ...newData[i][j],
-                          category: e.target.value,
+                          category,
                         };
                         return newData;
                       });
@@ -210,11 +216,17 @@ export default function PnmPage() {
                     value={stage.question || ""}
                     required
                     onChange={(e) => {
+                      // validate input
+                      const question = e.target.value
+                        .replace(/\s\s/g, " ") // double space
+                        .replace(/^[\s]/, ""); // space as first character
+
+                      // update data
                       setData((prev) => {
                         const newData = [...prev];
                         newData[i][j] = {
                           ...newData[i][j],
-                          question: e.target.value,
+                          question,
                         };
                         return newData;
                       });
@@ -247,15 +259,19 @@ export default function PnmPage() {
                         value={answer.value || ""}
                         required={k < 2}
                         onChange={(e) => {
+                          // validate input
+                          const value = e.target.value
+                            .replace(/\s\s/g, " ") // double space
+                            .replace(/^[\s]/, ""); // space as first character
+
+                          // update data
                           setData((prev) => {
                             const newData = [...prev];
                             newData[i][j] = {
                               ...newData[i][j],
                               answers: newData[i][j].answers.map((a, l) => {
                                 // find specific answer and add value
-                                return l === k
-                                  ? { ...a, value: e.target.value }
-                                  : a;
+                                return l === k ? { ...a, value } : a;
                               }),
                             };
                             return newData;

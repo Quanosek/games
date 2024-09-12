@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
+import AnimatedBoard from "../animatedBoard";
 
 import styles from "../styles.module.scss";
 
@@ -110,5 +110,19 @@ export default function PnmStartBoard() {
   if (showIntro) return <IntroComponent />;
 
   // show start board
-  return <div className={styles.startLayout} />;
+  return (
+    <AnimatedBoard>
+      <Image
+        className={styles.logoImage}
+        alt=""
+        src="/pnm/images/logo.webp"
+        width={949}
+        height={628}
+        draggable={false}
+        priority
+      />
+
+      <audio src="/pnm/audio/entrance.mp3" autoPlay />
+    </AnimatedBoard>
+  );
 }
