@@ -4,6 +4,14 @@ declare module "next-auth" {
     password: string?;
     role: string["user" | "admin"];
   }
+
+  interface Game {
+    id: int;
+    userId: string;
+    type: string;
+    data: string;
+    createdAt: EpochTimeStamp;
+  }
 }
 
 import { JWT } from "next-auth/jwt";

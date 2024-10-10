@@ -1,11 +1,17 @@
+import { auth } from "@/lib/auth";
+
+import GamesList from "./gamesList";
 import styles from "@/styles/dashboard.module.scss";
 
-export default function SavedPage() {
+export default async function SavedPage() {
+  const session = await auth();
+  const user = session?.user;
+
   return (
     <>
       <h1>Zapisane gry</h1>
 
-      <p style={{ opacity: "90%" }}>Już wkrótce</p>
+      <GamesList user={user} />
     </>
   );
 }

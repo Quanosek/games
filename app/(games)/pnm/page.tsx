@@ -1,12 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, Fragment } from "react";
+import { useSession } from "next-auth/react";
 
 import PageLayout from "@/components/wrappers/pageLayout";
-
+import SaveForm from "@/components/saveForm";
 import styles from "./styles.module.scss";
 
 export interface Data {
@@ -17,6 +18,7 @@ export interface Data {
 
 export default function PnmPage() {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const newStage: Data[] = new Array(2).fill({
     category: "",
@@ -387,6 +389,14 @@ export default function PnmPage() {
             <p>Kolejny etap</p>
           </button>
         </div>
+      )}
+
+      {session && (
+        <SaveForm
+          userId={session.user?.id}
+          type={usePathname().slice(1)}
+          data={JSON.stringify(data)}
+        />
       )}
 
       <div className={styles.credits}>

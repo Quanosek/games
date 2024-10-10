@@ -1,11 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 import PageLayout from "@/components/wrappers/pageLayout";
-
+import SaveForm from "@/components/saveForm";
 import styles from "./page.module.scss";
 
 export interface Data {
@@ -17,6 +18,7 @@ export interface Data {
 
 export default function WisielecPage() {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const emptyData: Data = {
     attempts: 10,
@@ -393,6 +395,14 @@ export default function WisielecPage() {
             <p>Nowe hasło</p>
           </button>
         </div>
+      )}
+
+      {session && (
+        <SaveForm
+          userId={session.user?.id}
+          type={usePathname().slice(1)}
+          data={JSON.stringify(data)}
+        />
       )}
     </PageLayout>
   );

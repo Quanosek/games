@@ -1,13 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
 import PageLayout from "@/components/wrappers/pageLayout";
-
+import SaveForm from "@/components/saveForm";
 import styles from "./styles.module.scss";
 
 export interface Data {
@@ -19,6 +20,7 @@ export interface Data {
 
 export default function FamiliadaPage() {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const emptyData: Data = {
     checked: false,
@@ -434,6 +436,14 @@ export default function FamiliadaPage() {
             <p>Nowe pytanie</p>
           </button>
         </div>
+      )}
+
+      {session && (
+        <SaveForm
+          userId={session.user?.id}
+          type={usePathname().slice(1)}
+          data={JSON.stringify(data)}
+        />
       )}
 
       <div className={styles.credits}>
