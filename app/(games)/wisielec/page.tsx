@@ -36,7 +36,7 @@ export default function WisielecPage() {
       setLoading(false);
     } catch (error) {
       localStorage.removeItem("wisielec");
-      router.refresh();
+      window.location.reload();
     }
   }, [router]);
 

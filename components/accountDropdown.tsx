@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { User } from "next-auth";
 import { signOut } from "next-auth/react";
 
-export default function LoginButtonComponent({
+export default function AccountDropdownComponent({
   user,
 }: {
   user: User | undefined;

@@ -38,7 +38,7 @@ export default function FamiliadaPage() {
       setLoading(false);
     } catch (error) {
       localStorage.removeItem("familiada");
-      router.refresh();
+      window.location.reload();
     }
   }, [router]);
 

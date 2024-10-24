@@ -35,7 +35,7 @@ export default function PnmPage() {
       setLoading(false);
     } catch (error) {
       localStorage.removeItem("pnm");
-      router.refresh();
+      window.location.reload();
     }
   }, [router]);
 

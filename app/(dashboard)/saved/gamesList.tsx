@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { User, Game } from "next-auth";
 import axios from "axios";
@@ -31,7 +32,19 @@ export default function SavedGamesList({ user }: { user: User | undefined }) {
 
     localStorage.setItem(game.type, JSON.stringify(gameData));
     router.push(`/${game.type}`);
-    router.refresh();
+  };
+
+  const deleteGame = (game: Game) => {
+    if (!confirm("Czy na pewno chcesz usunąć tę grę?")) return;
+
+    axios
+      .delete("/api/game", { params: { id: game.id } })
+      .then(() => {
+        setGames(games.filter((g) => g.id !== game.id));
+        localStorage.removeItem(game.type);
+        toast.success("Gra została usunięta");
+      })
+      .catch((error) => toast.error(error.response.data.message));
   };
 
   if (loading) {
@@ -49,19 +62,34 @@ export default function SavedGamesList({ user }: { user: User | undefined }) {
       )}
 
       {games.map((game, i) => (
-        <button key={i} onClick={() => loadGame(game)}>
-          <p>ID: "{game.id}"</p>
-          <p>Gra: "{game.type}"</p>
-          <p>Zapisany tytuł: "{game.title}"</p>
-          <p>
-            Data utworzenia:{" "}
-            {`${new Date(game.createdAt).toLocaleDateString()}, ${new Date(
-              game.createdAt
-            ).toLocaleTimeString()}`}
-          </p>
-          <hr />
-          <p>{game.data}</p>
-        </button>
+        <div key={i} className={styles.gameData}>
+          <button className={styles.info} onClick={() => loadGame(game)}>
+            <h2>{game.type}</h2>
+            <p>Zapisany tytuł: "{game.title}"</p>
+            <p>
+              Data utworzenia:{" "}
+              {`${new Date(game.createdAt).toLocaleDateString()}, ${new Date(
+                game.createdAt
+              ).toLocaleTimeString()}`}
+            </p>
+            <hr />
+            <p>{game.data}</p>
+          </button>
+
+          <button
+            className={styles.deleteButton}
+            onClick={() => deleteGame(game)}
+          >
+            <Image
+              className="icon"
+              src="/icons/close.svg"
+              alt="usuń"
+              width={20}
+              height={20}
+              draggable={false}
+            />
+          </button>
+        </div>
       ))}
     </div>
   );

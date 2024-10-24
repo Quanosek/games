@@ -28,7 +28,7 @@ export default function QuizyPage() {
       setLoading(false);
     } catch (error) {
       localStorage.removeItem("quizy");
-      router.refresh();
+      window.location.reload();
     }
   }, [router]);
 

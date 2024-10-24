@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Game } from "next-auth";
@@ -16,7 +15,6 @@ export interface Params {
 }
 
 export default function SavedGameComponent({ type, data }: Params) {
-  const router = useRouter();
   const { data: session } = useSession();
   const user = session?.user;
 
@@ -41,30 +39,34 @@ export default function SavedGameComponent({ type, data }: Params) {
 
   const saveGame = async () => {
     const request = { userId: user?.id, type, title, data };
-    const response = await axios.post("/api/game", request);
+    let response;
 
+    if (game?.id) {
+      // update existing db record
+      response = await axios.put("/api/game", request, {
+        params: { id: game.id },
+      });
+      toast.success("Gra została zapisana");
+    } else {
+      // create new db record
+      response = await axios.post("/api/game", request);
+      toast.success("Zapisano nową grę na twoim koncie");
+    }
+
+    // temporary local data
     setGame(response.data.result);
     setTitle(response.data.result.title);
 
+    // save game params to local storage
     const localData = JSON.parse(localStorage.getItem(`${type}`) || "{}");
     const { id: _, ...params } = localData;
     const id = response.data.result.id;
-
-    localStorage.setItem("wisielec", JSON.stringify({ id, ...params }));
-    toast.success("Zapisano nową grę");
+    localStorage.setItem(`${type}`, JSON.stringify({ id, ...params }));
   };
 
-  const deleteGame = () => {
-    if (game) {
-      axios
-        .delete("/api/game/delete", { params: { id: game.id } })
-        .then(() => toast.success("Gra została usunięta"))
-        .catch((error) => toast.error(error.response.data.message));
-    } else {
-      localStorage.removeItem(`${type}`);
-      router.refresh();
-      toast.success("Wyczyszczono formularz");
-    }
+  const clearGame = async () => {
+    localStorage.removeItem(`${type}`);
+    window.location.reload();
   };
 
   if (!user) return null;
@@ -105,12 +107,12 @@ export default function SavedGameComponent({ type, data }: Params) {
               <p>
                 Ostatni zapis:{" "}
                 {game &&
-                  `${new Date(game.createdAt).toLocaleDateString()}, ${new Date(
-                    game.createdAt
+                  `${new Date(game.updatedAt).toLocaleDateString()}, ${new Date(
+                    game.updatedAt
                   ).toLocaleTimeString()}`}
               </p>
 
-              <button onClick={deleteGame}>
+              <button onClick={clearGame}>
                 <Image
                   className="icon"
                   alt="exit"

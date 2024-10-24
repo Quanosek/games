@@ -5,7 +5,7 @@ import { Toaster } from "react-hot-toast";
 
 import { auth } from "@/lib/auth";
 import Wrapper from "@/components/wrappers/session";
-import LoginButton from "@/components/loginButton";
+import AccountDropdown from "@/components/accountDropdown";
 
 import "the-new-css-reset/css/reset.css";
 import "@/styles/globals.scss";
@@ -65,7 +65,7 @@ export default async function RootLayout({
                 </Link>
               </div>
 
-              <LoginButton user={session?.user} />
+              <AccountDropdown user={session?.user} />
             </section>
           </header>
 
