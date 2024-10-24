@@ -12,13 +12,13 @@ export default function SavedButton({ user }: { user: User | undefined }) {
   const [gamesList, setGamesList] = useState([]);
 
   useEffect(() => {
-    if (user) {
-      axios
-        .get("/api/game/saved", { params: { userId: user.id } })
-        .then((res) => setGamesList(res.data.result))
-        .catch((error) => toast.error(error.response.data.message));
-    }
-  }, []);
+    if (!user) return;
+    
+    axios
+      .get("/api/game/saved", { params: { userId: user.id } })
+      .then((res) => setGamesList(res.data.result))
+      .catch((error) => toast.error(error.response.data.message));
+  }, [user]);
 
   if (gamesList.length) {
     return (

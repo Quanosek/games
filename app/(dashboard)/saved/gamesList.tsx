@@ -16,12 +16,14 @@ export default function SavedGamesList({ user }: { user: User | undefined }) {
   const [games, setGames] = useState<Game[]>([]);
 
   useEffect(() => {
+    if (!user) return;
+
     axios
-      .get("/api/game/saved", { params: { userId: user?.id } })
+      .get("/api/game/saved", { params: { userId: user.id } })
       .then((response) => setGames(response.data.result))
       .catch((error) => toast.error(error.response.data.message))
       .finally(() => setLoading(false));
-  }, []);
+  }, [user]);
 
   const loadGame = (game: Game) => {
     const gameData = {
@@ -65,7 +67,7 @@ export default function SavedGamesList({ user }: { user: User | undefined }) {
         <div key={i} className={styles.gameData}>
           <button className={styles.info} onClick={() => loadGame(game)}>
             <h2>{game.type}</h2>
-            <p>Zapisany tytuł: "{game.title}"</p>
+            <p>Zapisany tytuł: {`"${game.title}"`}</p>
             <p>
               Data utworzenia:{" "}
               {`${new Date(game.createdAt).toLocaleDateString()}, ${new Date(

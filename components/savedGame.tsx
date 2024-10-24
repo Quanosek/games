@@ -35,7 +35,7 @@ export default function SavedGameComponent({ type, data }: Params) {
       })
       .catch((error) => toast.error(error.response.data.message))
       .finally(() => setLoading(false));
-  }, []);
+  }, [type]);
 
   const saveGame = async () => {
     const request = { userId: user?.id, type, title, data };
