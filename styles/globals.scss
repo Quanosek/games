@@ -52,6 +52,8 @@ footer {
 $header-height: min(4rem, 16vw);
 
 header {
+  z-index: 1;
+  position: relative;
   height: $header-height;
 
   $button-side: min(1rem, 2vw);
