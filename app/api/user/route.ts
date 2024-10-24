@@ -6,11 +6,12 @@ import { hash, compare } from "bcrypt";
 // authenticated user session check
 async function UserSession() {
   const session = await auth();
+  const sessionUser = session?.user;
 
-  const id = session?.user?.id;
-  const user = await db.user.findUnique({ where: { id } });
+  const id = sessionUser?.id;
+  const userData = await db.user.findUnique({ where: { id } });
 
-  if (!(session && user)) {
+  if (!(session && userData)) {
     return NextResponse.json(
       { message: "Nieuprawniony dostęp" },
       { status: 401 }

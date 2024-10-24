@@ -23,7 +23,7 @@ export default function LoginButtonComponent({
   if (!user) {
     return (
       <Link className="loginButton" href="/login">
-        Zaloguj się
+        <p>Zaloguj się</p>
       </Link>
     );
   }

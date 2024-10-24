@@ -1,0 +1,41 @@
+.savedGamePrompt {
+  margin: max(-2rem, -2%) 0 min(2rem, 2%);
+  width: 100%;
+}
+
+.promptContainer {
+  padding: 1rem calc(min(3rem, 3%));
+  width: inherit;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--primary);
+  border-radius: 6px;
+
+  div {
+    display: flex;
+    gap: 12px;
+    opacity: 65%;
+    transition: 200ms opacity ease-in-out;
+    font-size: 90%;
+
+    button {
+      padding: 0;
+      background: none;
+      transform: none;
+
+      img {
+        position: relative;
+        top: -1px;
+      }
+    }
+
+    p {
+      font-size: 90%;
+    }
+  }
+
+  &:hover div {
+    opacity: 100%;
+  }
+}

@@ -4,10 +4,9 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, Fragment } from "react";
-import { useSession } from "next-auth/react";
 
 import PageLayout from "@/components/wrappers/pageLayout";
-import SaveForm from "@/components/saveForm";
+import SavedGame from "@/components/savedGame";
 import styles from "./styles.module.scss";
 
 export interface Data {
@@ -16,15 +15,14 @@ export interface Data {
   answers: Array<{ value: string; checked: boolean }>;
 }
 
+const newStage: Data[] = new Array(2).fill({
+  category: "",
+  question: "",
+  answers: new Array(4).fill({ value: "", checked: false }),
+});
+
 export default function PnmPage() {
   const router = useRouter();
-  const { data: session } = useSession();
-
-  const newStage: Data[] = new Array(2).fill({
-    category: "",
-    question: "",
-    answers: new Array(4).fill({ value: "", checked: false }),
-  });
 
   const [data, setData] = useState([newStage]);
   const [loading, setLoading] = useState(true);
@@ -320,6 +318,8 @@ export default function PnmPage() {
   // MAIN RETURN
   return (
     <PageLayout>
+      {/* <SavedGame type={usePathname().slice(1)} data={JSON.stringify(data)} /> */}
+
       <div className={styles.gameLogo}>
         <Image
           alt="Postaw na milion"
@@ -389,14 +389,6 @@ export default function PnmPage() {
             <p>Kolejny etap</p>
           </button>
         </div>
-      )}
-
-      {session && (
-        <SaveForm
-          userId={session.user?.id}
-          type={usePathname().slice(1)}
-          data={JSON.stringify(data)}
-        />
       )}
 
       <div className={styles.credits}>

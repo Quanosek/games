@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 
+// get game from database
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const userId = searchParams.get("userId")!;
-  const type = searchParams.get("type")!;
+  const id = searchParams.get("id")!;
 
   try {
-    const result = await db.game.findFirst({
-      where: { userId, type },
-    });
+    const result = await db.game.findFirst({ where: { id } });
 
     return NextResponse.json(
       { message: "Pomyślnie wczytano grę z twojego konta", result },
@@ -23,13 +21,12 @@ export async function GET(req: Request) {
   }
 }
 
+// create/update game in database
 export async function POST(req: Request) {
-  const { userId, type, data } = await req.json();
+  const request = await req.json();
 
   try {
-    const result = await db.game.create({
-      data: { userId, type, data },
-    });
+    const result = await db.game.create({ data: request });
 
     return NextResponse.json(
       { message: "Pomyślnie zapisano nową grę", result },

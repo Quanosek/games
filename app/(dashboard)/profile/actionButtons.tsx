@@ -13,13 +13,13 @@ export default function ActionButtons({ user }: { user: User | undefined }) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
 
-  const deleteAccount = async () => {
+  const deleteAccount = () => {
     try {
       setSubmitting(true);
 
       if (!confirm("Czy na pewno chcesz usunąć konto?")) return;
 
-      await axios
+      axios
         .delete("/api/user", { data: { id: user?.id } })
         .then(async () => {
           toast.success("Konto zostało usunięte");

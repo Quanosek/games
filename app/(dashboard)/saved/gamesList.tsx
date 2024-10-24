@@ -2,30 +2,30 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { User, Game } from "next-auth";
 import axios from "axios";
-import { Game } from "next-auth";
 import toast from "react-hot-toast";
 
 import styles from "@/styles/dashboard.module.scss";
 
-export default function SavedGamesList({ user }: { user: any }) {
+export default function SavedGamesList({ user }: { user: User | undefined }) {
   const router = useRouter();
 
   const [games, setGames] = useState<Game[]>([]);
 
   useEffect(() => {
     axios
-      .get(`/api/game/saved`, { params: { userId: user.id } })
-      .then((response) => {
-        setGames(response.data.result);
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-      });
+      .get("/api/game/saved", { params: { userId: user?.id } })
+      .then((response) => setGames(response.data.result))
+      .catch((error) => toast.error(error.response.data.message));
   }, []);
 
   return (
     <div className={styles.gamesList}>
+      {!games.length && (
+        <h2 className={styles.emptyList}>Brak zapisanych gier</h2>
+      )}
+
       {games.map((game, i) => (
         <button
           key={i}

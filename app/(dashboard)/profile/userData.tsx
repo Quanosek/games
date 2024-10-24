@@ -28,7 +28,7 @@ export default function UserData({ user }: { user: User | undefined }) {
 
   const [submitting, setSubmitting] = useState(false);
 
-  const formSubmit = async (values: userDataInput) => {
+  const formSubmit = (values: userDataInput) => {
     try {
       setSubmitting(true);
 
@@ -36,7 +36,7 @@ export default function UserData({ user }: { user: User | undefined }) {
       if (!params.password) delete params.password;
       const filteredData = { id: user?.id, ...params };
 
-      await axios
+      axios
         .put("/api/user", filteredData)
         .then(async () => {
           toast.success("Dane zostały zaktualizowane, zaloguj się ponownie");

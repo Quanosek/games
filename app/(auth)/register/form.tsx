@@ -28,12 +28,13 @@ export default function RegisterForm() {
 
   const [submitting, setSubmitting] = useState(false);
 
-  const formSubmit = async (values: RegisterUserInput) => {
+  const formSubmit = (values: RegisterUserInput) => {
     try {
       setSubmitting(true);
 
       const { passwordConfirm, ...params } = values;
-      await axios
+
+      axios
         .post("/api/user", params)
         .then(async () => {
           toast.success("Pomyślnie utworzono nowe konto");

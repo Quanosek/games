@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { auth } from "@/lib/auth";
 import ActionButtons from "./actionButtons";
+import SavedButton from "./savedButton";
 import UserData from "./userData";
 
 import styles from "@/styles/dashboard.module.scss";
@@ -36,9 +37,7 @@ export default async function ProfilePage() {
               )}
             </div>
 
-            <Link className={styles.savedButton} href={"/saved"}>
-              <p>Zapisane gry [0]</p>
-            </Link>
+            <SavedButton user={user} />
           </div>
         </div>
 

@@ -4,11 +4,10 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
 import PageLayout from "@/components/wrappers/pageLayout";
-import SaveForm from "@/components/saveForm";
+import SavedGame from "@/components/savedGame";
 import styles from "./styles.module.scss";
 
 export interface Data {
@@ -18,16 +17,15 @@ export interface Data {
   multiply: number | undefined;
 }
 
+const emptyData: Data = {
+  checked: false,
+  question: "",
+  answers: new Array(6).fill({ value: "", points: 0 }),
+  multiply: undefined,
+};
+
 export default function FamiliadaPage() {
   const router = useRouter();
-  const { data: session } = useSession();
-
-  const emptyData: Data = {
-    checked: false,
-    question: "",
-    answers: new Array(6).fill({ value: "", points: 0 }),
-    multiply: undefined,
-  };
 
   const [data, setData] = useState<Data[]>([emptyData]);
   const [loading, setLoading] = useState(true);
@@ -367,6 +365,8 @@ export default function FamiliadaPage() {
   // MAIN RETURN
   return (
     <PageLayout>
+      {/* <SavedGame type={usePathname().slice(1)} data={JSON.stringify(data)} /> */}
+
       <div className={styles.gameLogo}>
         <Image
           alt="Familiada"
@@ -436,14 +436,6 @@ export default function FamiliadaPage() {
             <p>Nowe pytanie</p>
           </button>
         </div>
-      )}
-
-      {session && (
-        <SaveForm
-          userId={session.user?.id}
-          type={usePathname().slice(1)}
-          data={JSON.stringify(data)}
-        />
       )}
 
       <div className={styles.credits}>

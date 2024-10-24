@@ -6,11 +6,13 @@ declare module "next-auth" {
   }
 
   interface Game {
-    id: int;
+    id: string;
     userId: string;
     type: string;
+    title: string;
     data: string;
     createdAt: EpochTimeStamp;
+    updatedAt: EpochTimeStamp;
   }
 }
 
