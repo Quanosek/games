@@ -15,14 +15,14 @@ export interface Data {
   answers: Array<{ value: string; checked: boolean }>;
 }
 
-const newStage: Data[] = new Array(2).fill({
-  category: "",
-  question: "",
-  answers: new Array(4).fill({ value: "", checked: false }),
-});
-
 export default function PnmPage() {
   const router = useRouter();
+
+  const newStage: Data[] = new Array(2).fill({
+    category: "",
+    question: "",
+    answers: new Array(4).fill({ value: "", checked: false }),
+  });
 
   const [data, setData] = useState([newStage]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,7 @@ export default function PnmPage() {
   useEffect(() => {
     try {
       const storedData = localStorage.getItem("pnm");
-      if (storedData) setData(JSON.parse(storedData));
+      if (storedData) setData(JSON.parse(storedData).data);
       setLoading(false);
     } catch (error) {
       localStorage.removeItem("pnm");
@@ -42,7 +42,11 @@ export default function PnmPage() {
   // save data on change
   useEffect(() => {
     if (loading) return;
-    localStorage.setItem("pnm", JSON.stringify(data));
+
+    const localData = JSON.parse(localStorage.getItem("pnm") || "{}");
+    const { data: _, ...params } = localData;
+
+    localStorage.setItem("pnm", JSON.stringify({ data, ...params }));
   }, [loading, data]);
 
   // check if board is empty
@@ -318,7 +322,7 @@ export default function PnmPage() {
   // MAIN RETURN
   return (
     <PageLayout>
-      {/* <SavedGame type={usePathname().slice(1)} data={JSON.stringify(data)} /> */}
+      <SavedGame type={usePathname().slice(1)} data={JSON.stringify(data)} />
 
       <div className={styles.gameLogo}>
         <Image

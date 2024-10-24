@@ -24,7 +24,7 @@ export default function QuizyPage() {
   useEffect(() => {
     try {
       const storedData = localStorage.getItem("quizy");
-      if (storedData) setData(JSON.parse(storedData));
+      if (storedData) setData(JSON.parse(storedData).data);
       setLoading(false);
     } catch (error) {
       localStorage.removeItem("quizy");
@@ -35,7 +35,11 @@ export default function QuizyPage() {
   // save data on change
   useEffect(() => {
     if (loading) return;
-    localStorage.setItem("quizy", JSON.stringify(data));
+
+    const localData = JSON.parse(localStorage.getItem("quizy") || "{}");
+    const { data: _, ...params } = localData;
+
+    localStorage.setItem("quizy", JSON.stringify({ data, ...params }));
   }, [loading, data]);
 
   // handle add buttons list show
@@ -308,7 +312,7 @@ export default function QuizyPage() {
 
   return (
     <PageLayout>
-      {/* <SavedGame type={usePathname().slice(1)} data={JSON.stringify(data)} /> */}
+      <SavedGame type={usePathname().slice(1)} data={JSON.stringify(data)} />
 
       <h1 className={styles.gameTitle}>
         Stwórz własny <span>Quiz</span>

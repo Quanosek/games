@@ -17,15 +17,15 @@ export interface Data {
   multiply: number | undefined;
 }
 
-const emptyData: Data = {
-  checked: false,
-  question: "",
-  answers: new Array(6).fill({ value: "", points: 0 }),
-  multiply: undefined,
-};
-
 export default function FamiliadaPage() {
   const router = useRouter();
+
+  const emptyData: Data = {
+    checked: false,
+    question: "",
+    answers: new Array(6).fill({ value: "", points: 0 }),
+    multiply: undefined,
+  };
 
   const [data, setData] = useState<Data[]>([emptyData]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ export default function FamiliadaPage() {
   useEffect(() => {
     try {
       const storedData = localStorage.getItem("familiada");
-      if (storedData) setData(JSON.parse(storedData));
+      if (storedData) setData(JSON.parse(storedData).data);
       setLoading(false);
     } catch (error) {
       localStorage.removeItem("familiada");
@@ -45,7 +45,11 @@ export default function FamiliadaPage() {
   // save data on change
   useEffect(() => {
     if (loading) return;
-    localStorage.setItem("familiada", JSON.stringify(data));
+
+    const localData = JSON.parse(localStorage.getItem("familiada") || "{}");
+    const { data: _, ...params } = localData;
+
+    localStorage.setItem("familiada", JSON.stringify({ data, ...params }));
   }, [loading, data]);
 
   // check if board is empty
@@ -365,7 +369,7 @@ export default function FamiliadaPage() {
   // MAIN RETURN
   return (
     <PageLayout>
-      {/* <SavedGame type={usePathname().slice(1)} data={JSON.stringify(data)} /> */}
+      <SavedGame type={usePathname().slice(1)} data={JSON.stringify(data)} />
 
       <div className={styles.gameLogo}>
         <Image

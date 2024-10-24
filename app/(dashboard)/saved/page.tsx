@@ -8,10 +8,9 @@ export default async function SavedPage() {
   const user = session?.user;
 
   return (
-    <div className={styles.savedGames}>
+    <>
       <h1>Zapisane gry</h1>
-
       <GamesList user={user} />
-    </div>
+    </>
   );
 }

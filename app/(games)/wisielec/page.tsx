@@ -15,15 +15,15 @@ export interface Data {
   phrase: string;
 }
 
-const emptyData: Data = {
-  attempts: 10,
-  time: "2m",
-  category: "",
-  phrase: "",
-};
-
 export default function WisielecPage() {
   const router = useRouter();
+
+  const emptyData: Data = {
+    attempts: 10,
+    time: "2m",
+    category: "",
+    phrase: "",
+  };
 
   const [data, setData] = useState([emptyData]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +32,7 @@ export default function WisielecPage() {
   useEffect(() => {
     try {
       const storedData = localStorage.getItem("wisielec");
-      if (storedData) setData(JSON.parse(storedData));
+      if (storedData) setData(JSON.parse(storedData).data);
       setLoading(false);
     } catch (error) {
       localStorage.removeItem("wisielec");
@@ -42,7 +42,12 @@ export default function WisielecPage() {
 
   // save data on change
   useEffect(() => {
-    if (!loading) localStorage.setItem("wisielec", JSON.stringify(data));
+    if (loading) return;
+
+    const localData = JSON.parse(localStorage.getItem("wisielec") || "{}");
+    const { data: _, ...params } = localData;
+
+    localStorage.setItem("wisielec", JSON.stringify({ data, ...params }));
   }, [loading, data]);
 
   // check if board is empty
@@ -348,7 +353,7 @@ export default function WisielecPage() {
 
   return (
     <PageLayout>
-      {/* <SavedGame type={usePathname().slice(1)} data={JSON.stringify(data)} /> */}
+      <SavedGame type={usePathname().slice(1)} data={JSON.stringify(data)} />
 
       <h1 className={styles.gameTitle}>
         Gra w <span>wisielca</span>
