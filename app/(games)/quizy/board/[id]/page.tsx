@@ -19,7 +19,7 @@ export default function QuizyIdBoard({ params }: { params: { id: number } }) {
   // load board data
   useEffect(() => {
     const storedData = localStorage.getItem("quizy") || "[]";
-    const data = JSON.parse(storedData)[id - 1];
+    const data = JSON.parse(storedData).data[id - 1];
 
     if (data) {
       // filter empty answers

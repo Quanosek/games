@@ -29,20 +29,26 @@ export default function PnmPage() {
 
   // load game data
   useEffect(() => {
-    const localData = localStorage.getItem("pnm");
+    const type = "pnm";
 
-    if (localData) {
-      const parsed = JSON.parse(localData);
+    try {
+      const localData = localStorage.getItem(`${type}`);
 
-      if (parsed.data) {
-        setData(parsed.data);
-      } else {
-        // previous format compatibility
-        localStorage.setItem("pnm", JSON.stringify({ data: parsed }));
+      if (localData) {
+        const parsed = JSON.parse(localData);
+
+        if (parsed.data) {
+          setData(parsed.data);
+        } else {
+          localStorage.setItem(`${type}`, JSON.stringify({ data: parsed }));
+        }
       }
+    } catch (error) {
+      localStorage.removeItem(`${type}`);
+      window.location.reload();
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   }, [router]);
 
   // save data on change

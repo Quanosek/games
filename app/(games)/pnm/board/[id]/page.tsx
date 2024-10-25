@@ -24,7 +24,7 @@ export default function PnmIdBoard({ params }: { params: { id: number } }) {
   // get data on load
   useEffect(() => {
     const storedData = localStorage.getItem("pnm") || "[]";
-    const data = JSON.parse(storedData)[id - 1];
+    const data = JSON.parse(storedData).data[id - 1];
 
     if (data) setData(data);
 

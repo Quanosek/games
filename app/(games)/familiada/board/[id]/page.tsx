@@ -31,7 +31,7 @@ export default function FamiliadaIdBoard({
   // load board data
   useEffect(() => {
     const storedData = localStorage.getItem("familiada") || "[]";
-    let data = JSON.parse(storedData)[id - 1] as Data;
+    let data = JSON.parse(storedData).data[id - 1] as Data;
 
     if (data) {
       // filter empty answers
