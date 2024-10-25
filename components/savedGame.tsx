@@ -42,7 +42,7 @@ export default function SavedGameComponent({ type, data }: Params) {
       })
       .catch((error) => toast.error(error.response.data.message))
       .finally(() => setLoading(false));
-  }, [type]);
+  }, [type, user]);
 
   // check if game data has been modified
   useEffect(() => {
