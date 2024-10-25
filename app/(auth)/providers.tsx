@@ -27,7 +27,7 @@ export default function AuthProviders({
         />
       </button>
 
-      <button
+      {/* <button
         title="Facebook"
         onClick={async () => await signIn("facebook", authOptions)}
       >
@@ -38,7 +38,7 @@ export default function AuthProviders({
           width={34}
           height={34}
         />
-      </button>
+      </button> */}
 
       <button
         title="Github"
