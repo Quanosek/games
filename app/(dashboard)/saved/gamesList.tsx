@@ -28,7 +28,6 @@ export default function SavedGamesList({ user }: { user: User | undefined }) {
   const loadGame = (game: Game) => {
     const gameData = {
       id: game.id,
-      title: game.title,
       data: JSON.parse(game.data),
     };
 
@@ -43,10 +42,14 @@ export default function SavedGamesList({ user }: { user: User | undefined }) {
       .delete("/api/game", { params: { id: game.id } })
       .then(() => {
         setGames(games.filter((g) => g.id !== game.id));
-        localStorage.removeItem(game.type);
         toast.success("Gra została usunięta");
       })
-      .catch((error) => toast.error(error.response.data.message));
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      })
+      .finally(() => {
+        localStorage.removeItem(game.type);
+      });
   };
 
   if (loading) {
