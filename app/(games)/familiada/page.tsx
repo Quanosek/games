@@ -32,14 +32,20 @@ export default function FamiliadaPage() {
 
   // load game data
   useEffect(() => {
-    try {
-      const storedData = localStorage.getItem("familiada");
-      if (storedData) setData(JSON.parse(storedData).data);
-      setLoading(false);
-    } catch (error) {
-      localStorage.removeItem("familiada");
-      window.location.reload();
+    const localData = localStorage.getItem("familiada");
+
+    if (localData) {
+      const parsed = JSON.parse(localData);
+
+      if (parsed.data) {
+        setData(parsed.data);
+      } else {
+        // previous format compatibility
+        localStorage.setItem("familiada", JSON.stringify({ data: parsed }));
+      }
     }
+
+    setLoading(false);
   }, [router]);
 
   // save data on change

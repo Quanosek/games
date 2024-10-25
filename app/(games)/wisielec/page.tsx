@@ -30,14 +30,20 @@ export default function WisielecPage() {
 
   // load game data
   useEffect(() => {
-    try {
-      const storedData = localStorage.getItem("wisielec");
-      if (storedData) setData(JSON.parse(storedData).data);
-      setLoading(false);
-    } catch (error) {
-      localStorage.removeItem("wisielec");
-      window.location.reload();
+    const localData = localStorage.getItem("wisielec");
+
+    if (localData) {
+      const parsed = JSON.parse(localData);
+
+      if (parsed.data) {
+        setData(parsed.data);
+      } else {
+        // previous format compatibility
+        localStorage.setItem("wisielec", JSON.stringify({ data: parsed }));
+      }
     }
+
+    setLoading(false);
   }, [router]);
 
   // save data on change

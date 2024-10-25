@@ -22,14 +22,20 @@ export default function QuizyPage() {
 
   // load game data
   useEffect(() => {
-    try {
-      const storedData = localStorage.getItem("quizy");
-      if (storedData) setData(JSON.parse(storedData).data);
-      setLoading(false);
-    } catch (error) {
-      localStorage.removeItem("quizy");
-      window.location.reload();
+    const localData = localStorage.getItem("quizy");
+
+    if (localData) {
+      const parsed = JSON.parse(localData);
+
+      if (parsed.data) {
+        setData(parsed.data);
+      } else {
+        // previous format compatibility
+        localStorage.setItem("quizy", JSON.stringify({ data: parsed }));
+      }
     }
+
+    setLoading(false);
   }, [router]);
 
   // save data on change
