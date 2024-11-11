@@ -5,10 +5,11 @@ const nextConfig = {
   images: {
     minimumCacheTTL: 60,
     remotePatterns: [
-      { hostname: "lh3.googleusercontent.com" },
-      { hostname: "platform-lookaside.fbsbx.com" },
-      { hostname: "avatars.githubusercontent.com" },
-      { hostname: "cdn.discordapp.com" },
+      // Allow images for profile avatars
+      { hostname: "lh3.googleusercontent.com" }, // Google
+      { hostname: "platform-lookaside.fbsbx.com" }, // Facebook
+      { hostname: "avatars.githubusercontent.com" }, // Github
+      { hostname: "cdn.discordapp.com" }, // Discord
     ],
   },
 };

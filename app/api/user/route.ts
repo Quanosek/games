@@ -19,6 +19,29 @@ async function UserSession() {
   }
 }
 
+// get additional user data
+export async function GET(req: Request) {
+  UserSession();
+
+  const url = new URL(req.url);
+  const id = url.searchParams.get("id");
+
+  try {
+    const user = await db.user.findUnique({ where: { id } });
+    const providers = await db.account.findMany({ where: { userId: id } });
+
+    return NextResponse.json(
+      { message: "Informacje o koncie", user: { ...user, providers } },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Wystąpił nieoczekiwany błąd serwera", error },
+      { status: 500 }
+    );
+  }
+}
+
 // create new user
 export async function POST(req: Request) {
   UserSession();
@@ -40,13 +63,14 @@ export async function POST(req: Request) {
 
     // secure password
     const hashPassword = await hash(password, 12);
-    const { password: _, ...result } = await db.user.create({
+
+    await db.user.create({
       data: { email, password: hashPassword },
     });
 
     // return response
     return NextResponse.json(
-      { message: "Pomyślnie utworzono nowe konto", result },
+      { message: "Pomyślnie utworzono nowe konto" },
       { status: 201 }
     );
   } catch (error) {
@@ -114,14 +138,14 @@ export async function PUT(req: Request) {
       newData = { ...data, password: hashPassword };
     }
 
-    const { password: _, ...result } = await db.user.update({
+    await db.user.update({
       where: { id: data.id },
       data: newData,
     });
 
     // return response
     return NextResponse.json(
-      { message: "Zaktualizowano dane użytkownika", result },
+      { message: "Zaktualizowano dane użytkownika" },
       { status: 200 }
     );
   } catch (error) {
@@ -156,7 +180,7 @@ export async function DELETE(req: Request) {
 
     // return response
     return NextResponse.json(
-      { message: "Konto użytkownika zostało usunięte", existingUser },
+      { message: "Konto użytkownika zostało usunięte", user: existingUser },
       { status: 200 }
     );
   } catch (error) {

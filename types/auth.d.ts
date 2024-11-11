@@ -1,8 +1,10 @@
+import { Role } from "@/lib/enums";
+
 declare module "next-auth" {
   interface User {
     username: string?;
     password: string?;
-    role: string["user" | "admin"];
+    role: Role;
   }
 
   interface Game {

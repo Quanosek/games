@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { compare } from "bcrypt";
 import db from "@/lib/db";
+import { Role } from "@/lib/enums";
 
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
@@ -34,7 +35,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!passwordMatch) return null;
 
-        return existingUser;
+        return {
+          ...existingUser,
+          role: existingUser.role as Role,
+        };
       },
     }),
 
@@ -53,7 +57,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
 
   callbacks: {
-    jwt({ token, user }) {
+    jwt({ session, token, trigger, user }) {
+      if (trigger === "update") {
+        if (session.username) {
+          token.username = session.username;
+        }
+        if (session.password !== undefined) {
+          token.password = session.password;
+        }
+      }
+
       if (user) {
         const { username, password, id, role } = user;
         return {

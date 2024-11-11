@@ -15,7 +15,7 @@ model User {
   image         String?
   password      String?
   username      String?   @unique
-  role          String    @default("user")
+  role          Role      @default(user)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -23,6 +23,11 @@ model User {
   sessions      Session[]
   authenticator Authenticator[]
   games         Game[]
+}
+
+enum Role {
+  user
+  admin
 }
 
 model Account {

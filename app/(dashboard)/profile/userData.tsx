@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { User } from "next-auth";
-import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -15,6 +15,7 @@ import PasswordInput from "@/components/passwordInput";
 import styles from "@/styles/dashboard.module.scss";
 
 export default function UserData({ user }: { user: User | undefined }) {
+  const { update } = useSession();
   const router = useRouter();
 
   const {
@@ -32,17 +33,19 @@ export default function UserData({ user }: { user: User | undefined }) {
     try {
       setSubmitting(true);
 
-      const { passwordConfirm, ...params } = values;
+      const { passwordConfirm: _, ...params } = values;
       if (!params.password) delete params.password;
-      const filteredData = { id: user?.id, ...params };
 
       axios
-        .put("/api/user", filteredData)
+        .put("/api/user", { id: user?.id, ...params })
         .then(async () => {
-          toast.success("Dane zostały zaktualizowane, zaloguj się ponownie");
-          await signOut({ redirect: false });
-          router.push("/login");
-          router.refresh();
+          toast.success("Dane konta zostały zaktualizowane");
+
+          await update(params).then(() => {
+            reset({ password: "", passwordConfirm: "" });
+            router.push("/profile");
+            router.refresh();
+          });
         })
         .catch((error) => {
           reset({ passwordConfirm: "" });
@@ -97,7 +100,7 @@ export default function UserData({ user }: { user: User | undefined }) {
       </label>
 
       <label>
-        <p>{user.password ? "Nowe hasło" : "Hasło"}</p>
+        <p>{user.password ? "Nowe hasło" : "Utwórz hasło"}</p>
         <PasswordInput
           function={register}
           name="password"

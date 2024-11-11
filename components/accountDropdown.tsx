@@ -5,12 +5,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { User } from "next-auth";
 import { signOut } from "next-auth/react";
+import { Role } from "@/lib/enums";
 
 export default function AccountDropdownComponent({
   user,
 }: {
   user: User | undefined;
 }) {
+  const admin = user?.role === Role.ADMIN;
   const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export default function AccountDropdownComponent({
 
         <Image
           style={{
-            borderColor: user.role === "admin" ? "var(--gold)" : "var(--white)",
+            borderColor: admin ? "var(--gold)" : "var(--white)",
           }}
           alt=""
           src={user.image ?? "/icons/profile.svg"}
@@ -46,14 +48,14 @@ export default function AccountDropdownComponent({
 
       <div className="dropdown" style={{ display: showDropdown ? "" : "none" }}>
         <Link href="/profile">
-          <p>Przejdź do profilu</p>
+          <p>Twój profil</p>
         </Link>
 
         <Link href="/saved">
           <p>Zapisane gry</p>
         </Link>
 
-        {user.role === "admin" && (
+        {admin && (
           <Link href="/admin" style={{ backgroundColor: "var(--gold)" }}>
             <p>Panel administratora</p>
           </Link>
