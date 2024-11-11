@@ -13,7 +13,7 @@ export default function SavedButton({ user }: { user: User | undefined }) {
 
   useEffect(() => {
     if (!user) return;
-    
+
     axios
       .get("/api/game/saved", { params: { userId: user.id } })
       .then((res) => setGamesList(res.data.result))
