@@ -37,8 +37,8 @@ export default function SavedGameComponent({ type, data }: Params) {
     axios
       .get("/api/game", { params: { id: localGame.id } })
       .then((res) => {
-        setGameData(res.data.result);
-        setTitle(res.data.result.title);
+        setGameData(res.data.game);
+        setTitle(res.data.game.title);
       })
       .catch((error) => toast.error(error.response.data.message))
       .finally(() => setLoading(false));

@@ -15,9 +15,9 @@ export default function AccountProviders({ user }: { user: User | undefined }) {
     if (!user) return;
 
     axios
-      .get("/api/user", { params: { id: user?.id } })
+      .get("/api/user/account", { params: { id: user.id } })
       .then((response) => {
-        const providers = response.data.user.providers.map(
+        const providers = response.data.providers.map(
           ({ provider }: { provider: string }) => {
             return provider;
           }
@@ -34,10 +34,32 @@ export default function AccountProviders({ user }: { user: User | undefined }) {
       <button
         className={`${providers.includes(provider) || styles.notConnected}`}
         onClick={async () => {
+          if (!user) return;
+
           if (providers.includes(provider)) {
-            // TODO: Disconnect provider
+            // remove provider
+            await axios
+              .delete("/api/user/account", {
+                params: { id: user.id },
+                data: { name },
+              })
+              .then((response) => {
+                toast.success(response.data.message);
+
+                const providers = response.data.providers.map(
+                  ({ provider }: { provider: string }) => {
+                    return provider;
+                  }
+                );
+                setProviders(providers);
+              })
+              .catch((error) => toast.error(error.response.data.message));
           } else {
-            await signIn(provider);
+            // add provider
+            await signIn(provider).then(() => {
+              toast.success("Połączono konto");
+              setProviders([...providers, provider]);
+            });
           }
         }}
       >
@@ -54,13 +76,13 @@ export default function AccountProviders({ user }: { user: User | undefined }) {
         </div>
 
         <div>
-          <p>Połączono</p>
+          <p>{providers.includes(provider) ? "Połączono" : "Nie połączono"}</p>
           <Image
             className="icon"
             alt=""
             src="/icons/link.svg"
-            width={35}
-            height={35}
+            width={32}
+            height={32}
             draggable={false}
           />
         </div>

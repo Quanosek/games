@@ -20,7 +20,7 @@ export default function SavedGamesList({ user }: { user: User | undefined }) {
 
     axios
       .get("/api/game/saved", { params: { userId: user.id } })
-      .then((response) => setGames(response.data.result))
+      .then((response) => setGames(response.data.games))
       .catch((error) => toast.error(error.response.data.message))
       .finally(() => setLoading(false));
   }, [user]);

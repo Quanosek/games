@@ -17,28 +17,26 @@ export default function SavedButton({ user }: { user: User | undefined }) {
 
     axios
       .get("/api/game/saved", { params: { userId: user.id } })
-      .then((res) => setGamesList(res.data.result))
+      .then((res) => setGamesList(res.data.games))
       .catch((error) => toast.error(error.response.data.message))
       .finally(() => setLoading(false));
   }, [user]);
 
-  if (!loading) {
-    if (gamesList.length) {
-      return (
-        <Link className={styles.savedButton} href={"/saved"}>
-          <p>
-            Zapisane gry [{gamesList.length > 100 ? "99+" : gamesList.length}]
-          </p>
-        </Link>
-      );
-    } else {
-      return (
-        <Link className={styles.savedButton} href={"/"}>
-          <p>Stwórz nową grę!</p>
-        </Link>
-      );
-    }
-  }
+  if (loading) return null;
 
-  return null;
+  if (gamesList.length) {
+    return (
+      <Link className={styles.savedButton} href={"/saved"}>
+        <p>
+          Zapisane gry [{gamesList.length > 100 ? "99+" : gamesList.length}]
+        </p>
+      </Link>
+    );
+  } else {
+    return (
+      <Link className={styles.savedButton} href={"/"}>
+        <p>Stwórz nową grę!</p>
+      </Link>
+    );
+  }
 }

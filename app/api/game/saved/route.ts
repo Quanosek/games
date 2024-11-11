@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 
-// get all saved games by user id
+// get all saved games list
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId")!;
 
   try {
-    const result = await db.game.findMany({ where: { userId } });
+    const games = await db.game.findMany({ where: { userId } });
 
     return NextResponse.json(
-      { message: "Pomyślnie wczytano listę zapisanych gier", result },
+      { message: "Lista zapisanych gier", games },
       { status: 200 }
     );
   } catch (error) {

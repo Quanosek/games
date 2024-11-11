@@ -32,13 +32,13 @@ export default function RegisterForm() {
     try {
       setSubmitting(true);
 
-      const { passwordConfirm, ...params } = values;
+      const { passwordConfirm, ...data } = values;
 
       axios
-        .post("/api/user", params)
-        .then(async () => {
-          toast.success("Pomyślnie utworzono nowe konto");
-          await signIn("credentials", { ...params, redirect: false });
+        .post("/api/user", data)
+        .then(async (response) => {
+          toast.success(response.data.message);
+          await signIn("credentials", { ...data, redirect: false });
           router.push("/profile");
           router.refresh();
         })

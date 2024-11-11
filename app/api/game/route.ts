@@ -1,19 +1,32 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 
-// get game info by id
+// get saved game params
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id")!;
+  const id = searchParams.get("id");
 
   try {
-    const result = await db.game.findFirst({ where: { id } });
+    // id required
+    if (!id) throw new Error("Nie podano id gry");
 
+    // game not found
+    const existingGame = await db.game.findUnique({ where: { id } });
+
+    if (!existingGame) {
+      return NextResponse.json(
+        { message: "Nie znaleziono gry" },
+        { status: 404 }
+      );
+    }
+
+    // return response
     return NextResponse.json(
-      { message: "Pomyślnie wczytano grę z twojego konta", result },
+      { message: "Pomyślnie wczytano grę z twojego konta", game: existingGame },
       { status: 200 }
     );
   } catch (error) {
+    // error response
     return NextResponse.json(
       { message: "Wystąpił nieoczekiwany błąd serwera", error },
       { status: 500 }
@@ -21,18 +34,21 @@ export async function GET(req: Request) {
   }
 }
 
-// create new game
+// save new game
 export async function POST(req: Request) {
-  const request = await req.json();
+  const data = await req.json();
 
   try {
-    const result = await db.game.create({ data: request });
+    // save new game
+    const game = await db.game.create({ data });
 
+    // return response
     return NextResponse.json(
-      { message: "Pomyślnie zapisano nową grę", result },
+      { message: "Pomyślnie zapisano nową grę", game },
       { status: 201 }
     );
   } catch (error) {
+    // error response
     return NextResponse.json(
       { message: "Wystąpił nieoczekiwany błąd serwera", error },
       { status: 500 }
@@ -40,20 +56,37 @@ export async function POST(req: Request) {
   }
 }
 
-// update game data by id
+// update saved game data
 export async function PUT(req: Request) {
-  const request = await req.json();
+  const data = await req.json();
+
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id")!;
+  const id = searchParams.get("id");
 
   try {
-    const result = await db.game.update({ where: { id }, data: request });
+    // id required
+    if (!id) throw new Error("Nie podano id gry");
 
+    // game not found
+    const existingGame = await db.game.findUnique({ where: { id } });
+
+    if (!existingGame) {
+      return NextResponse.json(
+        { message: "Nie znaleziono gry" },
+        { status: 404 }
+      );
+    }
+
+    // update saved game data
+    const game = await db.game.update({ where: { id }, data });
+
+    // return response
     return NextResponse.json(
-      { message: "Pomyślnie zaktualizowano grę", result },
+      { message: "Pomyślnie zaktualizowano grę", game },
       { status: 200 }
     );
   } catch (error) {
+    // error response
     return NextResponse.json(
       { message: "Wystąpił nieoczekiwany błąd serwera", error },
       { status: 500 }
@@ -61,19 +94,35 @@ export async function PUT(req: Request) {
   }
 }
 
-// delete game
+// delete saved game
 export async function DELETE(req: Request) {
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id")!;
+  const id = searchParams.get("id");
 
   try {
-    const result = await db.game.delete({ where: { id } });
+    // id required
+    if (!id) throw new Error("Nie podano id gry");
 
+    // game not found
+    const existingGame = await db.game.findUnique({ where: { id } });
+
+    if (!existingGame) {
+      return NextResponse.json(
+        { message: "Nie znaleziono gry" },
+        { status: 404 }
+      );
+    }
+
+    // delete saved game
+    await db.game.delete({ where: { id } });
+
+    // return response
     return NextResponse.json(
-      { message: "Pomyślnie usunięto grę", result },
+      { message: "Pomyślnie usunięto grę", game: existingGame },
       { status: 200 }
     );
   } catch (error) {
+    // error response
     return NextResponse.json(
       { message: "Wystąpił nieoczekiwany błąd serwera", error },
       { status: 500 }

@@ -20,9 +20,9 @@ export default function ActionButtons({ user }: { user: User | undefined }) {
       if (!confirm("Czy na pewno chcesz usunąć konto?")) return;
 
       axios
-        .delete("/api/user", { data: { id: user?.id } })
-        .then(async () => {
-          toast.success("Konto zostało usunięte");
+        .delete("/api/user", { params: { id: user?.id } })
+        .then(async (response) => {
+          toast.success(response.data.message);
           await signOut({ redirect: false });
           router.push("/");
           router.refresh();

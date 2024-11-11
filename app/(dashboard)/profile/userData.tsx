@@ -33,15 +33,15 @@ export default function UserData({ user }: { user: User | undefined }) {
     try {
       setSubmitting(true);
 
-      const { passwordConfirm: _, ...params } = values;
-      if (!params.password) delete params.password;
+      const { passwordConfirm: _, ...data } = values;
+      if (!data.password) delete data.password;
 
       axios
-        .put("/api/user", { id: user?.id, ...params })
-        .then(async () => {
-          toast.success("Dane konta zostały zaktualizowane");
+        .put("/api/user", data, { params: { id: user?.id } })
+        .then(async (response) => {
+          toast.success(response.data.message);
 
-          await update(params).then(() => {
+          await update(data).then(() => {
             reset({ password: "", passwordConfirm: "" });
             router.push("/profile");
             router.refresh();
