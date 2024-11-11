@@ -28,12 +28,6 @@ export default function SavedGameComponent({ type, data }: Params) {
     const localGame = JSON.parse(localStorage.getItem(`${type}`) || "{}");
     if (!localGame.id) return setLoading(false);
 
-    if (!user) {
-      const { id: _, ...params } = localGame;
-      localStorage.setItem(`${type}`, JSON.stringify(params));
-      return setLoading(false);
-    }
-
     axios
       .get("/api/game", { params: { id: localGame.id } })
       .then((res) => {
@@ -52,27 +46,34 @@ export default function SavedGameComponent({ type, data }: Params) {
 
   const saveGame = async () => {
     const request = { userId: user?.id, type, title, data };
-    let response;
 
     if (gameData?.id) {
       // update existing db record
-      response = await axios.put("/api/game", request, {
-        params: { id: gameData.id },
-      });
-      toast.success("Gra została zapisana");
+      axios
+        .put("/api/game", request, {
+          params: { id: gameData.id },
+        })
+        .then((response) => {
+          toast.success(response.data.message);
+          setGameData(response.data.game);
+        })
+        .catch((error) => toast.error(error.response.data.message));
     } else {
       // create new db record
-      response = await axios.post("/api/game", request);
-      toast.success("Zapisano nową grę na twoim koncie");
+      axios
+        .post("/api/game", request)
+        .then((response) => {
+          toast.success(response.data.message);
+          setGameData(response.data.game);
 
-      // update local storage
-      const localData = JSON.parse(localStorage.getItem(`${type}`) || "{}");
-      const { id: _, ...params } = localData;
-      const id = response.data.result.id;
-      localStorage.setItem(`${type}`, JSON.stringify({ id, ...params }));
+          // update local storage
+          const localData = JSON.parse(localStorage.getItem(`${type}`) || "{}");
+          const { id: _, ...params } = localData;
+          const id = response.data.game.id;
+          localStorage.setItem(`${type}`, JSON.stringify({ id, ...params }));
+        })
+        .catch((error) => toast.error(error.response.data.message));
     }
-
-    setGameData(response.data.result);
   };
 
   const clearGame = () => {

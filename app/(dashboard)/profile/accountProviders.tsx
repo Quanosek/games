@@ -56,10 +56,7 @@ export default function AccountProviders({ user }: { user: User | undefined }) {
               .catch((error) => toast.error(error.response.data.message));
           } else {
             // add provider
-            await signIn(provider).then(() => {
-              toast.success("Połączono konto");
-              setProviders([...providers, provider]);
-            });
+            await signIn(provider);
           }
         }}
       >
