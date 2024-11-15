@@ -1,9 +1,10 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, Fragment } from "react";
+import { GameType } from "@/lib/enums";
 
 import PageLayout from "@/components/wrappers/pageLayout";
 import SavedGame from "@/components/savedGame";
@@ -334,7 +335,7 @@ export default function PnmPage() {
   // MAIN RETURN
   return (
     <PageLayout>
-      <SavedGame type={usePathname().slice(1)} data={JSON.stringify(data)} />
+      <SavedGame type={GameType.PNM} data={JSON.stringify(data)} />
 
       <div className={styles.gameLogo}>
         <Image

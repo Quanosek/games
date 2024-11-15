@@ -141,6 +141,9 @@ export async function DELETE(req: Request) {
       );
     }
 
+    // delete all user saved games
+    await db.game.deleteMany({ where: { userId: id } });
+
     // delete user account
     await db.user.delete({ where: { id } });
 

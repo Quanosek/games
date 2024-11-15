@@ -1,8 +1,9 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { GameType } from "@/lib/enums";
 
 import PageLayout from "@/components/wrappers/pageLayout";
 import SavedGame from "@/components/savedGame";
@@ -365,7 +366,7 @@ export default function WisielecPage() {
 
   return (
     <PageLayout>
-      <SavedGame type={usePathname().slice(1)} data={JSON.stringify(data)} />
+      <SavedGame type={GameType.WISIELEC} data={JSON.stringify(data)} />
 
       <h1 className={styles.gameTitle}>
         Gra w <span>wisielca</span>

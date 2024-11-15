@@ -1,10 +1,11 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { GameType } from "@/lib/enums";
 
 import PageLayout from "@/components/wrappers/pageLayout";
 import SavedGame from "@/components/savedGame";
@@ -381,7 +382,7 @@ export default function FamiliadaPage() {
   // MAIN RETURN
   return (
     <PageLayout>
-      <SavedGame type={usePathname().slice(1)} data={JSON.stringify(data)} />
+      <SavedGame type={GameType.FAMILIADA} data={JSON.stringify(data)} />
 
       <div className={styles.gameLogo}>
         <Image

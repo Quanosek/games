@@ -46,11 +46,7 @@
       padding: 6px 18px;
       background-color: var(--gold);
       border-radius: 30px;
-      transition: filter 150ms ease-out;
-
-      &:hover {
-        filter: contrast(0.8);
-      }
+      cursor: default;
     }
 
     .savedButton {
@@ -199,8 +195,19 @@
     background-color: var(--background);
     transform: none;
 
-    h2 {
-      font-size: 125%;
+    .dataTitle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 120%;
+
+      h2 {
+        font-size: 115%;
+      }
+    }
+
+    h3 {
+      font-size: 90%;
     }
 
     hr {
@@ -210,6 +217,10 @@
       opacity: 15%;
       border: 0.5px solid var(--white);
       border-radius: 30px;
+    }
+
+    .dataParams {
+      opacity: 60%;
     }
   }
 
@@ -223,6 +234,7 @@
     border-radius: 3px;
 
     &:hover {
+      transform: none;
       opacity: 100%;
     }
   }

@@ -11,9 +11,9 @@ export async function GET(req: Request) {
     if (!id) throw new Error("Nie podano id gry");
 
     // game not found
-    const existingGame = await db.game.findUnique({ where: { id } });
+    const game = await db.game.findUnique({ where: { id } });
 
-    if (!existingGame) {
+    if (!game) {
       return NextResponse.json(
         { message: "Nie znaleziono gry" },
         { status: 404 }
@@ -22,7 +22,7 @@ export async function GET(req: Request) {
 
     // return response
     return NextResponse.json(
-      { message: "Pomyślnie wczytano grę z twojego konta", game: existingGame },
+      { message: "Pomyślnie wczytano grę z twojego konta", game },
       { status: 200 }
     );
   } catch (error) {

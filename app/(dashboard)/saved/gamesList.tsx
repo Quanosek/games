@@ -9,11 +9,15 @@ import toast from "react-hot-toast";
 
 import styles from "@/styles/dashboard.module.scss";
 
+interface Games extends Game {
+  label: string;
+}
+
 export default function SavedGamesList({ user }: { user: User | undefined }) {
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
-  const [games, setGames] = useState<Game[]>([]);
+  const [games, setGames] = useState<Games[]>([]);
 
   useEffect(() => {
     if (!user) return;
@@ -69,16 +73,32 @@ export default function SavedGamesList({ user }: { user: User | undefined }) {
       {games.map((game, i) => (
         <div key={i} className={styles.gameData}>
           <button className={styles.info} onClick={() => loadGame(game)}>
-            <h2>{game.type}</h2>
-            <p>Zapisany tytuł: {`"${game.title}"`}</p>
-            <p>
-              Data utworzenia:{" "}
-              {`${new Date(game.createdAt).toLocaleDateString()}, ${new Date(
+            <div className={styles.dataTitle}>
+              <h2>{game.label}</h2>
+              {" • "}
+              <p>{`"${game.title}"`}</p>
+            </div>
+
+            <h3>
+              {`Utworzono: ${new Date(
                 game.createdAt
-              ).toLocaleTimeString()}`}
-            </p>
+              ).toLocaleDateString()}, ${new Date(
+                game.createdAt
+              ).toLocaleTimeString()}`}{" "}
+              {game.updatedAt !== game.createdAt && (
+                <>
+                  {`(aktualizacja: ${new Date(
+                    game.updatedAt
+                  ).toLocaleDateString()}, ${new Date(
+                    game.updatedAt
+                  ).toLocaleTimeString()})`}
+                </>
+              )}
+            </h3>
+
             <hr />
-            <p>{game.data}</p>
+
+            <code className={styles.dataParams}>{game.data}</code>
           </button>
 
           <button
@@ -87,10 +107,10 @@ export default function SavedGamesList({ user }: { user: User | undefined }) {
           >
             <Image
               className="icon"
-              src="/icons/close.svg"
+              src="/icons/trashcan.svg"
               alt="usuń"
-              width={20}
-              height={20}
+              width={24}
+              height={24}
               draggable={false}
             />
           </button>

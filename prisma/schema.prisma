@@ -1,3 +1,4 @@
+// Default schema
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -7,6 +8,20 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Enums
+enum Role {
+  user
+  admin
+}
+
+enum GameType {
+  quizy
+  wisielec
+  familiada
+  pnm
+}
+
+// Models
 model User {
   id            String    @id @default(uuid())
   name          String?
@@ -23,11 +38,6 @@ model User {
   sessions      Session[]
   authenticator Authenticator[]
   games         Game[]
-}
-
-enum Role {
-  user
-  admin
 }
 
 model Account {
@@ -87,7 +97,7 @@ model Authenticator {
 model Game {
   id        String   @id @default(uuid())
   userId    String
-  type      String
+  type      GameType
   title     String
   data      String
   createdAt DateTime @default(now())
