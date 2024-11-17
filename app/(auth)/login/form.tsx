@@ -27,7 +27,7 @@ export default function LoginForm() {
 
   const [submitting, setSubmitting] = useState(false);
 
-  const formSubmit = async ({ email, password }: LoginUserInput) => {
+  async function formSubmit({ email, password }: LoginUserInput) {
     try {
       setSubmitting(true);
 
@@ -51,7 +51,7 @@ export default function LoginForm() {
     } finally {
       setSubmitting(false);
     }
-  };
+  }
 
   return (
     <div className={styles.formContainer}>
@@ -87,7 +87,7 @@ export default function LoginForm() {
         </button>
       </form>
 
-      <Providers callbackUrl="/" />
+      <Providers redirectTo="/" />
     </div>
   );
 }

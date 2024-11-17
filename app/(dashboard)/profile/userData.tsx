@@ -29,14 +29,14 @@ export default function UserData({ user }: { user: User | undefined }) {
 
   const [submitting, setSubmitting] = useState(false);
 
-  const formSubmit = (values: userDataInput) => {
+  async function formSubmit(values: userDataInput) {
     try {
       setSubmitting(true);
 
       const { passwordConfirm: _, ...data } = values;
       if (!data.password) delete data.password;
 
-      axios
+      await axios
         .put("/api/user", data, { params: { id: user?.id } })
         .then(async (response) => {
           toast.success(response.data.message);
@@ -57,7 +57,7 @@ export default function UserData({ user }: { user: User | undefined }) {
     } finally {
       setSubmitting(false);
     }
-  };
+  }
 
   if (!user) return null;
 

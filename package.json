@@ -1,5 +1,5 @@
 {
-  "version": "0.5.6",
+  "version": "0.5.7",
   "name": "games",
   "description": "Complex web application of party-games",
   "scripts": {
@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth/core": "^0.37.3",
-    "@auth/prisma-adapter": "^2.7.3",
+    "@auth/core": "^0.37.4",
+    "@auth/prisma-adapter": "^2.7.4",
     "@hookform/resolvers": "^3.9.1",
     "@prisma/client": "^5.22.0",
     "axios": "^1.7.7",
@@ -38,7 +38,7 @@
     "eslint": "~8.57.1",
     "eslint-config-next": "~14.2.18",
     "prisma": "^5.22.0",
-    "sass": "^1.80.7",
+    "sass": "^1.81.0",
     "typescript": "^5.6.3"
   }
 }

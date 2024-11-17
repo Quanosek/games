@@ -28,13 +28,13 @@ export default function RegisterForm() {
 
   const [submitting, setSubmitting] = useState(false);
 
-  const formSubmit = (values: RegisterUserInput) => {
+  async function formSubmit(values: RegisterUserInput) {
     try {
       setSubmitting(true);
 
       const { passwordConfirm, ...data } = values;
 
-      axios
+      await axios
         .post("/api/user", data)
         .then(async (response) => {
           toast.success(response.data.message);
@@ -52,7 +52,7 @@ export default function RegisterForm() {
     } finally {
       setSubmitting(false);
     }
-  };
+  }
 
   return (
     <div className={styles.formContainer}>
@@ -94,7 +94,7 @@ export default function RegisterForm() {
         </button>
       </form>
 
-      <Providers callbackUrl="/profile" />
+      <Providers redirectTo="/profile" />
     </div>
   );
 }

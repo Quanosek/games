@@ -37,6 +37,8 @@ export default function AccountProviders({ user }: { user: User | undefined }) {
           if (!user) return;
 
           if (providers.includes(provider)) {
+            if (!confirm("Czy na pewno chcesz usunąć to połączenie?")) return;
+
             // remove provider
             await axios
               .delete("/api/user/account", {
@@ -56,7 +58,7 @@ export default function AccountProviders({ user }: { user: User | undefined }) {
               .catch((error) => toast.error(error.response.data.message));
           } else {
             // add provider
-            await signIn(provider);
+            await signIn(provider, { redirect: false });
           }
         }}
       >

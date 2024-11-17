@@ -3,20 +3,16 @@ import { signIn } from "next-auth/react";
 
 import styles from "@/styles/auth.module.scss";
 
-export default function AuthProviders({
-  callbackUrl,
-}: {
-  callbackUrl: string;
-}) {
-  const authOptions = {
-    callbackUrl,
+export default function AuthProviders({ redirectTo }: { redirectTo: string }) {
+  const options = {
+    redirectTo,
   };
 
   return (
     <div className={styles.providers}>
       <button
         title="Google"
-        onClick={async () => await signIn("google", authOptions)}
+        onClick={async () => await signIn("google", options)}
       >
         <Image
           className="icon"
@@ -29,7 +25,7 @@ export default function AuthProviders({
 
       {/* <button
         title="Facebook"
-        onClick={async () => await signIn("facebook", authOptions)}
+        onClick={async () => await signIn("facebook", options)}
       >
         <Image
           className="icon"
@@ -42,7 +38,7 @@ export default function AuthProviders({
 
       <button
         title="Github"
-        onClick={async () => await signIn("github", authOptions)}
+        onClick={async () => await signIn("github", options)}
       >
         <Image
           className="icon"
@@ -55,7 +51,7 @@ export default function AuthProviders({
 
       <button
         title="Discord"
-        onClick={async () => await signIn("discord", authOptions)}
+        onClick={async () => await signIn("discord", options)}
       >
         <Image
           className="icon"
