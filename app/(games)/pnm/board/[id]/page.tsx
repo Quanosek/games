@@ -91,10 +91,19 @@ export default function PnmIdBoard({ params }: { params: { id: number } }) {
 
   // GAME BOARD LAYOUT
   const GameLayout = () => {
-    // show answers in delay and animation
+    const [showBoard, setShowBoard] = useState(false);
     const [displayCounter, setDisplayCounter] = useState(0);
 
     useEffect(() => {
+      // delay showing the board
+      setTimeout(() => setShowBoard(true), 150);
+
+      // auto reveal board content
+      const answersAvailable = selectedQuestion?.answers.filter(
+        (answer) => answer.value
+      );
+      const answersCounted = answersAvailable?.length || 0;
+
       questionAudio.current?.play();
 
       const interval = setInterval(() => {
@@ -102,23 +111,23 @@ export default function PnmIdBoard({ params }: { params: { id: number } }) {
           if (!answerAudio.current) return prev;
           const newValue = prev + 1;
 
-          if (newValue < 5) {
+          if (newValue < answersCounted + 1) {
             answerAudio.current.pause();
             answerAudio.current.currentTime = 0;
             answerAudio.current.play();
+            return newValue;
           } else {
             categoriesAudio.current?.play();
             clearInterval(interval);
+            return 5;
           }
-
-          return newValue;
         });
       }, 2_200);
 
       return () => clearInterval(interval);
     }, []);
 
-    // time counter
+    // main timer
     const [remainingTime, setRemainingTime] = useState(60_000); // 60 seconds
 
     useEffect(() => {
@@ -138,33 +147,11 @@ export default function PnmIdBoard({ params }: { params: { id: number } }) {
       return () => clearInterval(interval);
     }, [displayCounter]);
 
-    // display formatted money amount
-    const MoneyFormat = (value: number) => {
-      const money = value * 25_000;
-
-      return money.toLocaleString("pl-PL", {
-        minimumFractionDigits: 0,
-        style: "currency",
-        currency: "PLN",
-      });
-    };
-
-    // display time counter
-    const DynamicClock = () => {
-      const minutes = Math.floor((remainingTime / (1_000 * 60)) % 60);
-      const seconds = Math.floor((remainingTime / 1_000) % 60);
-      const milliseconds = (remainingTime % 1_000) / 100;
-
-      const showMinutes = minutes.toString().padStart(2, "0");
-      const showSeconds = seconds.toString().padStart(2, "0");
-      const showMilliseconds = milliseconds.toString().padStart(1, "0");
-
-      return (
-        <div style={{ color: remainingTime <= 10_000 ? "red" : "" }}>
-          <h3>{`${showMinutes}:${showSeconds}.${showMilliseconds}`}</h3>
-        </div>
-      );
-    };
+    // money packages status
+    const [packages, setPackages] = useState({
+      left: 40,
+      boxes: new Array(4).fill({ packages: 0 }),
+    });
 
     // keyboard interactions
     useEffect(() => {
@@ -222,155 +209,257 @@ export default function PnmIdBoard({ params }: { params: { id: number } }) {
             displayCounter === 7
           ) {
             setDisplayCounter(8);
-            console.log("Reveal answers");
+
+            const packagesWon = selectedQuestion?.answers
+              .map((answer, index) => {
+                return answer.checked ? packages.boxes[index].packages : 0;
+              })
+              .reduce((acc, curr) => acc + curr, 0);
+
+            if (packagesWon) {
+              console.log(`You won ${packagesWon * 25_000} PLN!`);
+            } else {
+              console.log("You lost!");
+            }
           }
         }
       };
 
       document.addEventListener("keyup", KeyupEvent);
       return () => document.removeEventListener("keyup", KeyupEvent);
-    }, [displayCounter, remainingTime]);
+    }, [displayCounter, remainingTime, packages.boxes]);
 
-    // delay show board
-    const [showBoard, setShowBoard] = useState(false);
+    // display time counter
+    const DynamicClock = () => {
+      const minutes = Math.floor((remainingTime / (1_000 * 60)) % 60);
+      const seconds = Math.floor((remainingTime / 1_000) % 60);
+      const milliseconds = (remainingTime % 1_000) / 100;
 
-    useEffect(() => {
-      setTimeout(() => setShowBoard(true), 150);
-    }, []);
+      const showMinutes = minutes.toString().padStart(2, "0");
+      const showSeconds = seconds.toString().padStart(2, "0");
+      const showMilliseconds = milliseconds.toString().padStart(1, "0");
 
-    // manage money packages
-    const [packages, setPackages] = useState({
-      left: 40,
-      boxes: new Array(4).fill({ packages: 0 }),
-    });
+      return (
+        <h3
+          style={{ color: remainingTime <= 10_000 ? "#d50000" : "" }}
+        >{`${showMinutes}:${showSeconds}.${showMilliseconds}`}</h3>
+      );
+    };
 
-    // interval on hold money packages button
-    const [intervalId, setIntervalId] = useState<NodeJS.Timeout>();
+    const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
 
     return (
       <div
-        className={styles.questionBoard}
         style={{
-          opacity: showBoard ? 1 : 0,
-          transition: "opacity 200ms ease-out",
+          opacity: showBoard ? "100%" : "0",
+          transition: "opacity 300ms ease-out",
         }}
       >
-        <div className={styles.boxes}>
-          {selectedQuestion?.answers.map((answer, index) => (
-            <div
-              key={index}
-              className={styles.box}
-              style={{
-                opacity: displayCounter >= index + 1 ? 1 : 0,
-                transition: "opacity 300ms ease-in-out",
-              }}
-            >
-              <div className={styles.screen}>
-                <div className={styles.answerHandler}>
-                  <h2>{answer.value}</h2>
+        <div>
+          {selectedQuestion?.answers
+            .filter((answer) => answer.value)
+            .map((answer, index) => (
+              <div key={index} className={styles.answer}>
+                <div className={styles.screen}>
+                  <div
+                    className={styles.text}
+                    style={{
+                      opacity: displayCounter >= index + 1 ? 1 : 0,
+                      transition: "opacity 300ms ease-in-out",
+                    }}
+                  >
+                    <h2>{answer.value}</h2>
+                  </div>
+
+                  <div className={styles.amount}>
+                    <p>{`${packages.boxes[index].packages * 25_000} ZŁ`}</p>
+                  </div>
                 </div>
 
-                <div className={styles.amountHandler}>
-                  <p>{MoneyFormat(packages.boxes[index].packages)}</p>
+                <div className={styles.trap}>
+                  {
+                    //TODO: dynamic packages images
+                  }
                 </div>
-              </div>
 
-              <div className={styles.trap} />
-
-              <div
-                className={styles.buttons}
-                style={{
-                  visibility:
-                    displayCounter < 6 || remainingTime === 0
-                      ? "hidden"
-                      : "visible",
-                }}
-              >
-                <button
-                  onMouseDown={() => {
-                    const removePackage = () => {
+                <div
+                  className={styles.packagesControls}
+                  style={{
+                    visibility:
+                      displayCounter < 6 || remainingTime === 0
+                        ? "hidden"
+                        : "visible",
+                  }}
+                >
+                  <button
+                    onMouseDown={() => {
                       setPackages((prev) => {
+                        return {
+                          ...prev,
+                          left: prev.left + prev.boxes[index].packages,
+                          boxes: prev.boxes.map((box, i) => {
+                            if (i === index) {
+                              return { packages: 0 };
+                            }
+                            return box;
+                          }),
+                        };
+                      });
+                    }}
+                  >
+                    <p>{"--"}</p>
+                  </button>
+
+                  <button
+                    onMouseDown={() => {
+                      let interval = 250;
+                      const endInterval = 50;
+                      const decayFactor = 0.85;
+
+                      const removePackage = () => {
+                        setPackages((prev) => {
+                          if (
+                            prev.left === 40 ||
+                            prev.boxes[index].packages === 0
+                          ) {
+                            return prev;
+                          }
+
+                          return {
+                            ...prev,
+                            left: prev.left + 1,
+                            boxes: prev.boxes.map((box, i) => {
+                              if (i === index) {
+                                return { packages: box.packages - 1 };
+                              }
+                              return box;
+                            }),
+                          };
+                        });
+
+                        interval = Math.max(
+                          endInterval,
+                          interval * decayFactor
+                        );
+                        if (interval < endInterval) interval = endInterval;
+
+                        const id = setTimeout(removePackage, interval);
+                        setTimeoutId(id);
+                      };
+
+                      removePackage();
+                    }}
+                    onMouseUp={() => clearTimeout(timeoutId)}
+                  >
+                    <p>{"-"}</p>
+                  </button>
+
+                  <button
+                    onMouseDown={() => {
+                      let interval = 250;
+                      const endInterval = 50;
+                      const decayFactor = 0.85;
+
+                      const addPackage = () => {
+                        setPackages((prev) => {
+                          const boxesWithPackages = prev.boxes.filter((box) => {
+                            return box.packages > 0;
+                          });
+
+                          if (
+                            prev.left === 0 ||
+                            prev.boxes[index].packages === 40 ||
+                            (boxesWithPackages.length === 3 &&
+                              !prev.boxes[index].packages)
+                          ) {
+                            return prev;
+                          }
+
+                          return {
+                            ...prev,
+                            left: prev.left - 1,
+                            boxes: prev.boxes.map((box, i) => {
+                              if (i === index) {
+                                return { packages: box.packages + 1 };
+                              }
+                              return box;
+                            }),
+                          };
+                        });
+
+                        interval = Math.max(
+                          endInterval,
+                          interval * decayFactor
+                        );
+                        if (interval < endInterval) interval = endInterval;
+
+                        const id = setTimeout(addPackage, interval);
+                        setTimeoutId(id);
+                      };
+
+                      addPackage();
+                    }}
+                    onMouseUp={() => clearTimeout(timeoutId)}
+                  >
+                    <p>{"+"}</p>
+                  </button>
+
+                  <button
+                    onMouseDown={() => {
+                      setPackages((prev) => {
+                        const boxesWithPackages = prev.boxes.filter((box) => {
+                          return box.packages > 0;
+                        });
+
                         if (
-                          prev.left === 40 ||
-                          prev.boxes[index].packages === 0
+                          boxesWithPackages.length === 3 &&
+                          !prev.boxes[index].packages
                         ) {
                           return prev;
                         }
 
                         return {
                           ...prev,
-                          left: prev.left + 1,
+                          left: 0,
                           boxes: prev.boxes.map((box, i) => {
                             if (i === index) {
-                              return { packages: box.packages - 1 };
+                              return { packages: box.packages + prev.left };
                             }
                             return box;
                           }),
                         };
                       });
-                    };
-
-                    const id = setInterval(removePackage, 250);
-                    removePackage(), setIntervalId(id);
-                  }}
-                  onMouseUp={() => clearInterval(intervalId)}
-                >
-                  <p>-</p>
-                </button>
-
-                <button
-                  onMouseDown={() => {
-                    const addPackage = () => {
-                      setPackages((prev) => {
-                        if (
-                          prev.left === 0 ||
-                          prev.boxes[index].packages === 40
-                        ) {
-                          return prev;
-                        }
-
-                        return {
-                          ...prev,
-                          left: prev.left - 1,
-                          boxes: prev.boxes.map((box, i) => {
-                            if (i === index) {
-                              return { packages: box.packages + 1 };
-                            }
-                            return box;
-                          }),
-                        };
-                      });
-                    };
-
-                    const id = setInterval(addPackage, 250);
-                    addPackage(), setIntervalId(id);
-                  }}
-                  onMouseUp={() => clearInterval(intervalId)}
-                >
-                  <p>+</p>
-                </button>
+                    }}
+                  >
+                    <p>{"++"}</p>
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
 
         <div className={styles.packagesLeft}>
-          <p>{MoneyFormat(packages.left)}</p>
+          {
+            //TODO: dynamic packages images
+          }
+
+          <p>{`${packages.left * 25_000} ZŁ`}</p>
         </div>
 
         <div
-          className={styles.question}
+          className={styles.questionBoard}
           style={{
             opacity: displayCounter >= 5 ? 1 : 0,
             transition: "opacity 300ms ease-in-out",
           }}
         >
-          <div className={styles.questionHandler}>
+          <div className={styles.question}>
             <h1>{selectedQuestion?.question}</h1>
           </div>
 
           <div className={styles.timer}>
             <button
+              className={styles.additionalTime}
               onClick={(e) => {
                 setRemainingTime((prev) => prev + 30_000);
                 e.currentTarget.disabled = true;
@@ -380,6 +469,35 @@ export default function PnmIdBoard({ params }: { params: { id: number } }) {
             </button>
 
             <DynamicClock />
+          </div>
+        </div>
+
+        <div className={styles.fullscreenImages}>
+          <div
+            className={styles.questionImage}
+            style={{
+              opacity: displayCounter >= 5 ? 1 : 0,
+              transition: "opacity 300ms ease-in-out",
+            }}
+          />
+
+          <div className={styles.answersImage} />
+
+          <div>
+            {new Array(4).fill("").map((_, index) => (
+              <div key={index} className={styles.answer}>
+                <div className={styles.screen}>
+                  <video
+                    className={styles.animatedBackground}
+                    autoPlay
+                    loop
+                    muted
+                  >
+                    <source src="/pnm/video/animation.mp4" type="video/mp4" />
+                  </video>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
