@@ -21,10 +21,10 @@ export async function GET(req: Request) {
     }
 
     const gamesDatabase = (await db.game.findMany({ where: { userId } })).sort(
-      (a: any, b: any) => b.createdAt.getTime() - a.createdAt.getTime()
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
     );
 
-    let games = new Array();
+    const games = [];
     for (const game of gamesDatabase) {
       games.push({
         ...game,

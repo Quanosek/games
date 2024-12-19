@@ -1,4 +1,4 @@
-import styles from "@/styles/admin.module.scss";
+// import styles from "@/styles/admin.module.scss";
 
 export default function AdminPage() {
   return (

@@ -8,7 +8,7 @@ export default function PasswordInputComponent({
   name,
   autocomplete,
 }: {
-  function: Function;
+  function: any;
   name: string;
   autocomplete?: "current-password" | "new-password" | "off";
 }) {

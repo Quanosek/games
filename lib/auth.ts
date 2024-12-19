@@ -11,8 +11,7 @@ import GitHub from "next-auth/providers/github";
 import Discord from "next-auth/providers/discord";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  // @ts-ignore
-  adapter: PrismaAdapter(db),
+  adapter: PrismaAdapter(db) as any,
   pages: { error: "/", signIn: "/login" },
   session: { strategy: "jwt" },
   trustHost: true,

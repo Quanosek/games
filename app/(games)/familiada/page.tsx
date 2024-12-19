@@ -47,7 +47,7 @@ export default function FamiliadaPage() {
           localStorage.setItem(`${type}`, JSON.stringify({ data: parsed }));
         }
       }
-    } catch (error) {
+    } catch (_err) {
       localStorage.removeItem(`${type}`);
       window.location.reload();
     } finally {
@@ -67,7 +67,7 @@ export default function FamiliadaPage() {
 
   // check if board is empty
   const emptyBoardCheck = (data: Data) => {
-    const { multiply, ...rest } = data;
+    const { multiply: _, ...rest } = data;
     return JSON.stringify(rest) === JSON.stringify(emptyData);
   };
 
@@ -300,8 +300,8 @@ export default function FamiliadaPage() {
               title="Przenieś w dół"
               disabled={index + 1 === data.length}
               onClick={() => {
-                data[index].multiply === undefined;
-                data[index + 1].multiply === undefined;
+                data[index].multiply = undefined;
+                data[index + 1].multiply = undefined;
 
                 setData((prev) => {
                   const newData = [...prev];
@@ -329,8 +329,8 @@ export default function FamiliadaPage() {
               title="Przenieś do góry"
               disabled={index === 0}
               onClick={() => {
-                data[index - 1].multiply === undefined;
-                data[index].multiply === undefined;
+                data[index - 1].multiply = undefined;
+                data[index].multiply = undefined;
 
                 setData((prev) => {
                   const newData = [...prev];

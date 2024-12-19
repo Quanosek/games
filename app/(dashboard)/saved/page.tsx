@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 
 import GamesList from "./gamesList";
-import styles from "@/styles/dashboard.module.scss";
+// import styles from "@/styles/dashboard.module.scss";
 
 export default async function SavedPage() {
   const session = await auth();

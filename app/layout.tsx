@@ -14,7 +14,7 @@ import { Nexa } from "@/lib/fonts";
 export const metadata: Metadata = {
   title: "Pokój gier / klalo.pl",
   description:
-    "Przeglądarkowe wersje popularnych gier towarzyskich i telewizyjnych teleturniejów",
+    "Przeglądarkowe wersje popularnych gier towarzyskich i telewizyjnych teleturniejów w postaci interaktywnych planszy.",
 
   icons: {
     icon: ["/favicons/game_die.ico", "/favicons/game_die.svg"],
@@ -23,7 +23,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  colorScheme: "dark",
+  themeColor: "black",
 };
 
 export default async function RootLayout({

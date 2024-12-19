@@ -45,7 +45,7 @@ export default function WisielecPage() {
           localStorage.setItem(`${type}`, JSON.stringify({ data: parsed }));
         }
       }
-    } catch (error) {
+    } catch (_err) {
       localStorage.removeItem(`${type}`);
       window.location.reload();
     } finally {

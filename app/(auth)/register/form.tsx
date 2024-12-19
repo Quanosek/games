@@ -32,7 +32,7 @@ export default function RegisterForm() {
     try {
       setSubmitting(true);
 
-      const { passwordConfirm, ...data } = values;
+      const { passwordConfirm: _, ...data } = values;
 
       await axios
         .post("/api/user", data)

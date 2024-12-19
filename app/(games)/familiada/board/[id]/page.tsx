@@ -57,7 +57,10 @@ export default function FamiliadaIdBoard({
         if (!data.answers[number - 1]) return;
 
         if (!visible.includes(number)) {
-          audioCorrect.current && audioCorrect.current.play();
+          if (audioCorrect.current) {
+            audioCorrect.current.play();
+          }
+
           setVisible([...visible, number]);
 
           if (!event.ctrlKey) {
