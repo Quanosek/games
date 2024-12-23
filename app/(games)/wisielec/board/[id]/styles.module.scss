@@ -1,17 +1,14 @@
-// Board layout
-
-.layout {
+.board {
   z-index: 1;
   position: absolute;
   top: 0;
   left: 0;
   width: 100svw;
-  height: auto;
   background: radial-gradient(at bottom right, #2e0117, #000000);
-  user-select: none;
+  overflow: hidden;
 }
 
-.container {
+.layout {
   width: 100%;
   height: 100%;
   aspect-ratio: 16/9;
@@ -24,38 +21,36 @@
   width: 100%;
   font-size: 1vw;
   text-align: center;
+  cursor: default;
 }
 
-// Loading screen
-
 .loading {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: appearing 1s ease-in-out;
+  animation: appearing 1s ease-in;
 
   @keyframes appearing {
-    0% {
-      opacity: 0;
-    }
+    0%,
     20% {
       opacity: 0;
     }
     50% {
-      opacity: 40%;
+      opacity: 0.4;
     }
     100% {
-      opacity: 100%;
+      opacity: 1;
     }
   }
 
   .spinner {
-    $size: 6vw;
-
-    width: $size;
-    height: $size;
+    width: 6vw;
+    aspect-ratio: 1/1;
     border-radius: 50%;
     border-top: 0.25vw solid #ffffff;
     border-right: 0.25vw solid transparent;
@@ -63,18 +58,16 @@
 
     @keyframes rotation {
       0% {
-        rotate: 0deg;
+        transform: rotate(0deg);
       }
       100% {
-        rotate: 360deg;
+        transform: rotate(360deg);
       }
     }
   }
 }
 
-// Game elements
-
-.board {
+.game {
   padding: 5vw;
   width: 100%;
   height: 100%;
@@ -85,14 +78,82 @@
   text-align: center;
 }
 
-.globalKeyboard {
+.navigation {
+  position: absolute;
+  bottom: min(2vw, 6vh);
+  padding: 0 min(2vw, 6vh);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+
+  button {
+    opacity: 35%;
+    padding: 0.8vw;
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+    border: 0.15vw solid rgba(#ffffff, 0.5);
+    background-color: rgba(#ffffff, 0.15);
+    pointer-events: all;
+    transition: opacity 150ms ease-out, transform 150ms ease-in-out;
+
+    &:hover {
+      opacity: 60%;
+      transform: translateY(-0.1vw);
+    }
+
+    &:disabled {
+      opacity: 35%;
+      transform: none;
+      cursor: not-allowed;
+    }
+
+    img {
+      width: 2vw;
+    }
+  }
+}
+
+// start & end screen components
+
+.simpleLayout {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4vw;
+
+  h1 {
+    font-size: 6vw;
+    font-weight: bold;
+  }
+
+  button {
+    padding: 1.5vw 4vw;
+    font-size: 2vw;
+    border-radius: 1vw;
+    background-color: rgba(#ffffff, 0.15);
+    transition: filter 150ms ease-out, transform 150ms ease-in-out;
+
+    &:hover {
+      transform: translateY(-0.15vw);
+      filter: contrast(0.8);
+    }
+  }
+}
+
+// game board component
+
+.hiddenInput {
   opacity: 0;
   position: fixed;
   top: 0;
   pointer-events: none;
 }
 
-.topDiv {
+.gameInfo {
   display: flex;
   align-items: center;
   gap: 1vw;
@@ -111,37 +172,37 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
 
-.phrase {
-  position: absolute;
-  left: 0;
-  width: 80%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2vw;
-
-  div {
+  .phrase {
+    position: absolute;
+    left: 0;
+    width: 80%;
     display: flex;
-    gap: 0.5vw;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2vw;
 
-    p {
-      padding-bottom: 0.2vw;
-      height: 3.5vw;
+    div {
       display: flex;
-      justify-content: center;
-      font-size: 150%;
+      gap: 0.5vw;
 
-      &.letter {
-        width: 2.4vw;
-        border-bottom: 0.1vw solid #ffffff;
+      p {
+        padding-bottom: 0.2vw;
+        height: 3.5vw;
+        display: flex;
+        justify-content: center;
+        font-size: 150%;
+
+        &.letter {
+          width: 2.4vw;
+          border-bottom: 0.1vw solid #ffffff;
+        }
       }
     }
   }
 }
 
-.bottomDiv {
+.gameProgress {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -168,8 +229,15 @@
       transition: filter 150ms ease-out, transform 150ms ease-in-out;
 
       &:hover {
-        transform: translateY(-1.5px);
+        transform: translateY(-0.1vw);
         filter: contrast(0.8);
+      }
+
+      &:disabled {
+        opacity: 35%;
+        transform: none;
+        filter: none;
+        cursor: not-allowed;
       }
 
       &.vowel {
@@ -193,6 +261,5 @@
     top: 6vw;
     left: 35vw;
     width: 48vw;
-    height: auto;
   }
 }

@@ -246,7 +246,8 @@ main {
     gap: 1.5rem;
   }
 
-  input {
+  input,
+  textarea {
     padding: 0.7rem 1rem;
     background-color: var(--primary);
     border-radius: 5px;
