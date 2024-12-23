@@ -1,63 +1,54 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Fragment } from "react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { GameType } from "@/lib/enums";
+import toast from "react-hot-toast";
+import TextareaAutosize from "react-textarea-autosize";
 
+import { GameType } from "@/lib/enums";
 import PageLayout from "@/components/wrappers/pageLayout";
 import SavedGame from "@/components/savedGame";
 import styles from "./page.module.scss";
 
-export interface Data {
+export interface DataTypes {
   type: "closed" | "gap" | "open";
   question: string;
   answers: Array<{ value: string; checked: boolean }>;
 }
 
 export default function QuizyPage() {
-  const router = useRouter();
+  const type = GameType.QUIZY;
 
-  const [data, setData] = useState<Data[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [data, setData] = useState<DataTypes[]>([]);
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
   // load game data
   useEffect(() => {
-    const type = "quizy";
+    const localData = localStorage.getItem(type);
 
-    try {
-      const localData = localStorage.getItem(`${type}`);
-
-      if (localData) {
+    if (localData) {
+      try {
         const parsed = JSON.parse(localData);
-
-        if (parsed.data) {
-          setData(parsed.data);
-        } else {
-          localStorage.setItem(`${type}`, JSON.stringify({ data: parsed }));
-        }
+        setData(parsed.data);
+      } catch {
+        localStorage.removeItem(type);
+        window.location.reload();
       }
-    } catch (_err) {
-      localStorage.removeItem(`${type}`);
-      window.location.reload();
-    } finally {
-      setLoading(false);
     }
-  }, [router]);
+
+    setIsLoading(false);
+  }, [type]);
 
   // save data on change
   useEffect(() => {
-    if (loading) return;
+    if (isLoading) return;
 
-    const localData = JSON.parse(localStorage.getItem("quizy") || "{}");
-    const { data: _, ...params } = localData;
-
-    localStorage.setItem("quizy", JSON.stringify({ data, ...params }));
-  }, [loading, data]);
+    const localData = JSON.parse(localStorage.getItem(type)!);
+    localStorage.setItem(type, JSON.stringify({ ...localData, data }));
+  }, [isLoading, data, type]);
 
   // handle add buttons list show
-  const [showDropdown, setShowDropdown] = useState(false);
-
   useEffect(() => {
     const hideButtonsList = () => setShowDropdown(false);
 
@@ -65,58 +56,42 @@ export default function QuizyPage() {
     return () => document.removeEventListener("click", hideButtonsList);
   }, [showDropdown]);
 
-  // PAGE COMPONENTS
-
-  const BoardType = ({ type }: { type: Data["type"] }) => {
-    let data = { src: "", name: "" };
-
-    switch (type) {
-      case "closed":
-        data = { src: "a_button", name: "Pytanie zamknięte" };
-        break;
-      case "gap":
-        data = { src: "magnifying_glass", name: "Uzupełnij lukę" };
-        break;
-      case "open":
-        data = { src: "thought_balloon", name: "Pytanie otwarte" };
-        break;
+  // allow presentation only on valid form values
+  const formValidation = (params: DataTypes) => {
+    if (params.type === "closed") {
+      return (
+        params.question &&
+        params.answers.some((answer) => answer.checked) &&
+        params.answers.every((answer, index) => {
+          if (index === 0) return true;
+          return answer.value ? params.answers[index - 1].value : true;
+        })
+      );
+    } else if (params.type === "gap") {
+      return /\[.*?\]/.test(params.question); // square brackets check
+    } else if (params.type === "open") {
+      return params.question && params.answers[0].value;
     }
-
-    return (
-      <div>
-        <Image
-          className="icon"
-          alt=""
-          src={`/icons/${data.src}.svg`}
-          width={20}
-          height={20}
-          draggable={false}
-        />
-
-        <h2>{data.name}</h2>
-      </div>
-    );
   };
 
+  // inside form components
   const ClosedBoard = (i: number) => (
     <div className={styles.inputs}>
       <label>
         <h3>Pytanie:</h3>
 
-        <input
+        <TextareaAutosize
           name={`${i}-question`}
+          value={data[i].question}
           placeholder="Wpisz treść pytania"
           autoComplete="off"
           maxLength={128}
-          value={data[i].question || ""}
-          required
           onChange={(e) => {
-            // validate input
             const value = e.target.value
               .replace(/\s\s/g, " ") // double space
-              .replace(/^[\s]/, ""); // space as first character
+              .replace(/^[\s]/, "") // space as first character
+              .replace(/\n/g, ""); // enters
 
-            // update data
             setData((prev) => {
               const newData = [...prev];
               newData[i].question = value;
@@ -148,18 +123,15 @@ export default function QuizyPage() {
 
                 <input
                   name={`${i}-${j}-answer`}
+                  value={answer.value}
                   placeholder="Wpisz odpowiedź"
                   autoComplete="off"
                   maxLength={64}
-                  value={answer.value || ""}
-                  required={j < 2}
                   onChange={(e) => {
-                    // validate input
                     const value = e.target.value
                       .replace(/\s\s/g, " ") // double space
                       .replace(/^[\s]/, ""); // space as first character
 
-                    // update data
                     setData((prev) => {
                       const newData = [...prev];
                       newData[i].answers[j] = {
@@ -170,7 +142,6 @@ export default function QuizyPage() {
                     });
                   }}
                   onBlur={(e) => {
-                    // unchecked if answer is empty
                     if (!e.target.value) {
                       setData((prev) => {
                         const newData = [...prev];
@@ -188,15 +159,12 @@ export default function QuizyPage() {
               <div className={styles.checkboxHandler}>
                 <div
                   className={styles.checkbox}
-                  style={{
-                    // disable if answer is empty
-                    pointerEvents: answer.value ? "unset" : "none",
-                  }}
+                  style={{ pointerEvents: answer.value ? "unset" : "none" }}
                 >
                   <input
                     type="checkbox"
                     id={`${i}-${j}-checkbox`}
-                    checked={answer.checked || false}
+                    checked={answer.checked}
                     onChange={(e) => {
                       const checked = e.target.checked;
 
@@ -217,7 +185,7 @@ export default function QuizyPage() {
                   >
                     <p>poprawna odpowiedź</p>
 
-                    <svg width="18px" height="18px" viewBox="0 0 18 18">
+                    <svg width="15px" height="15px" viewBox="0 0 18 18">
                       <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
                       <polyline points="1 9 7 14 15 4"></polyline>
                     </svg>
@@ -233,21 +201,18 @@ export default function QuizyPage() {
 
   const GapBoard = (i: number) => (
     <>
-      <input
-        style={{ marginBottom: "0.5rem" }}
+      <TextareaAutosize
+        value={data[i].question}
         name={`${i}-question`}
         placeholder="Wpisz zdanie z luką"
         autoComplete="off"
-        maxLength={128}
-        value={data[i].question || ""}
-        required
+        maxLength={256}
         onChange={(e) => {
-          // validate input
           const value = e.target.value
             .replace(/\s\s/g, " ") // double space
-            .replace(/^[\s]/, ""); // space as first character
+            .replace(/^[\s]/, "") // space as first character
+            .replace(/\n/g, ""); // enters
 
-          // update data
           setData((prev) => {
             const newData = [...prev];
             newData[i].question = value;
@@ -268,21 +233,19 @@ export default function QuizyPage() {
       <label>
         <h3>Pytanie:</h3>
 
-        <input
+        <TextareaAutosize
           name={`${i}-question`}
+          value={data[i].question}
           placeholder="Wpisz treść pytania"
           autoComplete="off"
-          maxLength={128}
+          maxLength={256}
           className={styles.question}
-          value={data[i].question || ""}
-          required
           onChange={(e) => {
-            // validate input
             const value = e.target.value
               .replace(/\s\s/g, " ") // double space
-              .replace(/^[\s]/, ""); // space as first character
+              .replace(/^[\s]/, "") // space as first character
+              .replace(/\n/g, ""); // enters
 
-            // update data
             setData((prev) => {
               const newData = [...prev];
               newData[i].question = value;
@@ -295,21 +258,19 @@ export default function QuizyPage() {
       <label>
         <h3>Odpowiedź:</h3>
 
-        <input
+        <TextareaAutosize
           name={`${i}-answer`}
+          value={data[i].answers[0].value}
           placeholder="Wpisz poprawną odpowiedź"
           autoComplete="off"
-          maxLength={128}
+          maxLength={256}
           className={styles.answer}
-          value={data[i].answers[0].value || ""}
-          required
           onChange={(e) => {
-            // validate input
             const value = e.target.value
               .replace(/\s\s/g, " ") // double space
-              .replace(/^[\s]/, ""); // space as first character
+              .replace(/^[\s]/, "") // space as first character
+              .replace(/\n/g, ""); // enters
 
-            // update data
             setData((prev) => {
               const newData = [...prev];
               data[i].answers[0].value = value;
@@ -321,270 +282,325 @@ export default function QuizyPage() {
     </div>
   );
 
-  // MAIN RETURN
+  // game form component
+  const MainComponent = (index: number) => {
+    const params = data[index];
+    if (!params) return null;
 
+    let typeInfo: { src: string; name: string };
+
+    switch (params.type) {
+      case "closed":
+        typeInfo = { src: "a_button", name: "Pytanie zamknięte" };
+        break;
+      case "gap":
+        typeInfo = { src: "magnifying_glass", name: "Uzupełnij lukę" };
+        break;
+      case "open":
+        typeInfo = { src: "thought_balloon", name: "Pytanie otwarte" };
+        break;
+    }
+
+    return (
+      <div id={`${index}`} className={styles.form}>
+        <div className={styles.controls}>
+          <div className={styles.description}>
+            <p>{`Plansza ${index + 1}/${data.length}`}</p>
+
+            <p>{"•"}</p>
+
+            <Image
+              className="icon"
+              alt=""
+              src={`/icons/${typeInfo.src}.svg`}
+              width={18}
+              height={18}
+              draggable={false}
+            />
+
+            <h2>{typeInfo.name}</h2>
+          </div>
+
+          <div className={styles.buttons}>
+            <button
+              onClick={() => {
+                if (data[index].question || data[index].answers[0]?.value) {
+                  setData((prev) => {
+                    const newData = [...prev];
+                    newData[index] = {
+                      type: data[index].type,
+                      question: "",
+                      answers: data[index].answers.map(() => ({
+                        value: "",
+                        checked: false,
+                      })),
+                    };
+                    return newData;
+                  });
+                } else {
+                  setData((prev) => {
+                    const newData = [...prev];
+                    newData.splice(index, 1);
+
+                    setTimeout(() => {
+                      document
+                        .getElementById(index.toString())
+                        ?.scrollIntoView({
+                          behavior: "smooth",
+                          block: "center",
+                        });
+                    }, 1);
+
+                    return newData;
+                  });
+                }
+              }}
+            >
+              <Image
+                className="icon"
+                alt="usuń"
+                src="/icons/trashcan.svg"
+                width={20}
+                height={20}
+                draggable={false}
+              />
+            </button>
+
+            <button
+              disabled={index + 1 === data.length}
+              onClick={() => {
+                setData((prev) => {
+                  const newData = [...prev];
+
+                  [newData[index], newData[index + 1]] = [
+                    newData[index + 1],
+                    newData[index],
+                  ];
+
+                  return newData;
+                });
+              }}
+            >
+              <Image
+                style={{ rotate: "180deg" }}
+                className="icon"
+                alt="w dół"
+                src="/icons/arrow.svg"
+                width={20}
+                height={20}
+                draggable={false}
+              />
+            </button>
+
+            <button
+              disabled={index === 0}
+              onClick={() => {
+                setData((prev) => {
+                  const newData = [...prev];
+
+                  [newData[index], newData[index - 1]] = [
+                    newData[index - 1],
+                    newData[index],
+                  ];
+
+                  return newData;
+                });
+              }}
+            >
+              <Image
+                className="icon"
+                alt="w górę"
+                src="/icons/arrow.svg"
+                width={20}
+                height={20}
+                draggable={false}
+              />
+            </button>
+
+            <p>{"•"}</p>
+
+            <button
+              className={styles.presentationButton}
+              disabled={!formValidation(params)}
+              onClick={() => {
+                return open(
+                  `/quizy/board/${index + 1}`,
+                  "game_window",
+                  "width=960, height=540"
+                );
+              }}
+            >
+              <p>Prezentuj</p>
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.content}>
+          {params.type === "closed" && ClosedBoard(index)}
+          {params.type === "gap" && GapBoard(index)}
+          {params.type === "open" && OpenBoard(index)}
+        </div>
+      </div>
+    );
+  };
+
+  // main component render
   return (
     <PageLayout>
       <SavedGame type={GameType.QUIZY} data={JSON.stringify(data)} />
 
-      <h1 className={styles.gameTitle}>
-        Stwórz własny <span>Quiz</span>
+      <h1 className={styles.title}>
+        Gra w <span>Quizy</span>
       </h1>
 
-      {loading ? (
+      {isLoading && (
         <div className="loading">
           <p>Trwa ładowanie...</p>
         </div>
-      ) : (
-        <form
-          style={{ gap: data.length ? "" : "0" }}
-          onSubmit={(e) => {
-            e.preventDefault();
-            open("/quizy/board/0", "game_window", "width=960, height=540");
-          }}
-        >
-          {data.length > 0 && (
-            <button type="submit" className={styles.startButton}>
-              <p>Uruchom grę</p>
+      )}
+
+      <div
+        className={styles.container}
+        style={{
+          visibility: isLoading ? "hidden" : "visible",
+          position: "relative",
+          top: isLoading ? 10 : 0,
+          opacity: isLoading ? 0 : 1,
+          transition: "top 150ms ease-out, opacity 200ms ease-out",
+        }}
+      >
+        {data.length > 0 && (
+          <>
+            <button
+              className={styles.formButton}
+              onClick={() => {
+                if (!data.some(formValidation)) {
+                  return toast.error("Uzupełnij co najmniej jedną planszę");
+                }
+
+                return open(
+                  "/quizy/board/0",
+                  "game_window",
+                  "width=960, height=540"
+                );
+              }}
+            >
+              <p>Rozpocznij grę</p>
             </button>
-          )}
 
-          <div className={styles.container}>
-            {[...Array(data.length)].map((_, index) => {
-              const { type } = data[index];
+            <div className={styles.formsContainer}>
+              {Array.from({ length: data.length }).map((_, index) => (
+                <Fragment key={index}>{MainComponent(index)}</Fragment>
+              ))}
+            </div>
+          </>
+        )}
 
-              return (
-                <div key={index} id={index.toString()} className={styles.board}>
-                  <div className={styles.controls}>
-                    <div className={styles.description}>
-                      <p>{`${index + 1}/${data.length} •`}</p>
-                      <BoardType type={type} />
-                    </div>
-
-                    <div className={styles.buttons}>
-                      {/* delete button */}
-                      <button
-                        type="button"
-                        title="Wyczyść/usuń planszę"
-                        onClick={() => {
-                          if (
-                            data[index].question ||
-                            data[index].answers[0]?.value
-                          ) {
-                            if (
-                              !confirm("Czy na pewno chcesz wyczyścić planszę?")
-                            ) {
-                              return;
-                            }
-
-                            setData((prev) => {
-                              const newData = [...prev];
-                              newData[index] = {
-                                type: data[index].type,
-                                question: "",
-                                answers: data[index].answers.map(() => ({
-                                  value: "",
-                                  checked: false,
-                                })),
-                              };
-                              return newData;
-                            });
-                          } else {
-                            setData((prev) => {
-                              const newData = [...prev];
-                              newData.splice(index, 1);
-
-                              setTimeout(() => {
-                                document
-                                  .getElementById(index.toString())
-                                  ?.scrollIntoView({
-                                    behavior: "smooth",
-                                    block: "start",
-                                  });
-                              }, 1);
-
-                              return newData;
-                            });
-                          }
-                        }}
-                      >
-                        <Image
-                          className="icon"
-                          alt="kosz"
-                          src="/icons/trashcan.svg"
-                          width={20}
-                          height={20}
-                          draggable={false}
-                        />
-                      </button>
-
-                      {/* move down button */}
-                      <button
-                        type="button"
-                        title="Przenieś w dół"
-                        disabled={index + 1 === data.length}
-                        onClick={() => {
-                          setData((prev) => {
-                            const newData = [...prev];
-                            const temp = newData[index];
-                            newData[index] = newData[index + 1];
-                            newData[index + 1] = temp;
-                            return newData;
-                          });
-                        }}
-                      >
-                        <Image
-                          style={{ rotate: "180deg" }}
-                          className="icon"
-                          alt="w lewo"
-                          src="/icons/arrow.svg"
-                          width={20}
-                          height={20}
-                          draggable={false}
-                        />
-                      </button>
-
-                      {/* move up button */}
-                      <button
-                        type="button"
-                        title="Przenieś do góry"
-                        disabled={index === 0}
-                        onClick={() => {
-                          setData((prev) => {
-                            const newData = [...prev];
-                            const temp = newData[index];
-                            newData[index] = newData[index - 1];
-                            newData[index - 1] = temp;
-                            return newData;
-                          });
-                        }}
-                      >
-                        <Image
-                          className="icon"
-                          alt="w górę"
-                          src="/icons/arrow.svg"
-                          width={20}
-                          height={20}
-                          draggable={false}
-                        />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className={styles.content}>
-                    {type === "closed" && ClosedBoard(index)}
-                    {type === "gap" && GapBoard(index)}
-                    {type === "open" && OpenBoard(index)}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className={styles.addButton}>
-            {data.length ? (
-              <button type="button" onClick={() => setShowDropdown(true)}>
+        <div className={styles.dropdownHandler}>
+          <button
+            className={styles.formButton}
+            onClick={() => setShowDropdown(true)}
+          >
+            {data.length > 0 ? (
+              <>
                 <Image
                   className="icon"
                   alt="+"
                   src="/icons/plus.svg"
-                  width={18}
-                  height={18}
+                  width={16}
+                  height={16}
                   draggable={false}
                 />
                 <p>Dodaj...</p>
-              </button>
+              </>
             ) : (
-              <button
-                type="button"
-                className={styles.startButton}
-                onClick={() => setShowDropdown(true)}
-              >
-                <p>Rozpocznij</p>
-              </button>
+              <p>Rozpocznij</p>
             )}
+          </button>
 
-            <div
-              style={{ display: showDropdown ? "" : "none" }}
-              className={styles.dropdown}
+          <div
+            style={{ display: showDropdown ? "" : "none" }}
+            className={styles.dropdown}
+          >
+            <hr />
+
+            <button
+              onClick={() => {
+                setData([
+                  ...data,
+                  {
+                    type: "closed",
+                    question: "",
+                    answers: new Array(4).fill({
+                      value: "",
+                      checked: false,
+                    }),
+                  },
+                ]);
+
+                setTimeout(() => {
+                  document
+                    .getElementById(data.length.toString())
+                    ?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
+                }, 1);
+              }}
             >
-              <button
-                type="button"
-                onClick={() => {
-                  setData([
-                    ...data,
-                    {
-                      type: "closed",
-                      question: "",
-                      answers: new Array(4).fill({
-                        value: "",
-                        checked: false,
-                      }),
-                    },
-                  ]);
+              <p>pytanie zamknięte</p>
+            </button>
 
-                  setTimeout(() => {
-                    document
-                      .getElementById(data.length.toString())
-                      ?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                      });
-                  }, 1);
-                }}
-              >
-                <p>pytanie zamknięte</p>
-              </button>
+            <button
+              onClick={() => {
+                setData([
+                  ...data,
+                  {
+                    type: "gap",
+                    question: "",
+                    answers: [],
+                  },
+                ]);
 
-              <button
-                type="button"
-                onClick={() => {
-                  setData([
-                    ...data,
-                    { type: "gap", question: "", answers: [] },
-                  ]);
+                setTimeout(() => {
+                  document
+                    .getElementById(data.length.toString())
+                    ?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
+                }, 1);
+              }}
+            >
+              <p>uzupełnij lukę</p>
+            </button>
 
-                  setTimeout(() => {
-                    document
-                      .getElementById(data.length.toString())
-                      ?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                      });
-                  }, 1);
-                }}
-              >
-                <p>uzupełnij lukę</p>
-              </button>
+            <button
+              onClick={() => {
+                setData([
+                  ...data,
+                  {
+                    type: "open",
+                    question: "",
+                    answers: [{ value: "", checked: false }],
+                  },
+                ]);
 
-              <button
-                type="button"
-                onClick={() => {
-                  setData([
-                    ...data,
-                    {
-                      type: "open",
-                      question: "",
-                      answers: [{ value: "", checked: false }],
-                    },
-                  ]);
-
-                  setTimeout(() => {
-                    document
-                      .getElementById(data.length.toString())
-                      ?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                      });
-                  }, 1);
-                }}
-              >
-                <p>pytanie otwarte</p>
-              </button>
-            </div>
+                setTimeout(() => {
+                  document
+                    .getElementById(data.length.toString())
+                    ?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
+                }, 1);
+              }}
+            >
+              <p>pytanie otwarte</p>
+            </button>
           </div>
-        </form>
-      )}
+        </div>
+      </div>
     </PageLayout>
   );
 }

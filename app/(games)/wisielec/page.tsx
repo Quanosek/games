@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Fragment } from "react";
 import Image from "next/image";
+import toast from "react-hot-toast";
 import TextareaAutosize from "react-textarea-autosize";
 
 import { GameType } from "@/lib/enums";
@@ -96,9 +97,6 @@ export default function WisielecPage() {
               disabled={data.length === 1 && emptyBoardCheck(params)}
               onClick={() => {
                 if (!emptyBoardCheck(params)) {
-                  if (!confirm("Czy na pewno chcesz wyczyścić planszę?"))
-                    return;
-
                   setData((prev) => {
                     const newData = [...prev];
                     newData[index] = emptyData;
@@ -143,6 +141,7 @@ export default function WisielecPage() {
                     newData[index + 1],
                     newData[index],
                   ];
+
                   return newData;
                 });
               }}
@@ -168,6 +167,7 @@ export default function WisielecPage() {
                     newData[index - 1],
                     newData[index],
                   ];
+
                   return newData;
                 });
               }}
@@ -257,7 +257,7 @@ export default function WisielecPage() {
             <label>
               <h3>Kategoria:</h3>
 
-              <TextareaAutosize
+              <input
                 name={`${index}-category`}
                 value={params.category}
                 placeholder="Wpisz kategorię"
@@ -266,8 +266,7 @@ export default function WisielecPage() {
                 onChange={(e) => {
                   const value = e.target.value
                     .replace(/\s\s/g, " ") // double space
-                    .replace(/^[\s]/, "") // space as first character
-                    .replace(/\n/g, ""); // enters
+                    .replace(/^[\s]/, ""); // space as first character
 
                   setData((prev) => {
                     const newData = [...prev];
@@ -359,6 +358,14 @@ export default function WisielecPage() {
         <button
           className={styles.formButton}
           onClick={() => {
+            const filteredData = data.filter((item: DataTypes) => {
+              return item.category && item.phrase;
+            });
+
+            if (filteredData.length <= 0) {
+              return toast.error("Uzupełnij co najmniej jedną planszę");
+            }
+
             return open(
               "/wisielec/board/0",
               "game_window",
