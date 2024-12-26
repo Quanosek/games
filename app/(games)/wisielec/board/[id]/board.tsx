@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { TConductorInstance } from "react-canvas-confetti/dist/types";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 import ms from "ms";
 
@@ -10,22 +11,33 @@ import { GameType } from "@/lib/enums";
 import type { DataTypes } from "../../page";
 import styles from "./styles.module.scss";
 
+const KeyboardInteraction = (Shortcuts: any) => {
+  useEffect(() => {
+    const KeyupEvent = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+      Shortcuts(e);
+    };
+
+    document.addEventListener("keyup", KeyupEvent);
+    return () => document.removeEventListener("keyup", KeyupEvent);
+  }, [Shortcuts]);
+};
+
 export default function WisielecBoardComponent({ id }: { id: number }) {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<DataTypes[]>([]);
 
-  // load game data
   useEffect(() => {
     const localData = localStorage.getItem(GameType.WISIELEC);
 
     if (localData) {
       try {
         const parsed = JSON.parse(localData);
-        const filteredData = parsed.data.filter((item: DataTypes) => {
-          return item.category && item.phrase;
-        });
+        const filteredData = parsed.data.filter(
+          (item: DataTypes) => item.category && item.phrase
+        );
         setData(filteredData);
       } catch {
         window.close();
@@ -35,30 +47,16 @@ export default function WisielecBoardComponent({ id }: { id: number }) {
     setIsLoading(false);
   }, [id]);
 
-  // keyboard shortcuts
-  useEffect(() => {
-    const KeyupEvent = (event: KeyboardEvent) => {
-      if (["Control", "Shift", "Alt", "Meta"].includes(event.key)) return;
-      if (event.key === "Escape") close();
-    };
+  KeyboardInteraction((e: KeyboardEvent) => {
+    if (e.key === "Escape") close();
+  });
 
-    document.addEventListener("keyup", KeyupEvent);
-    return () => document.removeEventListener("keyup", KeyupEvent);
-  }, []);
-
-  // start page component
   const StartLayout = () => {
     const nextPage = () => router.push(`/wisielec/board/1`);
 
-    useEffect(() => {
-      const handleKeyup = (event: KeyboardEvent) => {
-        if (["Control", "Shift", "Alt", "Meta"].includes(event.key)) return;
-        if (event.key === " ") nextPage();
-      };
-
-      document.addEventListener("keyup", handleKeyup);
-      return () => document.removeEventListener("keyup", handleKeyup);
-    }, []);
+    KeyboardInteraction((e: KeyboardEvent) => {
+      if (e.key === " ") nextPage();
+    });
 
     return (
       <div className={styles.simpleLayout}>
@@ -71,13 +69,30 @@ export default function WisielecBoardComponent({ id }: { id: number }) {
     );
   };
 
-  // game board component
+  const EndLayout = () => {
+    const exitGame = () => window.close();
+
+    KeyboardInteraction((e: KeyboardEvent) => {
+      if (e.key === " ") exitGame();
+    });
+
+    return (
+      <div className={styles.simpleLayout}>
+        <h1>Wisielec</h1>
+
+        <button onClick={exitGame}>
+          <p>Zakończ grę</p>
+        </button>
+      </div>
+    );
+  };
+
   const MainComponent = ({ params }: { params: DataTypes }) => {
     const [remainingTime, setRemainingTime] = useState(ms(params.time));
     const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
-    const [mistakes, setMistakes] = useState(0);
+    const [mistakes, setMistakes] = useState<number>(0);
     const [gameResult, setGameResult] = useState<"win" | "lose">();
-    const [conductor, setConductor] = useState<any>();
+    const [conductor, setConductor] = useState<TConductorInstance>();
 
     // time countdown
     useEffect(() => {
@@ -119,20 +134,12 @@ export default function WisielecBoardComponent({ id }: { id: number }) {
       }
     }, [gameResult, conductor]);
 
-    // keyboard shortcuts
-    useEffect(() => {
-      const handleKeyup = (event: KeyboardEvent) => {
-        if (["Control", "Shift", "Alt", "Meta"].includes(event.key)) return;
-
-        if (event.key === " ") {
-          if (gameResult === undefined) setGameResult("win");
-          else router.push(`/wisielec/board/${Number(id) + 1}`);
-        }
-      };
-
-      document.addEventListener("keyup", handleKeyup);
-      return () => document.removeEventListener("keyup", handleKeyup);
-    }, [gameResult]);
+    KeyboardInteraction((e: KeyboardEvent) => {
+      if (e.key === " ") {
+        if (gameResult === undefined) setGameResult("win");
+        else router.push(`/wisielec/board/${Number(id) + 1}`);
+      }
+    });
 
     const checkLetter = (letter: string) => {
       if (guessedLetters.includes(letter)) return;
@@ -163,9 +170,9 @@ export default function WisielecBoardComponent({ id }: { id: number }) {
         />
 
         <Fireworks
-          onInit={({ conductor }: { conductor: any }) =>
-            setConductor(conductor)
-          }
+          onInit={({ conductor }: { conductor: TConductorInstance }) => {
+            return setConductor(conductor);
+          }}
         />
 
         <div className={styles.gameInfo}>
@@ -265,32 +272,6 @@ export default function WisielecBoardComponent({ id }: { id: number }) {
     );
   };
 
-  // start page component
-  const EndLayout = () => {
-    const exitGame = () => window.close();
-
-    useEffect(() => {
-      const handleKeyup = (event: KeyboardEvent) => {
-        if (["Control", "Shift", "Alt", "Meta"].includes(event.key)) return;
-        if (event.key === " ") exitGame();
-      };
-
-      document.addEventListener("keyup", handleKeyup);
-      return () => document.removeEventListener("keyup", handleKeyup);
-    }, []);
-
-    return (
-      <div className={styles.simpleLayout}>
-        <h1>Wisielec</h1>
-
-        <button onClick={exitGame}>
-          <p>Zakończ grę</p>
-        </button>
-      </div>
-    );
-  };
-
-  // main component render
   return (
     <>
       {isLoading && (
@@ -308,8 +289,9 @@ export default function WisielecBoardComponent({ id }: { id: number }) {
         }}
       >
         {id <= 0 && <StartLayout />}
-        {data[id - 1] && <MainComponent params={data[id - 1]} />}
         {id > data.length && <EndLayout />}
+
+        {data[id - 1] && <MainComponent params={data[id - 1]} />}
       </div>
 
       <div className={styles.navigation}>

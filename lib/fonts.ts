@@ -1,5 +1,6 @@
 import localFont from "next/font/local";
 
+// Default
 export const Nexa = localFont({
   src: [
     {
@@ -20,11 +21,13 @@ export const Nexa = localFont({
   display: "swap",
 });
 
+// "Familiada"
 export const Dotted = localFont({
   src: "../fonts/familiada_regular.woff2",
   display: "swap",
 });
 
+// "Postaw Na Milion"
 export const Myriad = localFont({
   src: [
     {

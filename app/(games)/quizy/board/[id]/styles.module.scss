@@ -4,7 +4,8 @@
   top: 0;
   left: 0;
   width: 100svw;
-  background: radial-gradient(at bottom right, #2e0117, #000000);
+  background: radial-gradient(at bottom right, #081845, #390075);
+  box-shadow: 0 0 10vw rgba(#000000, 0.5) inset;
   overflow: hidden;
   user-select: none;
 }
@@ -158,117 +159,112 @@
 
 // game board component
 
-.hiddenInput {
-  opacity: 0;
-  position: fixed;
-  top: 0;
-  pointer-events: none;
-}
-
-.gameInfo {
-  display: flex;
-  align-items: center;
-  gap: 1vw;
-  font-size: 90%;
-
-  span {
-    font-size: 110%;
-    font-weight: bold;
-  }
-}
-
-.phraseContainer {
-  position: relative;
+.question {
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-
-  .phrase {
-    position: absolute;
-    left: 0;
-    width: 80%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2vw;
-
-    div {
-      display: flex;
-      gap: 0.5vw;
-
-      p {
-        padding-bottom: 0.2vw;
-        height: 3.5vw;
-        display: flex;
-        justify-content: center;
-        font-size: 150%;
-
-        &.letter {
-          width: 2.4vw;
-          border-bottom: 0.1vw solid #ffffff;
-        }
-      }
-    }
-  }
+  font-size: 150%;
+  font-weight: bold;
 }
 
-.gameProgress {
+.answersGrid {
+  $grid-gap: 0.5vw;
+
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5vw;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: $grid-gap;
 
-  .mistakes {
-    opacity: 80%;
-    font-size: 90%;
-  }
+  button {
+    padding: 2vw;
+    flex: 0 0 calc(50% - $grid-gap);
+    min-height: 12vw;
+    font-size: 105%;
+    border-radius: 0.5vw;
+    transition: background-color 150ms ease-out, filter 150ms ease-out,
+      transform 150ms ease-in-out;
 
-  .letters {
-    width: 95%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5vw;
+    &.correct {
+      opacity: 100%;
+      background-color: #348734;
+    }
+    &.selected {
+      background-color: #9f3737;
+    }
 
-    button {
-      padding: 1vw 0;
-      width: 4vw;
-      font-size: 110%;
-      border-radius: 0.5vw;
-
-      &:hover {
-        transform: translateY(-0.1vw);
-      }
-
-      &:disabled {
-        opacity: 30%;
-        transform: none;
-        filter: none;
-        cursor: not-allowed;
-      }
-
-      &.vowel {
-        background-color: rgba(#ffffff, 0.18);
-      }
+    &:disabled {
+      transform: none;
+      filter: none;
+      cursor: default;
     }
   }
 }
 
-.backgroundImage {
-  opacity: 15%;
-  position: absolute;
-  top: 0;
-  left: 0;
+.center {
   width: 100%;
   height: 100%;
-  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 150%;
+  font-weight: bold;
 
-  img {
+  .hidden {
+    $color: #8bf2ce;
+
     position: relative;
-    top: 6vw;
-    left: 35vw;
-    width: 48vw;
+    color: transparent;
+    font-weight: normal;
+    border-bottom: $color 0.3vw solid;
+    transition: color 150ms ease-out;
+
+    &.reveal {
+      color: $color;
+    }
   }
+}
+
+.controls {
+  display: flex;
+  gap: 1vw;
+
+  button {
+    padding: 1.2vw 3vw;
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    border-radius: 50vw;
+    font-size: 65%;
+
+    &:disabled {
+      opacity: 35%;
+      transform: none;
+      filter: none;
+      cursor: default;
+    }
+
+    img {
+      position: relative;
+      bottom: 0.05vw;
+      width: 1.5vw;
+      height: auto;
+    }
+  }
+}
+
+.openQuestion {
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.openAnswer {
+  margin: min(2vw, 6vh) 0;
+  font-size: 80%;
+  font-weight: normal;
 }

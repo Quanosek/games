@@ -16,6 +16,24 @@ export interface DataTypes {
   answers: Array<{ value: string; checked: boolean }>;
 }
 
+// allow presentation only on valid form values
+export function emptyForm(params: DataTypes) {
+  if (params.type === "closed") {
+    return (
+      params.question &&
+      params.answers.some((answer) => answer.checked) &&
+      params.answers.every((answer, index) => {
+        if (index === 0) return true;
+        return answer.value ? params.answers[index - 1].value : true;
+      })
+    );
+  } else if (params.type === "gap") {
+    return /\[.*?\]/.test(params.question); // square brackets check
+  } else if (params.type === "open") {
+    return params.question && params.answers[0].value;
+  }
+}
+
 export default function QuizyPage() {
   const type = GameType.QUIZY;
 
@@ -55,24 +73,6 @@ export default function QuizyPage() {
     if (showDropdown) document.addEventListener("click", hideButtonsList);
     return () => document.removeEventListener("click", hideButtonsList);
   }, [showDropdown]);
-
-  // allow presentation only on valid form values
-  const formValidation = (params: DataTypes) => {
-    if (params.type === "closed") {
-      return (
-        params.question &&
-        params.answers.some((answer) => answer.checked) &&
-        params.answers.every((answer, index) => {
-          if (index === 0) return true;
-          return answer.value ? params.answers[index - 1].value : true;
-        })
-      );
-    } else if (params.type === "gap") {
-      return /\[.*?\]/.test(params.question); // square brackets check
-    } else if (params.type === "open") {
-      return params.question && params.answers[0].value;
-    }
-  };
 
   // inside form components
   const ClosedBoard = (i: number) => (
@@ -222,8 +222,7 @@ export default function QuizyPage() {
       />
 
       <p className={styles.instruction}>
-        Umieść ukryte fragmenty w kwadratowych nawiasach. Na przykład:{" "}
-        {`"Ala ma [kota] i psa"`}.
+        {`Umieść ukryte fragmenty w kwadratowych nawiasach, na przykład: "Ala ma [kota] i psa".`}
       </p>
     </>
   );
@@ -421,7 +420,7 @@ export default function QuizyPage() {
 
             <button
               className={styles.presentationButton}
-              disabled={!formValidation(params)}
+              disabled={!emptyForm(params)}
               onClick={() => {
                 return open(
                   `/quizy/board/${index + 1}`,
@@ -474,7 +473,7 @@ export default function QuizyPage() {
             <button
               className={styles.formButton}
               onClick={() => {
-                if (!data.some(formValidation)) {
+                if (!data.some(emptyForm)) {
                   return toast.error("Uzupełnij co najmniej jedną planszę");
                 }
 
