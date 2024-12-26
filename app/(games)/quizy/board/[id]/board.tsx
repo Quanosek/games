@@ -26,7 +26,7 @@ const KeyboardInteraction = (Shortcuts: any) => {
 export default function QuizyBoardComponent({ id }: { id: number }) {
   const router = useRouter();
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<DataTypes[]>([]);
 
   useEffect(() => {
@@ -46,7 +46,17 @@ export default function QuizyBoardComponent({ id }: { id: number }) {
   }, [id]);
 
   KeyboardInteraction((e: KeyboardEvent) => {
-    if (e.key === "Escape") close();
+    // console.log(e.key);
+
+    if (e.key === "Escape") {
+      close();
+    }
+    if (e.key === "ArrowLeft" && id > 0) {
+      router.push(`/wisielec/board/${Number(id) - 1}`);
+    }
+    if (e.key === "ArrowRight" && id <= data.length) {
+      router.push(`/wisielec/board/${Number(id) + 1}`);
+    }
   });
 
   const StartLayout = () => {
@@ -86,7 +96,7 @@ export default function QuizyBoardComponent({ id }: { id: number }) {
   };
 
   const ClosedBoard = ({ params }: { params: DataTypes }) => {
-    const [selected, setSelected] = useState<number>(-1);
+    const [selected, setSelected] = useState(-1);
     const [conductor, setConductor] = useState<TConductorInstance>();
 
     // game win effect
@@ -146,7 +156,7 @@ export default function QuizyBoardComponent({ id }: { id: number }) {
   };
 
   const GapBoard = ({ params }: { params: DataTypes }) => {
-    const [reveal, setReveal] = useState<boolean>(false);
+    const [reveal, setReveal] = useState(false);
 
     KeyboardInteraction((e: KeyboardEvent) => {
       if (e.key === " ") {
@@ -202,7 +212,7 @@ export default function QuizyBoardComponent({ id }: { id: number }) {
   };
 
   const OpenBoard = ({ params }: { params: DataTypes }) => {
-    const [showAnswer, setShowAnswer] = useState<boolean>(false);
+    const [showAnswer, setShowAnswer] = useState(false);
 
     KeyboardInteraction((e: KeyboardEvent) => {
       if (e.key === " ") {

@@ -8,7 +8,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import { GameType } from "@/lib/enums";
 import PageLayout from "@/components/wrappers/pageLayout";
 import SavedGame from "@/components/savedGame";
-import styles from "./page.module.scss";
+import styles from "./styles.module.scss";
 
 export interface DataTypes {
   type: "closed" | "gap" | "open";
@@ -37,9 +37,9 @@ export function emptyForm(params: DataTypes) {
 export default function QuizyPage() {
   const type = GameType.QUIZY;
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<DataTypes[]>([]);
-  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   // load game data
   useEffect(() => {

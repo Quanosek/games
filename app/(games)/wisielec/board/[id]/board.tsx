@@ -35,9 +35,9 @@ export default function WisielecBoardComponent({ id }: { id: number }) {
     if (localData) {
       try {
         const parsed = JSON.parse(localData);
-        const filteredData = parsed.data.filter(
-          (item: DataTypes) => item.category && item.phrase
-        );
+        const filteredData = parsed.data.filter((item: DataTypes) => {
+          return item.category && item.phrase;
+        });
         setData(filteredData);
       } catch {
         window.close();
@@ -48,7 +48,17 @@ export default function WisielecBoardComponent({ id }: { id: number }) {
   }, [id]);
 
   KeyboardInteraction((e: KeyboardEvent) => {
-    if (e.key === "Escape") close();
+    // console.log(e.key);
+
+    if (e.key === "Escape") {
+      close();
+    }
+    if (e.key === "ArrowLeft" && id > 0) {
+      router.push(`/wisielec/board/${Number(id) - 1}`);
+    }
+    if (e.key === "ArrowRight" && id <= data.length) {
+      router.push(`/wisielec/board/${Number(id) + 1}`);
+    }
   });
 
   const StartLayout = () => {
@@ -90,7 +100,7 @@ export default function WisielecBoardComponent({ id }: { id: number }) {
   const MainComponent = ({ params }: { params: DataTypes }) => {
     const [remainingTime, setRemainingTime] = useState(ms(params.time));
     const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
-    const [mistakes, setMistakes] = useState<number>(0);
+    const [mistakes, setMistakes] = useState(0);
     const [gameResult, setGameResult] = useState<"win" | "lose">();
     const [conductor, setConductor] = useState<TConductorInstance>();
 

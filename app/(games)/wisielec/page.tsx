@@ -8,7 +8,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import { GameType } from "@/lib/enums";
 import PageLayout from "@/components/wrappers/pageLayout";
 import SavedGame from "@/components/savedGame";
-import styles from "./page.module.scss";
+import styles from "./styles.module.scss";
 
 export interface DataTypes {
   mistakes: number;
@@ -27,7 +27,7 @@ export default function WisielecPage() {
     phrase: "",
   };
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<DataTypes[]>([emptyData]);
 
   // load game data

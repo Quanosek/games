@@ -40,9 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# prisma
-/prisma/migrations
-
-# docker
+# other
+.vscode
+/prisma/migrations/
 Dockerfile
 docker-compose.yml
