@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
@@ -11,7 +11,6 @@ import toast from "react-hot-toast";
 
 import { userDataInput, userDataSchema } from "@/lib/zod";
 import PasswordInput from "@/components/password-input";
-
 import styles from "@/styles/dashboard.module.scss";
 
 export default function UserData({ user }: { user: User | undefined }) {

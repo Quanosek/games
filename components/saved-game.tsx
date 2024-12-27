@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Game } from "next-auth";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { GameType } from "@/lib/enums";
 
+import { GameType } from "@/lib/enums";
 import styles from "@/styles/components.module.scss";
 export interface Params {
   type: GameType;

@@ -1,13 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { auth } from "@/lib/auth";
-import { Role } from "@/lib/enums";
 import AccountProviders from "./account-providers";
 import ActionButtons from "./action-buttons";
 import SavedButton from "./saved-button";
 import UserData from "./user-data";
 
+import { auth } from "@/lib/auth";
+import { Role } from "@/lib/enums";
 import styles from "@/styles/dashboard.module.scss";
 
 export default async function ProfilePage() {

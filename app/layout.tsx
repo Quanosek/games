@@ -4,12 +4,12 @@ import Link from "next/link";
 import { Toaster } from "react-hot-toast";
 
 import { auth } from "@/lib/auth";
+import { Nexa } from "@/lib/fonts";
 import Wrapper from "@/components/wrappers/session";
 import AccountDropdown from "@/components/account-dropdown";
 
 import "the-new-css-reset/css/reset.css";
 import "@/styles/globals.scss";
-import { Nexa } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "Pokój gier / klalo.pl",

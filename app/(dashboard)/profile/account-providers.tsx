@@ -1,7 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { User } from "next-auth";
 import { signIn } from "next-auth/react";
 import axios from "axios";

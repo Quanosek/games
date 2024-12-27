@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import Form from "./form";
 
 import styles from "@/styles/auth.module.scss";

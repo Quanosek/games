@@ -1,16 +1,16 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 
-import { LoginUserInput, loginUserSchema } from "@/lib/zod";
-import PasswordInput from "@/components/password-input";
 import Providers from "../providers";
 
+import { LoginUserInput, loginUserSchema } from "@/lib/zod";
+import PasswordInput from "@/components/password-input";
 import styles from "@/styles/auth.module.scss";
 
 export default function LoginForm() {

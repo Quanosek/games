@@ -1,7 +1,7 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
 import toast from "react-hot-toast";
 

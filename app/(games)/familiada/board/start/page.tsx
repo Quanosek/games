@@ -1,7 +1,7 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
 
 import styles from "../styles.module.scss";
 
@@ -41,13 +41,9 @@ export default function FamiliadaStartBoard() {
 
     // keyboard interactions
     useEffect(() => {
-      const KeyupEvent = (event: KeyboardEvent) => {
-        if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
-          return;
-        }
-
-        // Spacebar to play/pause video
-        if (event.key === " ") setVideoPlaying((prev) => !prev);
+      const KeyupEvent = (e: KeyboardEvent) => {
+        if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+        if (e.key === " ") setVideoPlaying((prev) => !prev);
       };
 
       document.addEventListener("keyup", KeyupEvent);
@@ -112,7 +108,7 @@ export default function FamiliadaStartBoard() {
   const backgroundImage = `url("/familiada/images/background-title.webp")`;
 
   return (
-    <div className={styles.board} style={{ backgroundImage }}>
+    <div className={styles.game} style={{ backgroundImage }}>
       <audio src="/familiada/audio/intro.mp3" autoPlay />
     </div>
   );

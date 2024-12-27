@@ -39,6 +39,8 @@ export default function WisielecBoardComponent({ id }: { id: number }) {
       } catch {
         window.close();
       }
+    } else {
+      window.close();
     }
 
     setIsLoading(false);

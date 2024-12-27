@@ -1,14 +1,14 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { User, Game } from "next-auth";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-import styles from "@/styles/dashboard.module.scss";
 import { NunitoSans } from "@/lib/fonts";
+import styles from "@/styles/dashboard.module.scss";
 
 interface Games extends Game {
   label: string;

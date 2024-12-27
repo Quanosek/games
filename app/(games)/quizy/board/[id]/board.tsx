@@ -38,6 +38,8 @@ export default function QuizyBoardComponent({ id }: { id: number }) {
       } catch {
         window.close();
       }
+    } else {
+      window.close();
     }
 
     setIsLoading(false);

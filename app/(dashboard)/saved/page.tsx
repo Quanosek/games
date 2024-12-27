@@ -1,5 +1,4 @@
 import { auth } from "@/lib/auth";
-
 import GamesList from "./games-list";
 // import styles from "@/styles/dashboard.module.scss";
 
