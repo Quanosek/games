@@ -48,7 +48,7 @@ export default async function RootLayout({
                     width={28}
                     height={28}
                     draggable={false}
-                    priority
+                    priority={true}
                   />
                   <h1>Pokój gier</h1>
                 </Link>

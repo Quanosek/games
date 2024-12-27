@@ -1,17 +1,17 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { GameType } from "@/lib/enums";
+import TextareaAutosize from "react-textarea-autosize";
 
+import { GameType } from "@/lib/enums";
 import PageLayout from "@/components/wrappers/pageLayout";
 import SavedGame from "@/components/savedGame";
 import styles from "./styles.module.scss";
 
-export interface Data {
+export interface DataTypes {
   checked: boolean;
   question: string;
   answers: Array<{ value: string; points: number }>;
@@ -19,246 +19,63 @@ export interface Data {
 }
 
 export default function FamiliadaPage() {
-  const router = useRouter();
+  const type = GameType.FAMILIADA;
 
-  const emptyData: Data = {
+  const emptyData: DataTypes = {
     checked: false,
     question: "",
     answers: new Array(6).fill({ value: "", points: 0 }),
     multiply: undefined,
   };
 
-  const [data, setData] = useState<Data[]>([emptyData]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState<DataTypes[]>([emptyData]);
 
   // load game data
   useEffect(() => {
-    const type = "familiada";
+    const localData = localStorage.getItem(type);
 
-    try {
-      const localData = localStorage.getItem(`${type}`);
-
-      if (localData) {
+    if (localData) {
+      try {
         const parsed = JSON.parse(localData);
-
-        if (parsed.data) {
-          setData(parsed.data);
-        } else {
-          localStorage.setItem(`${type}`, JSON.stringify({ data: parsed }));
-        }
+        setData(parsed.data);
+      } catch {
+        localStorage.removeItem(type);
+        window.location.reload();
       }
-    } catch (_err) {
-      localStorage.removeItem(`${type}`);
-      window.location.reload();
-    } finally {
-      setLoading(false);
     }
-  }, [router]);
+
+    setIsLoading(false);
+  }, [type]);
 
   // save data on change
   useEffect(() => {
-    if (loading) return;
+    if (isLoading) return;
 
-    const localData = JSON.parse(localStorage.getItem("familiada") || "{}");
-    const { data: _, ...params } = localData;
-
-    localStorage.setItem("familiada", JSON.stringify({ data, ...params }));
-  }, [loading, data]);
+    const localData = JSON.parse(localStorage.getItem(type)!);
+    localStorage.setItem(type, JSON.stringify({ ...localData, data }));
+  }, [isLoading, data, type]);
 
   // check if board is empty
-  const emptyBoardCheck = (data: Data) => {
-    const { multiply: _, ...rest } = data;
-    return JSON.stringify(rest) === JSON.stringify(emptyData);
+  const emptyBoardCheck = (data: DataTypes) => {
+    return JSON.stringify(data) === JSON.stringify(emptyData);
   };
 
-  // MAIN COMPONENT
-  const FormBoard = (index: number) => (
-    <form
-      id={index.toString()}
-      key={index}
-      className={styles.board}
-      onSubmit={(e) => {
-        e.preventDefault();
+  // game form component
+  const MainComponent = (index: number) => {
+    const params = data[index];
+    if (!params) return null;
 
-        const answers = data[index].answers;
+    return (
+      <div id={`${index}`} className={styles.form}>
+        <div className={styles.controls}>
+          <h2>{`Plansza ${index + 1}/${data.length}`}</h2>
 
-        // form validation
-        if (answers.filter((el) => el.value && el.points).length < 3) {
-          return toast.error(
-            "Plansza musi zawierać co najmniej 3 uzupełnione odpowiedzi z punktami"
-          );
-        } else {
-          toast.success("Plansza jest gotowa do prezentacji");
-        }
-
-        // sort answers by points
-        const sorted = answers.sort((a, b) => {
-          return b.points - a.points;
-        });
-
-        // count filled answers
-        const filled = answers.filter((el) => {
-          return el.value && el.points;
-        }).length;
-
-        // update saved data
-        setData((prev) => {
-          const newData = [...prev];
-          newData[index] = data[index];
-          newData[index].checked = true;
-          newData[index].answers = sorted;
-
-          if (filled === 6) {
-            newData[index].multiply = 1;
-          } else if (filled > 3) {
-            newData[index].multiply = 2;
-          } else {
-            newData[index].multiply = 3;
-          }
-
-          return newData;
-        });
-      }}
-    >
-      <div className={styles.content}>
-        <label className={styles.question}>
-          <p>{index + 1}.</p>
-
-          <input
-            name={`${index}-question`}
-            placeholder={`Pytanie ${index + 1}`}
-            autoComplete="off"
-            maxLength={100}
-            value={data[index].question || ""}
-            onChange={(e) => {
-              // validate input
-              const value = e.target.value
-                .replace(/\s\s/g, " ") // double space
-                .replace(/^[\s]/, ""); // space as first character
-
-              // update data
-              setData((prev) => {
-                const newData = [...prev];
-                newData[index].question = value;
-                return newData;
-              });
-            }}
-          />
-        </label>
-
-        <div className={styles.answersList}>
-          {data[index].answers.map((answer, i) => (
-            <div key={i} className={styles.answer}>
-              <label className={styles.value}>
-                <p>Odpowiedź {i + 1}:</p>
-
-                <input
-                  name={`${index}-${i}-answer`}
-                  autoComplete="off"
-                  maxLength={17} // board limit
-                  value={answer.value || ""}
-                  required={Boolean(answer.points)}
-                  onChange={(e) => {
-                    // validate input
-                    const value = e.target.value
-                      .toUpperCase()
-                      .replace(/[^A-ZĄĆĘŁŃÓŚŹŻ!-/:-@\[-`{-~]/g, ""); // letters & unicode ranges
-
-                    // update data
-                    setData((prev) => {
-                      const newData = [...prev];
-                      newData[index].checked = false;
-                      newData[index].answers[i] = {
-                        ...newData[index].answers[i],
-                        value,
-                      };
-                      return newData;
-                    });
-                  }}
-                />
-              </label>
-
-              <label className={styles.points}>
-                <p>punkty:</p>
-                <input
-                  name={`${index}-${i}-points`}
-                  autoComplete="off"
-                  maxLength={2} // board limit
-                  value={answer.points || ""}
-                  required={Boolean(answer.value)}
-                  onChange={(e) => {
-                    // validate input
-                    const points = Number(
-                      e.target.value.replace(/[^0-9]/g, "")
-                    );
-
-                    // update data
-                    setData((prev) => {
-                      const newData = [...prev];
-                      newData[index].checked = false;
-                      newData[index].answers[i] = {
-                        ...newData[index].answers[i],
-                        points,
-                      };
-                      return newData;
-                    });
-                  }}
-                />
-              </label>
-            </div>
-          ))}
-
-          <div className={styles.pointsAmount}>
-            <p>
-              Suma:{" "}
-              {data[index].answers.reduce((acc, curr) => {
-                return acc + (curr.points || 0);
-              }, 0)}
-              /100
-            </p>
-
-            <select
-              style={{ display: data[index].checked ? "" : "none" }}
-              className={styles.multiply}
-              name={`${index}-multiply`}
-              title="Mnożnik punktów (zależny od ilości odpowiedzi)"
-              value={data[index].multiply}
-              onChange={(e) => {
-                const value = parseInt(e.target.value);
-
-                // update data
-                setData((prev) => {
-                  const newData = [...prev];
-                  newData[index].multiply = value;
-                  return newData;
-                });
-              }}
-            >
-              <option value={1}>× 1</option>
-              <option value={2}>× 2</option>
-              <option value={3}>× 3</option>
-              <option value={4}>× 4</option>
-            </select>
-          </div>
-        </div>
-
-        <div className={styles.bottomButtons}>
-          <div className={styles.controls}>
-            {/* delete button */}
+          <div className={styles.buttons}>
             <button
-              type="button"
-              disabled={data.length === 1 && emptyBoardCheck(data[index])}
-              title={
-                data.length === 1 && emptyBoardCheck(data[index])
-                  ? "Nie można usunąć ostatniej planszy"
-                  : "Wyczyść/usuń planszę"
-              }
+              disabled={data.length === 1 && emptyBoardCheck(params)}
               onClick={() => {
-                if (!emptyBoardCheck(data[index])) {
-                  if (!confirm("Czy na pewno chcesz wyczyścić pytanie?")) {
-                    return;
-                  }
-
+                if (!emptyBoardCheck(params)) {
                   setData((prev) => {
                     const newData = [...prev];
                     newData[index] = emptyData;
@@ -270,9 +87,12 @@ export default function FamiliadaPage() {
                     newData[index].checked = false;
                     if (newData.length > 1) newData.splice(index, 1);
 
+                    const scrollIndex =
+                      index + 1 === data.length ? data.length - 2 : "";
+
                     setTimeout(() => {
                       document
-                        .getElementById(index.toString())
+                        .getElementById(scrollIndex.toString())
                         ?.scrollIntoView({
                           behavior: "smooth",
                           block: "center",
@@ -286,18 +106,15 @@ export default function FamiliadaPage() {
             >
               <Image
                 className="icon"
-                alt="kosz"
+                alt="usuń"
                 src="/icons/trashcan.svg"
-                width={22}
-                height={22}
+                width={20}
+                height={20}
                 draggable={false}
               />
             </button>
 
-            {/* move down button */}
             <button
-              type="button"
-              title="Przenieś w dół"
               disabled={index + 1 === data.length}
               onClick={() => {
                 data[index].multiply = undefined;
@@ -305,9 +122,12 @@ export default function FamiliadaPage() {
 
                 setData((prev) => {
                   const newData = [...prev];
-                  const temp = newData[index];
-                  newData[index] = newData[index + 1];
-                  newData[index + 1] = temp;
+
+                  [newData[index], newData[index + 1]] = [
+                    newData[index + 1],
+                    newData[index],
+                  ];
+
                   return newData;
                 });
               }}
@@ -317,16 +137,13 @@ export default function FamiliadaPage() {
                 className="icon"
                 alt="w dół"
                 src="/icons/arrow.svg"
-                width={22}
-                height={22}
+                width={20}
+                height={20}
                 draggable={false}
               />
             </button>
 
-            {/* move up button */}
             <button
-              type="button"
-              title="Przenieś do góry"
               disabled={index === 0}
               onClick={() => {
                 data[index - 1].multiply = undefined;
@@ -334,9 +151,12 @@ export default function FamiliadaPage() {
 
                 setData((prev) => {
                   const newData = [...prev];
-                  const temp = newData[index];
-                  newData[index] = newData[index - 1];
-                  newData[index - 1] = temp;
+
+                  [newData[index], newData[index - 1]] = [
+                    newData[index - 1],
+                    newData[index],
+                  ];
+
                   return newData;
                 });
               }}
@@ -345,57 +165,247 @@ export default function FamiliadaPage() {
                 className="icon"
                 alt="w górę"
                 src="/icons/arrow.svg"
-                width={22}
-                height={22}
+                width={20}
+                height={20}
                 draggable={false}
               />
             </button>
-          </div>
 
-          <div>
-            <button type="submit">
-              <p>{"🔎 Sprawdź"}</p>
-            </button>
+            <p>{"•"}</p>
 
             <button
-              type="button"
-              disabled={!data[index].checked}
-              title={
-                !data[index].checked ? "Plansza nie została sprawdzona" : ""
-              }
+              className={styles.presentationButton}
+              disabled={!params.checked}
               onClick={() => {
-                open(
+                return open(
                   `/familiada/board/${index + 1}`,
                   "game_window",
                   "width=960, height=540"
                 );
               }}
             >
-              <p>{"🖥️ Prezentuj"}</p>
+              <p>Prezentuj</p>
             </button>
           </div>
         </div>
-      </div>
-    </form>
-  );
 
-  // MAIN RETURN
+        <form
+          className={styles.content}
+          onSubmit={(e) => {
+            e.preventDefault();
+
+            // form validation
+            if (
+              params.answers.filter((el) => el.value && el.points).length < 3
+            ) {
+              return toast.error(
+                "Plansza musi zawierać co najmniej 3 uzupełnione odpowiedzi z punktami"
+              );
+            }
+
+            toast.success("Plansza jest gotowa do prezentacji");
+
+            // sort answers by points
+            const sorted = params.answers.sort((a, b) => {
+              return b.points - a.points;
+            });
+
+            // count filled answers
+            const filled = params.answers.filter((el) => {
+              return el.value && el.points;
+            }).length;
+
+            // update saved data
+            setData((prev) => {
+              const newData = [...prev];
+              newData[index] = data[index];
+              newData[index].checked = true;
+              newData[index].answers = sorted;
+
+              if (filled === 6) {
+                newData[index].multiply = 1;
+              } else if (filled > 3) {
+                newData[index].multiply = 2;
+              } else {
+                newData[index].multiply = 3;
+              }
+
+              return newData;
+            });
+          }}
+        >
+          <label className={styles.question}>
+            <p>{`${index + 1}.`}</p>
+
+            <TextareaAutosize
+              name={`${index}-question`}
+              value={params.question}
+              placeholder="Wpisz treść pytania"
+              autoComplete="off"
+              maxLength={256}
+              onChange={(e) => {
+                const value = e.target.value
+                  .trimStart() // space as first character
+                  .replace(/\s\s+/g, " ") // double space
+                  .replace(/\n/g, ""); // enters
+
+                setData((prev) => {
+                  const newData = [...prev];
+                  newData[index].question = value;
+                  return newData;
+                });
+              }}
+            />
+          </label>
+
+          <hr />
+
+          <div className={styles.answers}>
+            {params.answers.map((answer, i) => (
+              <div key={i}>
+                <label className={styles.value}>
+                  <p>Odpowiedź {i + 1}:</p>
+
+                  <input
+                    name={`${index}-${i}-answer`}
+                    value={params.answers[i].value}
+                    placeholder={i === 0 ? "Wpisz odpowiedź" : ""}
+                    autoComplete="off"
+                    maxLength={17} // board limit
+                    required={!!answer.points}
+                    onChange={(e) => {
+                      const regex =
+                        /[^A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż\s!-/:-@\[-`{-~]/g;
+
+                      const value = e.target.value
+                        .replace(regex, "") // special characters
+                        .trimStart() // space as first character
+                        .replace(/\s\s+/g, " "); // double space
+
+                      setData((prev) => {
+                        const newData = [...prev];
+                        newData[index].checked = false;
+                        newData[index].answers[i] = {
+                          ...newData[index].answers[i],
+                          value,
+                        };
+                        return newData;
+                      });
+                    }}
+                    onBlur={() => {
+                      setData((prev) => {
+                        const newData = [...prev];
+                        newData[index].answers[i].value =
+                          newData[index].answers[i].value.toUpperCase();
+                        return newData;
+                      });
+                    }}
+                  />
+                </label>
+
+                <label className={styles.points}>
+                  <p>punkty:</p>
+
+                  <input
+                    type="number"
+                    name={`${index}-${i}-points`}
+                    value={answer.points || ""}
+                    placeholder={i === 0 ? "0" : ""}
+                    autoComplete="off"
+                    max={99} // board limit
+                    min={0}
+                    required={!!answer.value}
+                    onInput={(e) => {
+                      e.currentTarget.value = e.currentTarget.value.replace(
+                        /[^0-9]/g,
+                        ""
+                      );
+                    }}
+                    onChange={(e) => {
+                      if (e.target.value.length > 2) return;
+                      const points = Number(e.target.value);
+
+                      setData((prev) => {
+                        const newData = [...prev];
+                        newData[index].checked = false;
+                        newData[index].answers[i] = {
+                          ...newData[index].answers[i],
+                          points,
+                        };
+                        return newData;
+                      });
+                    }}
+                  />
+                </label>
+              </div>
+            ))}
+          </div>
+
+          <hr />
+
+          <div className={styles.pointsAmount}>
+            <button type="submit">
+              <p>{"🔎 Sprawdź"}</p>
+            </button>
+
+            <div>
+              <p>
+                {"Suma: "}
+                {data[index].answers.reduce((acc, curr) => {
+                  return acc + (curr.points || 0);
+                }, 0)}
+                /100
+              </p>
+
+              <select
+                style={{ display: data[index].checked ? "" : "none" }}
+                name={`${index}-multiply`}
+                value={data[index].multiply}
+                className={styles.multiply}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+
+                  setData((prev) => {
+                    const newData = [...prev];
+                    newData[index].multiply = value;
+                    return newData;
+                  });
+                }}
+              >
+                <option value={1}>{"× 1"}</option>
+                <option value={2}>{"× 2"}</option>
+                <option value={3}>{"× 3"}</option>
+                <option value={4}>{"× 4"}</option>
+                <option value={5}>{"× 5"}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+    );
+  };
+
+  // main component render
   return (
     <PageLayout>
-      <SavedGame type={GameType.FAMILIADA} data={JSON.stringify(data)} />
+      <SavedGame type={type} data={JSON.stringify(data)} />
 
-      <div className={styles.gameLogo}>
+      <div className={styles.logo}>
+        <p onClick={() => document.getElementById("legal")?.scrollIntoView()}>
+          {"*"}
+        </p>
+
         <Image
           alt="Familiada"
           src="/familiada/images/logo.svg"
           width={800}
           height={130}
           draggable={false}
-          priority
+          priority={true}
         />
       </div>
 
-      <div className={styles.actionButtons}>
+      <div className={styles.navigation}>
         <Link href="/familiada/rules">
           <p>{"📖 Zasady gry"}</p>
         </Link>
@@ -413,51 +423,62 @@ export default function FamiliadaPage() {
         </button>
       </div>
 
-      {loading ? (
+      {isLoading && (
         <div className="loading">
           <p>Trwa ładowanie...</p>
         </div>
-      ) : (
-        <div className={styles.container}>
-          {[...Array(data.length)].map((_, index) => FormBoard(index))}
-
-          <button
-            className={styles.addButton}
-            disabled={emptyBoardCheck(data[data.length - 1])}
-            title={
-              emptyBoardCheck(data[data.length - 1])
-                ? "Uzupełnij poprzednią planszę przed dodaniem nowej"
-                : ""
-            }
-            onClick={() => {
-              setData([...data, emptyData]);
-
-              setTimeout(() => {
-                document
-                  .getElementById(data.length.toString())
-                  ?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center",
-                  });
-              }, 1);
-            }}
-          >
-            <Image
-              className="icon"
-              alt="+"
-              src="/icons/plus.svg"
-              width={18}
-              height={18}
-              draggable={false}
-            />
-            <p>Nowe pytanie</p>
-          </button>
-        </div>
       )}
 
-      <div className={styles.credits}>
+      <div
+        className={styles.container}
+        style={{
+          visibility: isLoading ? "hidden" : "visible",
+          position: "relative",
+          top: isLoading ? 10 : 0,
+          opacity: isLoading ? 0 : 1,
+          transition: "top 150ms ease-out, opacity 200ms ease-out",
+        }}
+      >
+        <div className={styles.formsContainer}>
+          {Array.from({ length: data.length }).map((_, index) => (
+            <Fragment key={index}>{MainComponent(index)}</Fragment>
+          ))}
+        </div>
+
+        <button
+          className={styles.formButton}
+          disabled={emptyBoardCheck(data[data.length - 1])}
+          onClick={() => {
+            if (data.length >= 99) {
+              return toast.error("Osiągnięto limit 99 dodanych planszy");
+            }
+
+            setData([...data, emptyData]);
+
+            setTimeout(() => {
+              document.getElementById(data.length.toString())?.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              });
+            }, 1);
+          }}
+        >
+          <Image
+            className="icon"
+            alt="+"
+            src="/icons/plus.svg"
+            width={16}
+            height={16}
+            draggable={false}
+          />
+
+          <p>Dodaj planszę</p>
+        </button>
+      </div>
+
+      <div id="legal" className={styles.legal}>
         <p>
-          Gra została stworzona na podstawie polskiego teleturnieju{" "}
+          <b>{"*"}</b> Gra została stworzona na podstawie polskiego teleturnieju{" "}
           <Link
             href="https://pl.wikipedia.org/wiki/Familiada"
             target="_blank"

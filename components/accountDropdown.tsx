@@ -43,6 +43,7 @@ export default function AccountDropdownComponent({
           src={user.image ?? "/icons/profile.svg"}
           width={100}
           height={100}
+          priority={true}
         />
       </button>
 

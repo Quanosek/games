@@ -88,12 +88,27 @@ export default function WisielecPage() {
     };
 
     return (
-      <div id={`${index}`} className={styles.form}>
+      <form
+        id={`${index}`}
+        className={styles.form}
+        onSubmit={(e) => {
+          e.preventDefault();
+
+          if (!(params.category && params.phrase)) return;
+
+          return open(
+            `/wisielec/board/${index + 1}`,
+            "game_window",
+            "width=960, height=540"
+          );
+        }}
+      >
         <div className={styles.controls}>
           <h2>{`Plansza ${index + 1}/${data.length}`}</h2>
 
           <div className={styles.buttons}>
             <button
+              type="button"
               disabled={data.length === 1 && emptyBoardCheck(params)}
               onClick={() => {
                 if (!emptyBoardCheck(params)) {
@@ -107,9 +122,12 @@ export default function WisielecPage() {
                     const newData = [...prev];
                     if (newData.length > 1) newData.splice(index, 1);
 
+                    const scrollIndex =
+                      index + 1 === data.length ? data.length - 2 : "";
+
                     setTimeout(() => {
                       document
-                        .getElementById(index.toString())
+                        .getElementById(scrollIndex.toString())
                         ?.scrollIntoView({
                           behavior: "smooth",
                           block: "center",
@@ -132,6 +150,7 @@ export default function WisielecPage() {
             </button>
 
             <button
+              type="button"
               disabled={index + 1 === data.length}
               onClick={() => {
                 setData((prev) => {
@@ -158,6 +177,7 @@ export default function WisielecPage() {
             </button>
 
             <button
+              type="button"
               disabled={index === 0}
               onClick={() => {
                 setData((prev) => {
@@ -185,22 +205,16 @@ export default function WisielecPage() {
             <p>{"•"}</p>
 
             <button
+              type="submit"
               className={styles.presentationButton}
               disabled={!(params.category && params.phrase)}
-              onClick={() => {
-                return open(
-                  `/wisielec/board/${index + 1}`,
-                  "game_window",
-                  "width=960, height=540"
-                );
-              }}
             >
               <p>Prezentuj</p>
             </button>
           </div>
         </div>
 
-        <form className={styles.content}>
+        <div className={styles.content}>
           <div className={styles.params}>
             <label>
               <p>Dozwolone błędy:</p>
@@ -265,8 +279,8 @@ export default function WisielecPage() {
                 maxLength={32}
                 onChange={(e) => {
                   const value = e.target.value
-                    .replace(/\s\s/g, " ") // double space
-                    .replace(/^[\s]/, ""); // space as first character
+                    .trimStart() // space as first character
+                    .replace(/\s\s+/g, " "); // double space
 
                   setData((prev) => {
                     const newData = [...prev];
@@ -296,8 +310,8 @@ export default function WisielecPage() {
                 maxLength={128}
                 onChange={(e) => {
                   const value = e.target.value
-                    .replace(/\s\s/g, " ") // double space
-                    .replace(/^[\s]/, "") // space as first character
+                    .trimStart() // space as first character
+                    .replace(/\s\s+/g, " ") // double space
                     .replace(/\n/g, ""); // enters
 
                   setData((prev) => {
@@ -325,15 +339,15 @@ export default function WisielecPage() {
             <p>samogłoski: {phraseStats.vowelsCount} </p>
             <p>spółgłoski: {phraseStats.consonantsCount} </p>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     );
   };
 
   // main component render
   return (
     <PageLayout>
-      <SavedGame type={GameType.WISIELEC} data={JSON.stringify(data)} />
+      <SavedGame type={type} data={JSON.stringify(data)} />
 
       <h1 className={styles.title}>
         Gra w <span>wisielca</span>
@@ -356,7 +370,7 @@ export default function WisielecPage() {
         }}
       >
         <button
-          className={styles.formButton}
+          className={`${styles.formButton} ${styles.start}`}
           onClick={() => {
             const filteredData = data.filter((item: DataTypes) => {
               return item.category && item.phrase;
@@ -386,6 +400,10 @@ export default function WisielecPage() {
           className={styles.formButton}
           disabled={emptyBoardCheck(data[data.length - 1])}
           onClick={() => {
+            if (data.length >= 99) {
+              return toast.error("Osiągnięto limit 99 dodanych haseł");
+            }
+
             setData([...data, emptyData]);
 
             setTimeout(() => {
@@ -405,7 +423,7 @@ export default function WisielecPage() {
             draggable={false}
           />
 
-          <p>Nowe hasło</p>
+          <p>Dodaj hasło</p>
         </button>
       </div>
     </PageLayout>

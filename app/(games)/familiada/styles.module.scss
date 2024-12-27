@@ -1,15 +1,33 @@
-.gameLogo {
-  margin-top: min(0.5rem, 0.5vw);
+$gradient: linear-gradient(45deg, #cbb826, #c79924); // custom color theme
+
+.logo {
+  margin: min(0.5rem, 0.5vw) 0;
+  position: relative;
   user-select: none;
+
+  p {
+    opacity: 80%;
+    position: absolute;
+    top: -1rem;
+    right: 5rem;
+    font-size: 200%;
+    font-weight: bold;
+    cursor: help;
+    transition: opacity 150ms ease-out;
+
+    &:hover {
+      opacity: 100%;
+    }
+  }
 }
 
-.actionButtons {
+.navigation {
+  margin: -0.25rem 0 0.25rem;
   display: flex;
   align-items: center;
   gap: 20px;
 
   a {
-    // same as button global styling
     padding: 14px 32px;
     background-color: var(--primary);
     border-radius: 30px;
@@ -22,179 +40,36 @@
   }
 }
 
+// default form layout
+
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 1.2rem;
 }
 
-.board {
-  width: 45rem;
+.formButton {
+  width: 14rem;
+  border-radius: 8px;
+
+  img {
+    position: relative;
+    bottom: 1px;
+  }
+}
+
+.formsContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-
-  background-color: var(--background);
-  border-radius: 15px;
-  overflow: hidden;
+  gap: 0.8rem;
 }
 
-.content {
-  padding: 1rem 1.5rem 1.5rem;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+// legal notice
 
-  input {
-    width: 100%;
-  }
-}
-
-// Custom styling
-
-.question {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  font-size: 135%;
-  font-weight: bold;
-  background-color: var(--background);
-  border-radius: 5px 5px 0 0;
-  border-bottom: 1px solid #4e4e4e;
-  transition: filter 150ms ease-out;
-  cursor: text;
-
-  &:hover {
-    filter: contrast(0.85);
-  }
-
-  p {
-    margin-left: 12px;
-    user-select: none;
-  }
-
-  input {
-    padding-left: 10px;
-    background: none;
-    box-shadow: none;
-    filter: none !important;
-  }
-}
-
-.answersList {
-  margin-top: 0.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  font-size: 110%;
-}
-
-.answer {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-
-  label {
-    display: flex;
-    align-items: center;
-
-    p {
-      opacity: 90%;
-      font-size: 95%;
-    }
-
-    input {
-      width: 100%;
-
-      &:hover {
-        filter: contrast(0.9);
-      }
-      &:focus {
-        filter: contrast(0.85);
-      }
-      &:hover:focus {
-        filter: contrast(0.8);
-      }
-    }
-  }
-
-  .value {
-    p {
-      width: 7.5rem;
-    }
-
-    input {
-      width: 18rem;
-    }
-  }
-
-  .points {
-    p {
-      width: 4.5rem;
-    }
-
-    input {
-      width: 3.5rem;
-    }
-  }
-}
-
-.pointsAmount {
-  opacity: 90%;
-  position: relative;
-  margin-top: 0.5rem;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  font-size: 95%;
-
-  .multiply {
-    padding: 5px;
-    position: absolute;
-    right: -3rem;
-    width: 2.5rem;
-    text-align: center;
-  }
-}
-
-.bottomButtons {
-  margin-top: 0.5rem;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  div {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  button {
-    padding: 10px 28px;
-    border-radius: 5px;
-  }
-
-  .controls button {
-    padding: 8px;
-    height: 100%;
-    aspect-ratio: 1/1;
-  }
-}
-
-.addButton {
-  margin-top: calc(1.5rem - 14px);
-  width: 16rem;
-  border-radius: 6px;
-}
-
-.credits {
-  opacity: 35%;
+.legal {
+  opacity: 50%;
   margin-top: 3rem;
   width: 100%;
   height: 100%;
@@ -207,6 +82,13 @@
     width: 100%;
     font-size: 80%;
     text-align: center;
+
+    b {
+      position: relative;
+      top: 3px;
+      font-size: 150%;
+      font-weight: bold;
+    }
   }
 
   a {
@@ -216,7 +98,202 @@
   }
 }
 
-// RULES PAGE
+// game form component
+
+.form {
+  width: 42rem; // custom width
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  border-radius: 16px;
+  background-color: var(--background);
+  overflow: hidden;
+}
+
+$form-margin: 1rem;
+
+.controls {
+  position: relative;
+  padding: $form-margin;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: $gradient;
+  border-bottom: 1px solid var(--black);
+
+  &::before {
+    content: "";
+    opacity: 90%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--black);
+  }
+
+  & > * {
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  button {
+    opacity: 90%;
+    padding: 6px;
+    background: none;
+    border-radius: 4px;
+
+    &.presentationButton {
+      margin-left: 6px;
+      padding: 6px 16px;
+      border: 1px solid rgba(#ffffff, 0.5);
+      background-color: rgba(#ffffff, 0.15);
+    }
+  }
+}
+
+// custom form styling
+
+.content {
+  padding: 0.5rem $form-margin $form-margin;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  input,
+  textarea {
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  hr {
+    width: 100%;
+    height: 1.5px;
+    border-radius: 100%;
+    background-color: var(--primary);
+  }
+}
+
+.question {
+  position: relative;
+  margin: -0.5rem 0 -0.25rem;
+  width: 100%;
+
+  $default-padding: 0.7rem;
+  $number-padding: 44px;
+
+  p,
+  textarea {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  p {
+    z-index: 1;
+    position: absolute;
+    top: $default-padding;
+    left: 2px;
+    width: $number-padding;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  textarea {
+    padding: $default-padding;
+    padding-left: $number-padding;
+    background-color: var(--secondary);
+
+    &::placeholder {
+      position: relative;
+      top: 3px;
+    }
+  }
+}
+
+.answers {
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 105%;
+
+  div {
+    display: flex;
+    gap: 2rem;
+  }
+
+  label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .value {
+    width: 100%;
+
+    p {
+      width: 165px;
+    }
+
+    input {
+      width: 100%;
+      text-transform: uppercase;
+
+      &::placeholder {
+        text-transform: none;
+      }
+    }
+  }
+
+  .points {
+    p {
+      width: 65px;
+    }
+
+    input {
+      width: 85px;
+    }
+  }
+}
+
+.pointsAmount {
+  padding-left: 12px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+
+  button {
+    padding: 12px 32px;
+    font-size: 95%;
+  }
+
+  div {
+    position: relative;
+    right: 4rem;
+    display: flex;
+    align-items: center;
+    font-size: 105%;
+  }
+
+  .multiply {
+    padding: 5px;
+    position: absolute;
+    right: -3rem;
+    width: 2.5rem;
+    text-align: center;
+  }
+}
+
+// rules page layout
 
 .rulesTitle {
   position: relative;

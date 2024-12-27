@@ -88,8 +88,8 @@ export default function QuizyPage() {
           maxLength={128}
           onChange={(e) => {
             const value = e.target.value
-              .replace(/\s\s/g, " ") // double space
-              .replace(/^[\s]/, "") // space as first character
+              .trimStart() // space as first character
+              .replace(/\s\s+/g, " ") // double space
               .replace(/\n/g, ""); // enters
 
             setData((prev) => {
@@ -124,13 +124,13 @@ export default function QuizyPage() {
                 <input
                   name={`${i}-${j}-answer`}
                   value={answer.value}
-                  placeholder="Wpisz odpowiedź"
+                  placeholder={j === 0 ? "Wpisz odpowiedź" : ""}
                   autoComplete="off"
                   maxLength={64}
                   onChange={(e) => {
                     const value = e.target.value
-                      .replace(/\s\s/g, " ") // double space
-                      .replace(/^[\s]/, ""); // space as first character
+                      .trimStart() // space as first character
+                      .replace(/\s\s+/g, " "); // double space
 
                     setData((prev) => {
                       const newData = [...prev];
@@ -202,15 +202,15 @@ export default function QuizyPage() {
   const GapBoard = (i: number) => (
     <>
       <TextareaAutosize
-        value={data[i].question}
         name={`${i}-question`}
+        value={data[i].question}
         placeholder="Wpisz zdanie z luką"
         autoComplete="off"
         maxLength={256}
         onChange={(e) => {
           const value = e.target.value
-            .replace(/\s\s/g, " ") // double space
-            .replace(/^[\s]/, "") // space as first character
+            .trimStart() // space as first character
+            .replace(/\s\s+/g, " ") // double space
             .replace(/\n/g, ""); // enters
 
           setData((prev) => {
@@ -241,8 +241,8 @@ export default function QuizyPage() {
           className={styles.question}
           onChange={(e) => {
             const value = e.target.value
-              .replace(/\s\s/g, " ") // double space
-              .replace(/^[\s]/, "") // space as first character
+              .trimStart() // space as first character
+              .replace(/\s\s+/g, " ") // double space
               .replace(/\n/g, ""); // enters
 
             setData((prev) => {
@@ -266,8 +266,8 @@ export default function QuizyPage() {
           className={styles.answer}
           onChange={(e) => {
             const value = e.target.value
-              .replace(/\s\s/g, " ") // double space
-              .replace(/^[\s]/, "") // space as first character
+              .trimStart() // space as first character
+              .replace(/\s\s+/g, " ") // double space
               .replace(/\n/g, ""); // enters
 
             setData((prev) => {
@@ -301,7 +301,21 @@ export default function QuizyPage() {
     }
 
     return (
-      <div id={`${index}`} className={styles.form}>
+      <form
+        id={`${index}`}
+        className={styles.form}
+        onSubmit={(e) => {
+          e.preventDefault();
+
+          if (!emptyForm(params)) return;
+
+          return open(
+            `/quizy/board/${index + 1}`,
+            "game_window",
+            "width=960, height=540"
+          );
+        }}
+      >
         <div className={styles.controls}>
           <div className={styles.description}>
             <p>{`Plansza ${index + 1}/${data.length}`}</p>
@@ -322,6 +336,7 @@ export default function QuizyPage() {
 
           <div className={styles.buttons}>
             <button
+              type="button"
               onClick={() => {
                 if (data[index].question || data[index].answers[0]?.value) {
                   setData((prev) => {
@@ -341,9 +356,12 @@ export default function QuizyPage() {
                     const newData = [...prev];
                     newData.splice(index, 1);
 
+                    const scrollIndex =
+                      index + 1 === data.length ? data.length - 2 : "";
+
                     setTimeout(() => {
                       document
-                        .getElementById(index.toString())
+                        .getElementById(scrollIndex.toString())
                         ?.scrollIntoView({
                           behavior: "smooth",
                           block: "center",
@@ -366,6 +384,7 @@ export default function QuizyPage() {
             </button>
 
             <button
+              type="button"
               disabled={index + 1 === data.length}
               onClick={() => {
                 setData((prev) => {
@@ -392,6 +411,7 @@ export default function QuizyPage() {
             </button>
 
             <button
+              type="button"
               disabled={index === 0}
               onClick={() => {
                 setData((prev) => {
@@ -419,15 +439,9 @@ export default function QuizyPage() {
             <p>{"•"}</p>
 
             <button
+              type="submit"
               className={styles.presentationButton}
               disabled={!emptyForm(params)}
-              onClick={() => {
-                return open(
-                  `/quizy/board/${index + 1}`,
-                  "game_window",
-                  "width=960, height=540"
-                );
-              }}
             >
               <p>Prezentuj</p>
             </button>
@@ -439,14 +453,14 @@ export default function QuizyPage() {
           {params.type === "gap" && GapBoard(index)}
           {params.type === "open" && OpenBoard(index)}
         </div>
-      </div>
+      </form>
     );
   };
 
   // main component render
   return (
     <PageLayout>
-      <SavedGame type={GameType.QUIZY} data={JSON.stringify(data)} />
+      <SavedGame type={type} data={JSON.stringify(data)} />
 
       <h1 className={styles.title}>
         Gra w <span>Quizy</span>
@@ -471,7 +485,7 @@ export default function QuizyPage() {
         {data.length > 0 && (
           <>
             <button
-              className={styles.formButton}
+              className={`${styles.formButton} ${styles.start}`}
               onClick={() => {
                 if (!data.some(emptyForm)) {
                   return toast.error("Uzupełnij co najmniej jedną planszę");
@@ -498,7 +512,13 @@ export default function QuizyPage() {
         <div className={styles.dropdownHandler}>
           <button
             className={styles.formButton}
-            onClick={() => setShowDropdown(true)}
+            onClick={() => {
+              if (data.length >= 99) {
+                toast.error("Osiągnięto limit 99 dodanych pytań");
+              } else {
+                setShowDropdown(true);
+              }
+            }}
           >
             {data.length > 0 ? (
               <>

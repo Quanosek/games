@@ -12,6 +12,8 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0); // custom color theme
   }
 }
 
+// default form layout
+
 .container {
   display: flex;
   flex-direction: column;
@@ -139,7 +141,7 @@ $form-margin: 1rem;
 // custom form styling
 
 .content {
-  padding: 0.5rem $form-margin calc($form-margin + 0.5rem);
+  padding: 0.5rem $form-margin $form-margin;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -284,6 +286,7 @@ $form-margin: 1rem;
 }
 
 .instruction {
+  margin-bottom: 0.25rem;
   opacity: 65%;
   font-size: 90%;
 }

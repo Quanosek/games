@@ -290,7 +290,8 @@ main {
     box-shadow: none !important;
     cursor: pointer;
 
-    &:hover {
+    &:hover,
+    &:focus {
       filter: contrast(0.85);
     }
   }
