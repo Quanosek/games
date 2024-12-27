@@ -337,7 +337,17 @@ export default function FamiliadaPage() {
 
           <div className={styles.pointsAmount}>
             <button type="submit">
-              <p>{"🔎 Sprawdź"}</p>
+              <Image
+                style={{ rotate: "90deg" }}
+                className="icon"
+                alt=""
+                src="/icons/magnifying-glass.svg"
+                width={16}
+                height={16}
+                draggable={false}
+              />
+
+              <p>Sprawdź</p>
             </button>
 
             <div>
@@ -411,7 +421,7 @@ export default function FamiliadaPage() {
             );
           }}
         >
-          <p>{"✨ Tablica tytułowa"}</p>
+          <p>{"▶️ Tablica tytułowa"}</p>
         </button>
       </div>
 

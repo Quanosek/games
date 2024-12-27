@@ -274,6 +274,11 @@ $form-margin: 1rem;
   button {
     padding: 12px 32px;
     font-size: 95%;
+
+    img {
+      position: relative;
+      bottom: 1px;
+    }
   }
 
   div {
@@ -313,6 +318,11 @@ $form-margin: 1rem;
 
     &:hover {
       filter: contrast(0.8);
+    }
+
+    img {
+      position: relative;
+      bottom: 1.5px;
     }
   }
 }

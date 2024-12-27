@@ -1,6 +1,6 @@
 import localFont from "next/font/local";
 
-// Default
+// Default font-face
 export const Nexa = localFont({
   src: [
     {
@@ -21,13 +21,19 @@ export const Nexa = localFont({
   display: "swap",
 });
 
-// "Familiada"
+// Rules page font-face
+export const NunitoSans = localFont({
+  src: "../fonts/nunito-sans-semicondensed-regular.woff2",
+  display: "swap",
+});
+
+// "Familiada" boards
 export const Dotted = localFont({
   src: "../fonts/familiada-regular.woff2",
   display: "swap",
 });
 
-// "Postaw Na Milion"
+// "Postaw na milion" boards
 export const Myriad = localFont({
   src: [
     {

@@ -3,13 +3,7 @@ import Image from "next/image";
 import PageLayout from "@/components/wrappers/page-layout";
 
 import styles from "../styles.module.scss";
-import { Nexa } from "@/lib/fonts";
-
-import { Nunito_Sans } from "next/font/google";
-const Nunito = Nunito_Sans({
-  subsets: ["latin"],
-  display: "swap",
-});
+import { Nexa, NunitoSans } from "@/lib/fonts";
 
 export default function FamiliadaRulesPage() {
   return (
@@ -27,10 +21,10 @@ export default function FamiliadaRulesPage() {
           <p>Powrót</p>
         </Link>
 
-        <h1>Zasady gry</h1>
+        <h1>{"✨ Zasady gry ✨"}</h1>
       </div>
 
-      <div className={`${Nunito.className} ${styles.rulesContainer}`}>
+      <div className={`${NunitoSans.className} ${styles.rulesContainer}`}>
         <p>
           W programie uczestniczą przedstawiciele dwóch drużyn, z których każda
           liczy 5 osób. Każda drużyna ma wyznaczonego kapitana – głowę drużyny.
@@ -43,7 +37,7 @@ export default function FamiliadaRulesPage() {
         </p>
 
         <section>
-          <h2 className={Nexa.className}>Opis techniczny</h2>
+          <h2 className={Nexa.className}>{"Opis techniczny 🛠️"}</h2>
 
           <div className={styles.description}>
             <p>
@@ -59,7 +53,7 @@ export default function FamiliadaRulesPage() {
         </section>
 
         <section>
-          <h2 className={Nexa.className}>Sterowanie</h2>
+          <h2 className={Nexa.className}>{"Sterowanie ⌨️"}</h2>
 
           <div className={styles.description}>
             <p>
@@ -76,7 +70,7 @@ export default function FamiliadaRulesPage() {
         </section>
 
         <section>
-          <h2 className={Nexa.className}>Pierwszy etap</h2>
+          <h2 className={Nexa.className}>{"Pierwszy etap 1️⃣"}</h2>
 
           <div className={styles.description}>
             <p>

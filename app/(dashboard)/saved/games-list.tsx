@@ -8,6 +8,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 import styles from "@/styles/dashboard.module.scss";
+import { NunitoSans } from "@/lib/fonts";
 
 interface Games extends Game {
   label: string;
@@ -98,7 +99,9 @@ export default function SavedGamesList({ user }: { user: User | undefined }) {
 
             <hr />
 
-            <code className={styles.dataParams}>{game.data}</code>
+            <code className={`${NunitoSans.className} ${styles.dataParams}`}>
+              {game.data}
+            </code>
           </button>
 
           <button
