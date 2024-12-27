@@ -35,10 +35,7 @@ export default function WisielecBoardComponent({ id }: { id: number }) {
     if (localData) {
       try {
         const parsed = JSON.parse(localData);
-        const filteredData = parsed.data.filter((item: DataTypes) => {
-          return item.category && item.phrase;
-        });
-        setData(filteredData);
+        setData(parsed.data);
       } catch {
         window.close();
       }

@@ -22,8 +22,8 @@ export default function FamiliadaPage() {
   const type = GameType.FAMILIADA;
 
   const emptyData: DataTypes = {
-    checked: false,
     question: "",
+    checked: false,
     answers: new Array(6).fill({ value: "", points: 0 }),
     multiply: undefined,
   };
@@ -206,30 +206,22 @@ export default function FamiliadaPage() {
             toast.success("Plansza jest gotowa do prezentacji");
 
             // sort answers by points
-            const sorted = params.answers.sort((a, b) => {
+            const sorted = [...params.answers].sort((a, b) => {
               return b.points - a.points;
             });
 
             // count filled answers
-            const filled = params.answers.filter((el) => {
-              return el.value && el.points;
-            }).length;
+            const filled = sorted.filter((el) => el.value && el.points).length;
 
             // update saved data
             setData((prev) => {
               const newData = [...prev];
-              newData[index] = data[index];
-              newData[index].checked = true;
-              newData[index].answers = sorted;
-
-              if (filled === 6) {
-                newData[index].multiply = 1;
-              } else if (filled > 3) {
-                newData[index].multiply = 2;
-              } else {
-                newData[index].multiply = 3;
-              }
-
+              newData[index] = {
+                ...data[index],
+                checked: true,
+                answers: sorted,
+                multiply: filled === 6 ? 1 : filled > 3 ? 2 : 3,
+              };
               return newData;
             });
           }}

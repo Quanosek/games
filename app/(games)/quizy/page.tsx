@@ -16,24 +16,6 @@ export interface DataTypes {
   answers: Array<{ value: string; checked: boolean }>;
 }
 
-// allow presentation only on valid form values
-export function emptyForm(params: DataTypes) {
-  if (params.type === "closed") {
-    return (
-      params.question &&
-      params.answers.some((answer) => answer.checked) &&
-      params.answers.every((answer, index) => {
-        if (index === 0) return true;
-        return answer.value ? params.answers[index - 1].value : true;
-      })
-    );
-  } else if (params.type === "gap") {
-    return /\[.*?\]/.test(params.question); // square brackets check
-  } else if (params.type === "open") {
-    return params.question && params.answers[0].value;
-  }
-}
-
 export default function QuizyPage() {
   const type = GameType.QUIZY;
 
@@ -65,6 +47,24 @@ export default function QuizyPage() {
     const localData = JSON.parse(localStorage.getItem(type)!);
     localStorage.setItem(type, JSON.stringify({ ...localData, data }));
   }, [isLoading, data, type]);
+
+  // allow presentation only on valid form values
+  const emptyForm = (params: DataTypes) => {
+    if (params.type === "closed") {
+      return (
+        params.question &&
+        params.answers.some((answer) => answer.checked) &&
+        params.answers.every((answer, index) => {
+          if (index === 0) return true;
+          return answer.value ? params.answers[index - 1].value : true;
+        })
+      );
+    } else if (params.type === "gap") {
+      return /\[.*?\]/.test(params.question); // square brackets check
+    } else if (params.type === "open") {
+      return params.question && params.answers[0].value;
+    }
+  };
 
   // handle add buttons list show
   useEffect(() => {

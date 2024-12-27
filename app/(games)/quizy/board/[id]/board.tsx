@@ -8,7 +8,6 @@ import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
 import { GameType } from "@/lib/enums";
 import type { DataTypes } from "../../page";
-import { emptyForm } from "../../page";
 import styles from "./styles.module.scss";
 
 const KeyboardInteraction = (Shortcuts: any) => {
@@ -35,8 +34,7 @@ export default function QuizyBoardComponent({ id }: { id: number }) {
     if (localData) {
       try {
         const parsed = JSON.parse(localData);
-        const filteredData = parsed.data.filter(emptyForm);
-        setData(filteredData);
+        setData(parsed.data);
       } catch {
         window.close();
       }
