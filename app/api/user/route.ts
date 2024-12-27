@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { hash, compare } from "bcrypt";
 
 import db from "@/lib/db";
-import UserSession from "./userSession";
+import UserSession from "./user-session";
 
 // create new user account
 export async function POST(req: Request) {

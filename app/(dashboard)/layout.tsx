@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import PageLayout from "@/components/wrappers/pageLayout";
+import PageLayout from "@/components/wrappers/page-layout";
 
 export default async function DashboardLayout({
   children,

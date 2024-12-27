@@ -9,7 +9,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 import { RegisterUserInput, registerUserSchema } from "@/lib/zod";
-import PasswordInput from "@/components/passwordInput";
+import PasswordInput from "@/components/password-input";
 import Providers from "../providers";
 
 import styles from "@/styles/auth.module.scss";

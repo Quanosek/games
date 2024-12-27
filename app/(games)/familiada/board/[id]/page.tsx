@@ -124,7 +124,7 @@ export default function FamiliadaIdBoard({
           <Image
             className={styles.big}
             alt="X"
-            src="/familiada/images/x_big.webp"
+            src="/familiada/images/x-big.webp"
             width={111}
             height={283}
             draggable={false}
@@ -134,7 +134,7 @@ export default function FamiliadaIdBoard({
             <Image
               key={i}
               alt="x"
-              src="/familiada/images/x_small.webp"
+              src="/familiada/images/x-small.webp"
               width={111}
               height={163}
               draggable={false}
@@ -145,7 +145,7 @@ export default function FamiliadaIdBoard({
   };
 
   // main return
-  const backgroundImage = `url("/familiada/images/background_empty.webp")`;
+  const backgroundImage = `url("/familiada/images/background-empty.webp")`;
 
   return (
     <div
@@ -225,7 +225,7 @@ export default function FamiliadaIdBoard({
       )}
 
       {/* audio effects */}
-      <audio src="/familiada/audio/new_round.mp3" autoPlay />
+      <audio src="/familiada/audio/new-round.mp3" autoPlay />
       <audio ref={audioCorrect} src="/familiada/audio/correct.mp3" />
       <audio ref={audioWrong} src="/familiada/audio/wrong.mp3" />
     </div>

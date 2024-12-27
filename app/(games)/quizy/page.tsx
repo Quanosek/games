@@ -6,8 +6,8 @@ import toast from "react-hot-toast";
 import TextareaAutosize from "react-textarea-autosize";
 
 import { GameType } from "@/lib/enums";
-import PageLayout from "@/components/wrappers/pageLayout";
-import SavedGame from "@/components/savedGame";
+import PageLayout from "@/components/wrappers/page-layout";
+import SavedGame from "@/components/saved-game";
 import styles from "./styles.module.scss";
 
 export interface DataTypes {
@@ -290,13 +290,13 @@ export default function QuizyPage() {
 
     switch (params.type) {
       case "closed":
-        typeInfo = { src: "a_button", name: "Pytanie zamknięte" };
+        typeInfo = { src: "a-button", name: "Pytanie zamknięte" };
         break;
       case "gap":
-        typeInfo = { src: "magnifying_glass", name: "Uzupełnij lukę" };
+        typeInfo = { src: "magnifying-glass", name: "Uzupełnij lukę" };
         break;
       case "open":
-        typeInfo = { src: "thought_balloon", name: "Pytanie otwarte" };
+        typeInfo = { src: "thought-balloon", name: "Pytanie otwarte" };
         break;
     }
 

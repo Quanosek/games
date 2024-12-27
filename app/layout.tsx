@@ -5,7 +5,7 @@ import { Toaster } from "react-hot-toast";
 
 import { auth } from "@/lib/auth";
 import Wrapper from "@/components/wrappers/session";
-import AccountDropdown from "@/components/accountDropdown";
+import AccountDropdown from "@/components/account-dropdown";
 
 import "the-new-css-reset/css/reset.css";
 import "@/styles/globals.scss";
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     "Przeglądarkowe wersje popularnych gier towarzyskich i telewizyjnych teleturniejów w postaci interaktywnych planszy.",
 
   icons: {
-    icon: ["/favicons/game_die.ico", "/favicons/game_die.svg"],
-    apple: "/favicons/game_die.png",
+    icon: ["/favicons/game-die.ico", "/favicons/game-die.svg"],
+    apple: "/favicons/game-die.png",
   },
 };
 
@@ -44,7 +44,7 @@ export default async function RootLayout({
                 <Link href="/">
                   <Image
                     alt="🎲"
-                    src="/favicons/game_die.svg"
+                    src="/favicons/game-die.svg"
                     width={28}
                     height={28}
                     draggable={false}

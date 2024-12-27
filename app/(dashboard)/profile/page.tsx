@@ -3,10 +3,10 @@ import Link from "next/link";
 
 import { auth } from "@/lib/auth";
 import { Role } from "@/lib/enums";
-import AccountProviders from "./accountProviders";
-import ActionButtons from "./actionButtons";
-import SavedButton from "./savedButton";
-import UserData from "./userData";
+import AccountProviders from "./account-providers";
+import ActionButtons from "./action-buttons";
+import SavedButton from "./saved-button";
+import UserData from "./user-data";
 
 import styles from "@/styles/dashboard.module.scss";
 

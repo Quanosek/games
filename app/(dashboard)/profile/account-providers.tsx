@@ -66,7 +66,7 @@ export default function AccountProviders({ user }: { user: User | undefined }) {
           <Image
             className="icon"
             alt=""
-            src={`/icons/${provider}.svg`}
+            src={`/icons/socials/${provider}.svg`}
             width={40}
             height={40}
             draggable={false}

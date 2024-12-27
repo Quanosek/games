@@ -6,8 +6,8 @@ import Link from "next/link";
 import { useEffect, useState, Fragment } from "react";
 import { GameType } from "@/lib/enums";
 
-import PageLayout from "@/components/wrappers/pageLayout";
-import SavedGame from "@/components/savedGame";
+import PageLayout from "@/components/wrappers/page-layout";
+import SavedGame from "@/components/saved-game";
 import styles from "./styles.module.scss";
 
 export interface Data {

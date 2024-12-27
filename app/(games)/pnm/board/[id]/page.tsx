@@ -518,11 +518,11 @@ export default function PnmIdBoard({ params }: { params: { id: number } }) {
       {selectedQuestion && <GameLayout />}
 
       <audio ref={categoriesAudio} src="/pnm/audio/categories.mp3" />
-      <audio ref={selectAudio} src="/pnm/audio/category_select.mp3" />
-      <audio ref={answerAudio} src="/pnm/audio/answer_reveal.mp3" />
-      <audio ref={questionAudio} src="/pnm/audio/question_loop.mp3" loop />
-      <audio ref={timerAudio} src="/pnm/audio/question_timer.mp3" />
-      <audio ref={stopAudio} src="/pnm/audio/time_stop.mp3" />
+      <audio ref={selectAudio} src="/pnm/audio/category-select.mp3" />
+      <audio ref={answerAudio} src="/pnm/audio/answer-reveal.mp3" />
+      <audio ref={questionAudio} src="/pnm/audio/question-loop.mp3" loop />
+      <audio ref={timerAudio} src="/pnm/audio/question-timer.mp3" />
+      <audio ref={stopAudio} src="/pnm/audio/time-stop.mp3" />
     </div>
   );
 }

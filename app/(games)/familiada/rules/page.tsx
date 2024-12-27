@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import PageLayout from "@/components/wrappers/pageLayout";
+import PageLayout from "@/components/wrappers/page-layout";
 
 import styles from "../styles.module.scss";
 import { Nexa } from "@/lib/fonts";

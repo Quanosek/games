@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import PageLayout from "@/components/wrappers/pageLayout";
+import PageLayout from "@/components/wrappers/page-layout";
 
 import styles from "@/styles/home.module.scss";
 
@@ -14,7 +14,7 @@ export default function HomePage() {
         <Link href="/quizy">
           <Image
             alt="❔"
-            src="/favicons/white_question_mark.svg"
+            src="/favicons/white-question-mark.svg"
             width={22}
             height={22}
             draggable={false}
@@ -36,7 +36,7 @@ export default function HomePage() {
         <Link href="/familiada">
           <Image
             alt="💰"
-            src="/favicons/money_bag.svg"
+            src="/favicons/money-bag.svg"
             width={22}
             height={22}
             draggable={false}
@@ -47,7 +47,7 @@ export default function HomePage() {
         <Link tabIndex={-1} className="disabled" href="/pnm">
           <Image
             alt="💸"
-            src="/favicons/dollar_banknote.svg"
+            src="/favicons/dollar-banknote.svg"
             width={22}
             height={22}
             draggable={false}

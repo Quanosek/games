@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 
-import GamesList from "./gamesList";
+import GamesList from "./games-list";
 // import styles from "@/styles/dashboard.module.scss";
 
 export default async function SavedPage() {

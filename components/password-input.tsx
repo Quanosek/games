@@ -33,7 +33,7 @@ export default function PasswordInputComponent({
         <Image
           className="icon"
           alt=""
-          src={`/icons/${passwordVisible ? "eye" : "eye_slash"}.svg`}
+          src={`/icons/${passwordVisible ? "eye" : "eye-slash"}.svg`}
           width={24}
           height={24}
           draggable={false}

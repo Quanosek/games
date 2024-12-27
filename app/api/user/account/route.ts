@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import db from "@/lib/db";
-import UserSession from "../userSession";
+import UserSession from "../user-session";
 
 // get user account providers data
 export async function GET(req: Request) {

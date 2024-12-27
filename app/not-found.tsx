@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import PageLayout from "@/components/wrappers/pageLayout";
+import PageLayout from "@/components/wrappers/page-layout";
 
 export default function NotFoundPage() {
   const router = useRouter();

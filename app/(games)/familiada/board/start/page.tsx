@@ -109,7 +109,7 @@ export default function FamiliadaStartBoard() {
   if (showIntro) return <IntroComponent />;
 
   // show start board
-  const backgroundImage = `url("/familiada/images/background_title.webp")`;
+  const backgroundImage = `url("/familiada/images/background-title.webp")`;
 
   return (
     <div className={styles.board} style={{ backgroundImage }}>

@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 
 import { LoginUserInput, loginUserSchema } from "@/lib/zod";
-import PasswordInput from "@/components/passwordInput";
+import PasswordInput from "@/components/password-input";
 import Providers from "../providers";
 
 import styles from "@/styles/auth.module.scss";

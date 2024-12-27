@@ -31,8 +31,8 @@
 
 <div>
   <img align=center alt="Politechnika Lubelska" src="./emblem.png" height="120" />
-  <img align=center alt="University of Technology" src="./logo_white.png#gh-dark-mode-only" height="150" />
-  <img align=center alt="University of Technology" src="./logo_black.png#gh-light-mode-only" height="150" />
+  <img align=center alt="University of Technology" src="./logo-white.png#gh-dark-mode-only" height="150" />
+  <img align=center alt="University of Technology" src="./logo-black.png#gh-light-mode-only" height="150" />
 </div>
 
 <p>This is my engineering diploma project for 2025 for the Lublin University of Technology (Poland), Faculty of Electrical Engineering and Computer Science, Department of Electrical Engineering and Intelligent Technologies.</p>

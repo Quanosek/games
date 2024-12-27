@@ -198,7 +198,7 @@ export default function QuizyBoardComponent({ id }: { id: number }) {
             <Image
               className="icon"
               alt=""
-              src="/icons/magnifying_glass.svg"
+              src="/icons/magnifying-glass.svg"
               width={18}
               height={18}
               draggable={false}
@@ -244,7 +244,7 @@ export default function QuizyBoardComponent({ id }: { id: number }) {
             <Image
               className="icon"
               alt=""
-              src="/icons/thought_balloon.svg"
+              src="/icons/thought-balloon.svg"
               width={18}
               height={18}
               draggable={false}

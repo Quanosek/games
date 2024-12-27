@@ -17,7 +17,7 @@ export default function AuthProviders({ redirectTo }: { redirectTo: string }) {
         <Image
           className="icon"
           alt="Google"
-          src="/icons/google.svg"
+          src="/icons/socials/google.svg"
           width={34}
           height={34}
         />
@@ -30,7 +30,7 @@ export default function AuthProviders({ redirectTo }: { redirectTo: string }) {
         <Image
           className="icon"
           alt="Facebook"
-          src="/icons/facebook.svg"
+          src="/icons/socials/facebook.svg"
           width={34}
           height={34}
         />
@@ -43,7 +43,7 @@ export default function AuthProviders({ redirectTo }: { redirectTo: string }) {
         <Image
           className="icon"
           alt="Github"
-          src="/icons/github.svg"
+          src="/icons/socials/github.svg"
           width={34}
           height={34}
         />
@@ -56,7 +56,7 @@ export default function AuthProviders({ redirectTo }: { redirectTo: string }) {
         <Image
           className="icon"
           alt="Discord"
-          src="/icons/discord.svg"
+          src="/icons/socials/discord.svg"
           width={34}
           height={34}
         />

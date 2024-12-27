@@ -10,7 +10,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 import { userDataInput, userDataSchema } from "@/lib/zod";
-import PasswordInput from "@/components/passwordInput";
+import PasswordInput from "@/components/password-input";
 
 import styles from "@/styles/dashboard.module.scss";
 
