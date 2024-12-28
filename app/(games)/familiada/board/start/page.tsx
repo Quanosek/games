@@ -65,7 +65,7 @@ export default function FamiliadaStartBoard() {
             }}
           >
             <button
-              title="Odtwórz czołówkę teleturnieju"
+              title="Odtwórz czołówkę teleturnieju [Spacja]"
               className={styles.playButton}
             >
               <Image

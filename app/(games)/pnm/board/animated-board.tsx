@@ -28,7 +28,6 @@ export default function AnimatedBoardComponent({
         <div className={styles.content}>{children}</div>
 
         <Image
-          className={styles.background}
           alt=""
           src="/pnm/images/board.webp"
           width={2560}

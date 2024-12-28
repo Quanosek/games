@@ -17,6 +17,7 @@
 }
 
 .credits {
+  z-index: 1;
   opacity: 45%;
   position: absolute;
   bottom: 1.2vw;
@@ -128,13 +129,13 @@
   }
 }
 
-.logoImage {
+.logo {
   opacity: 90%;
   width: 45vw;
   height: auto;
 }
 
-// ID BOARD - CATEGORIES
+// category select
 
 .categorySelect {
   position: absolute;
@@ -167,7 +168,7 @@
   }
 }
 
-// ID BOARD - GAME
+// main game layout
 
 .answer {
   position: absolute;

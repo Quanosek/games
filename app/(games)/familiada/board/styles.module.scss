@@ -25,14 +25,6 @@
   cursor: default;
 }
 
-.game {
-  width: 100%;
-  height: 100%;
-  // background-image: "";
-  background-size: contain;
-  background-repeat: no-repeat;
-}
-
 // start screen layout
 
 .introComponent {
@@ -95,6 +87,14 @@
   video {
     width: 100%;
   }
+}
+
+.game {
+  width: 100%;
+  height: 100%;
+  // background-image: "";
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 // game board layout

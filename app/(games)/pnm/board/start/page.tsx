@@ -42,13 +42,9 @@ export default function PnmStartBoard() {
 
     // keyboard interactions
     useEffect(() => {
-      const KeyupEvent = (event: KeyboardEvent) => {
-        if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
-          return;
-        }
-
-        // Spacebar to play/pause video
-        if (event.key === " ") setVideoPlaying((prev) => !prev);
+      const KeyupEvent = (e: KeyboardEvent) => {
+        if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+        if (e.key === " ") setVideoPlaying((prev) => !prev);
       };
 
       document.addEventListener("keyup", KeyupEvent);
@@ -70,7 +66,7 @@ export default function PnmStartBoard() {
             }}
           >
             <button
-              title="Odtwórz czołówkę teleturnieju"
+              title="Odtwórz czołówkę teleturnieju [Spacja]"
               className={styles.playButton}
             >
               <Image
@@ -113,7 +109,7 @@ export default function PnmStartBoard() {
   return (
     <AnimatedBoard>
       <Image
-        className={styles.logoImage}
+        className={styles.logo}
         alt=""
         src="/pnm/images/logo.webp"
         width={949}
