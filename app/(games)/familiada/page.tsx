@@ -106,7 +106,7 @@ export default function FamiliadaPage() {
             >
               <Image
                 className="icon"
-                alt="usuń"
+                alt="Usuń"
                 src="/icons/trashcan.svg"
                 width={20}
                 height={20}
@@ -135,7 +135,7 @@ export default function FamiliadaPage() {
               <Image
                 style={{ rotate: "180deg" }}
                 className="icon"
-                alt="w dół"
+                alt="W dół"
                 src="/icons/arrow.svg"
                 width={20}
                 height={20}
@@ -163,7 +163,7 @@ export default function FamiliadaPage() {
             >
               <Image
                 className="icon"
-                alt="w górę"
+                alt="W górę"
                 src="/icons/arrow.svg"
                 width={20}
                 height={20}
@@ -350,7 +350,7 @@ export default function FamiliadaPage() {
               <p>Sprawdź</p>
             </button>
 
-            <div>
+            <div className={styles.multiplier}>
               <p>
                 {"Suma: "}
                 {data[index].answers.reduce((acc, curr) => {
@@ -363,7 +363,6 @@ export default function FamiliadaPage() {
                 style={{ display: data[index].checked ? "" : "none" }}
                 name={`${index}-multiply`}
                 value={data[index].multiply}
-                className={styles.multiply}
                 onChange={(e) => {
                   const value = parseInt(e.target.value);
 

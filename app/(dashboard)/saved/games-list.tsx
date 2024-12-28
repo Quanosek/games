@@ -110,8 +110,8 @@ export default function SavedGamesList({ user }: { user: User | undefined }) {
           >
             <Image
               className="icon"
+              alt="Usuń"
               src="/icons/trashcan.svg"
-              alt="usuń"
               width={24}
               height={24}
               draggable={false}

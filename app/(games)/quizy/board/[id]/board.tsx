@@ -291,7 +291,7 @@ export default function QuizyBoardComponent({ id }: { id: number }) {
           <Image
             style={{ rotate: "-90deg" }}
             className="icon"
-            alt="w lewo"
+            alt="W lewo"
             src="/icons/arrow.svg"
             width={50}
             height={50}
@@ -306,7 +306,7 @@ export default function QuizyBoardComponent({ id }: { id: number }) {
           <Image
             style={{ rotate: "90deg" }}
             className="icon"
-            alt="w prawo"
+            alt="W prawo"
             src="/icons/arrow.svg"
             width={50}
             height={50}

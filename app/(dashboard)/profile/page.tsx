@@ -25,7 +25,7 @@ export default async function ProfilePage() {
             style={{
               borderColor: admin ? "var(--gold)" : "var(--white)",
             }}
-            alt="profile_picture"
+            alt=""
             src={user?.image ?? "/icons/profile.svg"}
             width={150}
             height={150}

@@ -507,12 +507,12 @@ export default function PnmIdBoard({ params }: { params: { id: number } }) {
   // main return
   return (
     <div
+      className={Myriad.className}
       style={{
         position: "relative",
         width: "100%",
         height: "100%",
       }}
-      className={Myriad.className}
     >
       {!selectedQuestion && <CategoriesLayout />}
       {selectedQuestion && <GameLayout />}

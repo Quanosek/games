@@ -21,8 +21,8 @@ export default function PnmBoardLayout({
   }, []);
 
   return (
-    <div className={styles.layout}>
-      <div className={styles.container}>
+    <div className={styles.board}>
+      <div className={styles.layout}>
         <>{children}</>
 
         <div className={styles.credits}>

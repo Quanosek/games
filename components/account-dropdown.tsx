@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { User } from "next-auth";
@@ -13,6 +14,8 @@ export default function AccountDropdownComponent({
 }: {
   user: User | undefined;
 }) {
+  const router = useRouter();
+
   const admin = user?.role === Role.ADMIN;
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -65,7 +68,13 @@ export default function AccountDropdownComponent({
 
         <hr />
 
-        <button onClick={async () => await signOut()}>
+        <button
+          onClick={async () => {
+            await signOut({ redirect: false });
+            router.push("/");
+            router.refresh();
+          }}
+        >
           <p>Wyloguj się</p>
         </button>
       </div>

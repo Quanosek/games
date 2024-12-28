@@ -25,19 +25,19 @@ export default function PageLayoutWrapper({
 
       <footer>
         <section>
-          <p>
-            Stworzone z 💙 przez{" "}
+          <div>
+            <p>Stworzone przez </p>
             <Link href="https://github.com/quanosek" target="_blank">
               Jakuba Kłało
             </Link>
-          </p>
+          </div>
 
-          <p>
-            Wszelkie prawa zastrzeżone &#169; 2024 | domena{" "}
+          <div>
+            <p>Wszelkie prawa zastrzeżone &#169; 2024 | domena </p>
             <Link href="https://www.klalo.pl/" target="_blank">
               klalo.pl
             </Link>
-          </p>
+          </div>
         </section>
       </footer>
     </>

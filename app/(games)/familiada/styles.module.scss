@@ -280,20 +280,24 @@ $form-margin: 1.25rem;
     }
   }
 
-  div {
+  .multiplier {
     position: relative;
-    right: 4rem;
     display: flex;
     align-items: center;
     font-size: 105%;
-  }
 
-  .multiply {
-    padding: 5px;
-    position: absolute;
-    right: -3rem;
-    width: 2.5rem;
-    text-align: center;
+    p {
+      position: relative;
+      right: 3rem;
+    }
+
+    select {
+      padding: 5px;
+      position: absolute;
+      right: 0;
+      width: 2.5rem;
+      text-align: center;
+    }
   }
 }
 

@@ -1,6 +1,4 @@
-// BOARD LAYOUT
-
-.layout {
+.board {
   z-index: 1;
   position: absolute;
   top: 0;
@@ -12,20 +10,20 @@
   letter-spacing: 0.05vw;
 }
 
-.container {
+.layout {
   width: 100%;
   height: 100%;
   aspect-ratio: 16/9;
 }
 
 .credits {
-  z-index: 1;
   opacity: 45%;
   position: absolute;
-  bottom: min(1vw, 3vh);
+  bottom: 1.2vw;
   width: 100%;
   font-size: 1vw;
   text-align: center;
+  cursor: default;
 }
 
 // ANIMATED BOARD COMPONENT

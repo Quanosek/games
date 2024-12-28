@@ -13,8 +13,8 @@ export default function PnmRulesPage() {
           <Image
             style={{ rotate: "-90deg" }}
             className="icon"
+            alt=""
             src="/icons/arrow.svg"
-            alt="w lewo"
             width={25}
             height={25}
           />

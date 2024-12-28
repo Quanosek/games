@@ -115,7 +115,7 @@ export default function PnmPage() {
             >
               <Image
                 className="icon"
-                alt="usuń"
+                alt="Usuń"
                 src="/icons/trashcan.svg"
                 width={20}
                 height={20}
@@ -137,7 +137,7 @@ export default function PnmPage() {
               <Image
                 style={{ rotate: "180deg" }}
                 className="icon"
-                alt="w dół"
+                alt="W dół"
                 src="/icons/arrow.svg"
                 width={20}
                 height={20}
@@ -158,7 +158,7 @@ export default function PnmPage() {
             >
               <Image
                 className="icon"
-                alt="w górę"
+                alt="W górę"
                 src="/icons/arrow.svg"
                 width={20}
                 height={20}
@@ -171,7 +171,17 @@ export default function PnmPage() {
             <button
               type="submit"
               className={styles.presentationButton}
-              disabled={true}
+              disabled={
+                !params.every(({ category, question, answers }) => {
+                  return [
+                    category,
+                    question,
+                    answers[0].value,
+                    answers[1].value,
+                    answers.some((answer) => answer.checked),
+                  ].every(Boolean);
+                })
+              }
             >
               <p>Prezentuj</p>
             </button>

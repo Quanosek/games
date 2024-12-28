@@ -101,9 +101,14 @@ header {
     display: flex;
     align-items: center;
 
-    h1 {
-      font-size: 120%;
-      font-weight: bold;
+    .title {
+      position: relative;
+      bottom: 3.5%;
+
+      p {
+        font-size: 120%;
+        font-weight: bold;
+      }
     }
   }
 
@@ -168,17 +173,21 @@ header {
 }
 
 footer {
-  font-size: 95%;
+  font-size: 85%;
 
   section {
     padding: min(1.5rem, 5vw) min(3rem, 3%);
   }
 
-  p {
+  div {
     opacity: 80%;
+    height: 1rem;
     display: flex;
-    gap: 3px;
-    font-size: 90%;
+    align-items: center;
+  }
+
+  p {
+    white-space: pre-wrap;
   }
 
   a {
@@ -194,10 +203,11 @@ footer {
     section {
       flex-direction: column;
       gap: min(0.5rem, 2vw);
+      font-size: min(95%, 2.6vw);
     }
 
-    p {
-      font-size: min(95%, 2.6vw);
+    div {
+      height: auto;
     }
   }
 }

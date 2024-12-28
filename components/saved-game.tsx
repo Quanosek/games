@@ -100,7 +100,7 @@ export default function SavedGameComponent({ type, data }: Params) {
           <button onClick={saveGame}>
             <Image
               className="icon"
-              alt="save"
+              alt="Zapisz"
               src="/icons/save.svg"
               width={20}
               height={20}
@@ -139,7 +139,7 @@ export default function SavedGameComponent({ type, data }: Params) {
               <button onClick={clearGame}>
                 <Image
                   className="icon"
-                  alt="exit"
+                  alt="Zamknij"
                   src="/icons/close.svg"
                   width={18}
                   height={18}

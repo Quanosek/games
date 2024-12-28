@@ -116,7 +116,7 @@ export default function FamiliadaBoardComponent({ id }: { id: number }) {
         {(counter < 0 && (
           <Image
             className={styles.big}
-            alt="X"
+            alt=""
             src="/familiada/images/x-big.webp"
             width={111}
             height={283}
@@ -126,7 +126,7 @@ export default function FamiliadaBoardComponent({ id }: { id: number }) {
           Array.from({ length: counter }).map((_, i) => (
             <Image
               key={i}
-              alt="x"
+              alt=""
               src="/familiada/images/x-small.webp"
               width={111}
               height={163}

@@ -32,7 +32,7 @@ export default function FamiliadaStartBoard() {
         clearTimeout(cursorHideTimeout.current);
         cursorHideTimeout.current = setTimeout(() => {
           return setShowCursor(false);
-        }, 1_500);
+        }, 1500);
       };
 
       document.addEventListener("mousemove", mouseMoveEvent);
@@ -70,7 +70,7 @@ export default function FamiliadaStartBoard() {
             >
               <Image
                 className="icon"
-                alt=""
+                alt="Odtwórz"
                 src="/icons/play.svg"
                 width={100}
                 height={100}
