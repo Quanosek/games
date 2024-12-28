@@ -85,7 +85,7 @@ export default function QuizyPage() {
           value={data[i].question}
           placeholder="Wpisz treść pytania"
           autoComplete="off"
-          maxLength={128}
+          maxLength={171}
           onChange={(e) => {
             const value = e.target.value
               .trimStart() // space as first character
@@ -121,12 +121,12 @@ export default function QuizyPage() {
               >
                 <p>{`${["A", "B", "C", "D"][j]}:`}</p>
 
-                <input
+                <textarea
                   name={`${i}-${j}-answer`}
                   value={answer.value}
                   placeholder={j === 0 ? "Wpisz odpowiedź" : ""}
                   autoComplete="off"
-                  maxLength={64}
+                  maxLength={90}
                   onChange={(e) => {
                     const value = e.target.value
                       .trimStart() // space as first character
@@ -206,7 +206,7 @@ export default function QuizyPage() {
         value={data[i].question}
         placeholder="Wpisz zdanie z luką"
         autoComplete="off"
-        maxLength={256}
+        maxLength={351}
         onChange={(e) => {
           const value = e.target.value
             .trimStart() // space as first character
@@ -237,7 +237,7 @@ export default function QuizyPage() {
           value={data[i].question}
           placeholder="Wpisz treść pytania"
           autoComplete="off"
-          maxLength={256}
+          maxLength={219}
           className={styles.question}
           onChange={(e) => {
             const value = e.target.value
@@ -262,7 +262,7 @@ export default function QuizyPage() {
           value={data[i].answers[0].value}
           placeholder="Wpisz poprawną odpowiedź"
           autoComplete="off"
-          maxLength={256}
+          maxLength={235}
           className={styles.answer}
           onChange={(e) => {
             const value = e.target.value

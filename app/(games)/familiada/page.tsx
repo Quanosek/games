@@ -234,7 +234,7 @@ export default function FamiliadaPage() {
               value={params.question}
               placeholder="Wpisz treść pytania"
               autoComplete="off"
-              maxLength={256}
+              maxLength={219}
               onChange={(e) => {
                 const value = e.target.value
                   .trimStart() // space as first character
@@ -263,7 +263,7 @@ export default function FamiliadaPage() {
                     value={params.answers[i].value}
                     placeholder={i === 0 ? "Wpisz odpowiedź" : ""}
                     autoComplete="off"
-                    maxLength={17} // board limit
+                    maxLength={17}
                     required={!!answer.points}
                     onChange={(e) => {
                       const regex =

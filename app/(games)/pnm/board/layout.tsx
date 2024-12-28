@@ -2,22 +2,18 @@
 
 import { useEffect } from "react";
 
-import styles from "./styles.module.scss";
 import { Myriad } from "@/lib/fonts";
+import styles from "./styles.module.scss";
 
 export default function PnmBoardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // keyboard interactions
   useEffect(() => {
-    const KeyupEvent = (event: KeyboardEvent) => {
-      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
-        return;
-      }
-
-      if (event.key === "Escape") close();
+    const KeyupEvent = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+      if (e.key === "Escape") close();
     };
 
     document.addEventListener("keyup", KeyupEvent);
@@ -26,10 +22,14 @@ export default function PnmBoardLayout({
 
   return (
     <div className={styles.layout}>
-      <div className={styles.container}>{children}</div>
+      <div className={styles.container}>
+        <>{children}</>
 
-      <div className={styles.credits}>
-        <p className={Myriad.className}>Stworzone na stronie games.klalo.pl</p>
+        <div className={styles.credits}>
+          <p className={Myriad.className}>
+            Stworzone na stronie games.klalo.pl
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -59,7 +59,7 @@ export default function RegisterForm() {
       <form onSubmit={handleSubmit(formSubmit)}>
         <label>
           <p>E-mail</p>
-          <input {...register("email")} autoComplete="email" maxLength={100} />
+          <input {...register("email")} autoComplete="email" maxLength={65} />
           {errors.email && <span>{errors.email.message}</span>}
         </label>
 

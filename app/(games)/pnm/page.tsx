@@ -190,7 +190,7 @@ export default function PnmPage() {
                     value={stage.category}
                     placeholder="Wpisz kategorię"
                     autoComplete="off"
-                    maxLength={20} // board limit
+                    maxLength={25}
                     onChange={(e) => {
                       const category = e.target.value
                         .trimStart() // space as first character
@@ -216,7 +216,7 @@ export default function PnmPage() {
                     value={stage.question}
                     placeholder="Wpisz treść pytania"
                     autoComplete="off"
-                    maxLength={128}
+                    maxLength={91}
                     onChange={(e) => {
                       const question = e.target.value
                         .trimStart() // space as first character
@@ -257,7 +257,7 @@ export default function PnmPage() {
                         value={answer.value}
                         placeholder={k === 0 ? "Wpisz odpowiedź" : ""}
                         autoComplete="off"
-                        maxLength={64}
+                        maxLength={29}
                         onChange={(e) => {
                           const value = e.target.value
                             .trimStart() // space as first character

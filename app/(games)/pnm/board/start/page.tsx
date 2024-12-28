@@ -1,9 +1,9 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
-import AnimatedBoard from "../animatedBoard";
 
+import AnimatedBoard from "../animated-board";
 import styles from "../styles.module.scss";
 
 export default function PnmStartBoard() {

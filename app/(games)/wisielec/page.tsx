@@ -276,7 +276,7 @@ export default function WisielecPage() {
                 value={params.category}
                 placeholder="Wpisz kategorię"
                 autoComplete="off"
-                maxLength={32}
+                maxLength={39}
                 onChange={(e) => {
                   const value = e.target.value
                     .trimStart() // space as first character
@@ -307,7 +307,7 @@ export default function WisielecPage() {
                 value={params.phrase}
                 placeholder="Wpisz hasło"
                 autoComplete="off"
-                maxLength={128}
+                maxLength={119}
                 onChange={(e) => {
                   const value = e.target.value
                     .trimStart() // space as first character

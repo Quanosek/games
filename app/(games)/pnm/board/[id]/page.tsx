@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import AnimatedBoard from "../animatedBoard";
-
-import type { Data } from "../../page";
-import styles from "../styles.module.scss";
+import { useState, useEffect, useRef } from "react";
 import { Myriad } from "@/lib/fonts";
+
+import AnimatedBoard from "../animated-board";
+import type { DataTypes } from "../../page";
+import styles from "../styles.module.scss";
 
 export default function PnmIdBoard({ params }: { params: { id: number } }) {
   const id = Number(params.id);
 
-  const [data, setData] = useState<Data[]>();
-  const [selectedQuestion, setQuestion] = useState<Data>();
+  const [data, setData] = useState<DataTypes[]>();
+  const [selectedQuestion, setQuestion] = useState<DataTypes>();
 
   // audio files references
   const categoriesAudio = useRef<HTMLAudioElement>(null);

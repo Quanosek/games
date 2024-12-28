@@ -92,9 +92,9 @@ export default function UserData({ user }: { user: User | undefined }) {
           className={styles.locked}
           name="email"
           autoComplete="email"
-          maxLength={100}
+          maxLength={65}
           defaultValue={user.email ?? ""}
-          disabled
+          disabled={true}
         />
       </label>
 

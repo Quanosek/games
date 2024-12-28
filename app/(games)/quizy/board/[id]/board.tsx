@@ -52,10 +52,10 @@ export default function QuizyBoardComponent({ id }: { id: number }) {
       close();
     }
     if (e.key === "ArrowLeft" && id > 0) {
-      router.push(`/wisielec/board/${Number(id) - 1}`);
+      router.push(`/quizy/board/${Number(id) - 1}`);
     }
     if (e.key === "ArrowRight" && id <= data.length) {
-      router.push(`/wisielec/board/${Number(id) + 1}`);
+      router.push(`/quizy/board/${Number(id) + 1}`);
     }
   });
 
