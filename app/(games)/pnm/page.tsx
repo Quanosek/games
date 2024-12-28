@@ -1,106 +1,94 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, Fragment } from "react";
-import { GameType } from "@/lib/enums";
+import toast from "react-hot-toast";
 
+import { GameType } from "@/lib/enums";
 import PageLayout from "@/components/wrappers/page-layout";
 import SavedGame from "@/components/saved-game";
 import styles from "./styles.module.scss";
 
-export interface Data {
+export interface DataTypes {
   category: string;
   question: string;
   answers: Array<{ value: string; checked: boolean }>;
 }
 
 export default function PnmPage() {
-  const router = useRouter();
+  const type = GameType.PNM;
 
-  const newStage: Data[] = new Array(2).fill({
+  const emptyData: DataTypes[] = new Array(2).fill({
     category: "",
     question: "",
     answers: new Array(4).fill({ value: "", checked: false }),
   });
 
-  const [data, setData] = useState([newStage]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState<DataTypes[][]>([emptyData]);
 
   // load game data
   useEffect(() => {
-    const type = "pnm";
+    const localData = localStorage.getItem(type);
 
-    try {
-      const localData = localStorage.getItem(`${type}`);
-
-      if (localData) {
+    if (localData) {
+      try {
         const parsed = JSON.parse(localData);
-
-        if (parsed.data) {
-          setData(parsed.data);
-        } else {
-          localStorage.setItem(`${type}`, JSON.stringify({ data: parsed }));
-        }
+        setData(parsed.data);
+      } catch {
+        localStorage.removeItem(type);
+        window.location.reload();
       }
-    } catch (_err) {
-      localStorage.removeItem(`${type}`);
-      window.location.reload();
-    } finally {
-      setLoading(false);
     }
-  }, [router]);
+
+    setIsLoading(false);
+  }, [type]);
 
   // save data on change
   useEffect(() => {
-    if (loading) return;
+    if (isLoading) return;
 
-    const localData = JSON.parse(localStorage.getItem("pnm") || "{}");
-    const { data: _, ...params } = localData;
-
-    localStorage.setItem("pnm", JSON.stringify({ data, ...params }));
-  }, [loading, data]);
+    const localData = JSON.parse(localStorage.getItem(type)!);
+    localStorage.setItem(type, JSON.stringify({ ...localData, data }));
+  }, [isLoading, data, type]);
 
   // check if board is empty
-  const emptyBoardCheck = (data: Data[]) => {
-    return JSON.stringify(data) === JSON.stringify(newStage);
+  const emptyBoardCheck = (data: DataTypes[]) => {
+    return JSON.stringify(data) === JSON.stringify(emptyData);
   };
 
-  // MAIN COMPONENT
-  const FormBoard = (i: number) => {
+  // game form component
+  const MainComponent = (i: number) => {
+    const params = data[i];
+    if (!params) return null;
+
     return (
       <form
-        key={i}
-        id={i.toString()}
-        className={styles.board}
+        id={`${i}`}
+        className={styles.form}
         onSubmit={(e) => {
           e.preventDefault();
-          open(`/pnm/board/${i + 1}`, "game_window", "width=960, height=540");
+
+          return open(
+            `/pnm/board/${i + 1}`,
+            "game_window",
+            "width=960, height=540"
+          );
         }}
       >
         <div className={styles.controls}>
           <h2>{`Etap ${i + 1}/${data.length}`}</h2>
 
           <div className={styles.buttons}>
-            {/* delete button */}
             <button
               type="button"
-              disabled={data.length === 1 && emptyBoardCheck(data[i])}
-              title={
-                data.length === 1 && emptyBoardCheck(data[i])
-                  ? "Nie można usunąć ostatniej planszy"
-                  : "Wyczyść/usuń planszę"
-              }
+              disabled={data.length === 1 && emptyBoardCheck(params)}
               onClick={() => {
-                if (!emptyBoardCheck(data[i])) {
-                  if (!confirm("Czy na pewno chcesz wyczyścić planszę?")) {
-                    return;
-                  }
-
+                if (!emptyBoardCheck(params)) {
                   setData((prev) => {
                     const newData = [...prev];
-                    newData[i] = newStage;
+                    newData[i] = emptyData;
                     return newData;
                   });
                 } else {
@@ -108,11 +96,16 @@ export default function PnmPage() {
                     const newData = [...prev];
                     if (newData.length > 1) newData.splice(i, 1);
 
+                    const scrollIndex =
+                      i + 1 === data.length ? data.length - 2 : "";
+
                     setTimeout(() => {
-                      document.getElementById(i.toString())?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                      });
+                      document
+                        .getElementById(scrollIndex.toString())
+                        ?.scrollIntoView({
+                          behavior: "smooth",
+                          block: "center",
+                        });
                     }, 1);
 
                     return newData;
@@ -122,7 +115,7 @@ export default function PnmPage() {
             >
               <Image
                 className="icon"
-                alt="kosz"
+                alt="usuń"
                 src="/icons/trashcan.svg"
                 width={20}
                 height={20}
@@ -130,17 +123,13 @@ export default function PnmPage() {
               />
             </button>
 
-            {/* move down button */}
             <button
               type="button"
-              title="Przenieś w dół"
               disabled={i + 1 === data.length}
               onClick={() => {
                 setData((prev) => {
                   const newData = [...prev];
-                  const temp = newData[i];
-                  newData[i] = newData[i + 1];
-                  newData[i + 1] = temp;
+                  [newData[i], newData[i + 1]] = [newData[i + 1], newData[i]];
                   return newData;
                 });
               }}
@@ -156,17 +145,13 @@ export default function PnmPage() {
               />
             </button>
 
-            {/* move up button */}
             <button
               type="button"
-              title="Przenieś do góry"
               disabled={i === 0}
               onClick={() => {
                 setData((prev) => {
                   const newData = [...prev];
-                  const temp = newData[i];
-                  newData[i] = newData[i - 1];
-                  newData[i - 1] = temp;
+                  [newData[i], newData[i - 1]] = [newData[i - 1], newData[i]];
                   return newData;
                 });
               }}
@@ -183,14 +168,18 @@ export default function PnmPage() {
 
             <p>{"•"}</p>
 
-            <button type="submit">
+            <button
+              type="submit"
+              className={styles.presentationButton}
+              disabled={true}
+            >
               <p>Prezentuj</p>
             </button>
           </div>
         </div>
 
         <div className={styles.content}>
-          {data[i].map((stage, j) => (
+          {params.map((stage, j) => (
             <Fragment key={j}>
               <div className={styles.inputs}>
                 <label>
@@ -198,18 +187,15 @@ export default function PnmPage() {
 
                   <input
                     name={`${i}-${j}-category`}
+                    value={stage.category}
                     placeholder="Wpisz kategorię"
                     autoComplete="off"
-                    maxLength={20} // board responsiveness limit
-                    value={stage.category || ""}
-                    required
+                    maxLength={20} // board limit
                     onChange={(e) => {
-                      // validate input
                       const category = e.target.value
-                        .replace(/\s\s/g, " ") // double space
-                        .replace(/^[\s]/, ""); // space as first character
+                        .trimStart() // space as first character
+                        .replace(/\s\s/g, " "); // double space
 
-                      // update data
                       setData((prev) => {
                         const newData = [...prev];
                         newData[i][j] = {
@@ -225,20 +211,18 @@ export default function PnmPage() {
                 <label>
                   <h3>Pytanie:</h3>
 
-                  <input
+                  <textarea
                     name={`${i}-${j}-question`}
-                    placeholder="Wpisz pytanie"
+                    value={stage.question}
+                    placeholder="Wpisz treść pytania"
                     autoComplete="off"
                     maxLength={128}
-                    value={stage.question || ""}
-                    required
                     onChange={(e) => {
-                      // validate input
                       const question = e.target.value
+                        .trimStart() // space as first character
                         .replace(/\s\s/g, " ") // double space
-                        .replace(/^[\s]/, ""); // space as first character
+                        .replace(/\n/g, ""); // enters
 
-                      // update data
                       setData((prev) => {
                         const newData = [...prev];
                         newData[i][j] = {
@@ -251,8 +235,8 @@ export default function PnmPage() {
                   />
                 </label>
 
-                <div>
-                  <h3>Odpowiedzi (jedna poprawna):</h3>
+                <div className={styles.answers}>
+                  <h3>Odpowiedzi (tylko jedna poprawna):</h3>
 
                   {stage.answers.map((answer, k) => (
                     <div
@@ -262,37 +246,45 @@ export default function PnmPage() {
                         // disable if prev or curr answer is empty
                         pointerEvents:
                           k === 0 ||
-                          data[i][j].answers[k - 1].value ||
-                          data[i][j].answers[k].value
+                          params[j].answers[k - 1].value ||
+                          params[j].answers[k].value
                             ? "unset"
                             : "none",
                       }}
                     >
                       <input
                         name={`${i}-${j}-${k}-answer`}
-                        placeholder={`Odpowiedź ${k + 1}`}
+                        value={answer.value}
+                        placeholder={k === 0 ? "Wpisz odpowiedź" : ""}
                         autoComplete="off"
                         maxLength={64}
-                        value={answer.value || ""}
-                        required={k < 2}
                         onChange={(e) => {
-                          // validate input
                           const value = e.target.value
-                            .replace(/\s\s/g, " ") // double space
-                            .replace(/^[\s]/, ""); // space as first character
+                            .trimStart() // space as first character
+                            .replace(/\s\s/g, " "); // double space
 
-                          // update data
                           setData((prev) => {
                             const newData = [...prev];
                             newData[i][j] = {
                               ...newData[i][j],
-                              answers: newData[i][j].answers.map((a, l) => {
-                                // find specific answer and add value
-                                return l === k ? { ...a, value } : a;
-                              }),
+                              answers: newData[i][j].answers.map((answer, l) =>
+                                l === k ? { ...answer, value } : answer
+                              ),
                             };
                             return newData;
                           });
+                        }}
+                        onBlur={(e) => {
+                          if (!e.target.value) {
+                            setData((prev) => {
+                              const newData = [...prev];
+                              newData[i][j].answers[k] = {
+                                ...newData[i][j].answers[k],
+                                checked: false,
+                              };
+                              return newData;
+                            });
+                          }
                         }}
                       />
 
@@ -332,23 +324,26 @@ export default function PnmPage() {
     );
   };
 
-  // MAIN RETURN
+  // main component render
   return (
     <PageLayout>
-      <SavedGame type={GameType.PNM} data={JSON.stringify(data)} />
+      <SavedGame type={type} data={JSON.stringify(data)} />
+      <div className={styles.logo}>
+        <p onClick={() => document.getElementById("legal")?.scrollIntoView()}>
+          {"*"}
+        </p>
 
-      <div className={styles.gameLogo}>
         <Image
           alt="Postaw na milion"
           src="/pnm/images/logo.webp"
           width={475}
           height={314}
           draggable={false}
-          priority
+          priority={true}
         />
       </div>
 
-      <div className={styles.actionButtons}>
+      <div className={styles.navigation}>
         <Link href="/pnm/rules">
           <p>{"📖 Zasady gry"}</p>
         </Link>
@@ -362,55 +357,65 @@ export default function PnmPage() {
             );
           }}
         >
-          <p>{"✨ Tablica tytułowa"}</p>
+          <p>{"▶️ Tablica tytułowa"}</p>
         </button>
       </div>
 
-      {loading ? (
+      {isLoading && (
         <div className="loading">
           <p>Trwa ładowanie...</p>
         </div>
-      ) : (
-        <div className={styles.container}>
-          {[...Array(data.length)].map((_, index) => FormBoard(index))}
-
-          <button
-            className={styles.addButton}
-            disabled={emptyBoardCheck(data[data.length - 1])}
-            title={
-              emptyBoardCheck(data[data.length - 1])
-                ? "Uzupełnij poprzednią planszę przed dodaniem nowej"
-                : ""
-            }
-            onClick={() => {
-              setData([...data, newStage]);
-
-              setTimeout(() => {
-                document
-                  .getElementById(data.length.toString())
-                  ?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center",
-                  });
-              }, 1);
-            }}
-          >
-            <Image
-              className="icon"
-              alt="+"
-              src="/icons/plus.svg"
-              width={18}
-              height={18}
-              draggable={false}
-            />
-            <p>Kolejny etap</p>
-          </button>
-        </div>
       )}
 
-      <div className={styles.credits}>
+      <div
+        className={styles.container}
+        style={{
+          visibility: isLoading ? "hidden" : "visible",
+          position: "relative",
+          top: isLoading ? 10 : 0,
+          opacity: isLoading ? 0 : 1,
+          transition: "top 150ms ease-out, opacity 200ms ease-out",
+        }}
+      >
+        <div className={styles.formsContainer}>
+          {Array.from({ length: data.length }).map((_, index) => (
+            <Fragment key={index}>{MainComponent(index)}</Fragment>
+          ))}
+        </div>
+
+        <button
+          className={styles.formButton}
+          disabled={emptyBoardCheck(data[data.length - 1])}
+          onClick={() => {
+            if (data.length >= 99) {
+              return toast.error("Osiągnięto limit 99 dodanych etapów");
+            }
+
+            setData([...data, emptyData]);
+
+            setTimeout(() => {
+              document.getElementById(data.length.toString())?.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              });
+            }, 1);
+          }}
+        >
+          <Image
+            className="icon"
+            alt="+"
+            src="/icons/plus.svg"
+            width={16}
+            height={16}
+            draggable={false}
+          />
+          <p>Dodaj etap</p>
+        </button>
+      </div>
+
+      <div id="legal" className={styles.legal}>
         <p>
-          Gra została stworzona na podstawie polskiego teleturnieju{" "}
+          <b>{"*"}</b> Gra została stworzona na podstawie polskiego teleturnieju{" "}
           <Link
             href="https://pl.wikipedia.org/wiki/Postaw_na_milion"
             target="_blank"

@@ -43,9 +43,9 @@ export default function HomePage() {
           <p>{`"Familiada"`}</p>
         </Link>
 
-        <Link tabIndex={-1} className="disabled" href="/pnm">
+        <Link href="/pnm">
           <Image
-            alt="💸"
+            alt="💵"
             src="/favicons/dollar-banknote.svg"
             width={22}
             height={22}

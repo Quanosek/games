@@ -55,11 +55,12 @@ $gradient: linear-gradient(45deg, #e93838, #9b136e); // custom color theme
   overflow: hidden;
 }
 
-$form-margin: 1rem;
+$form-margin: 1.25rem;
 
 .controls {
   position: relative;
   padding: $form-margin;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;

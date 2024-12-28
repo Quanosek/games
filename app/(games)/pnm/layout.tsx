@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicons/dollar-banknote.svg",
   },
+  robots: {
+    index: false,
+  },
 };
 
 export default function PnmLayout({ children }: { children: React.ReactNode }) {

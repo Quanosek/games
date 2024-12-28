@@ -1,14 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
+
+import { NunitoSans } from "@/lib/fonts";
 import PageLayout from "@/components/wrappers/page-layout";
-
 import styles from "../styles.module.scss";
-
-import { Nunito_Sans } from "next/font/google";
-const Nunito = Nunito_Sans({
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export default function PnmRulesPage() {
   return (
@@ -26,10 +21,10 @@ export default function PnmRulesPage() {
           <p>Powrót</p>
         </Link>
 
-        <h1>Zasady gry</h1>
+        <h1>{"✨ Zasady gry ✨"}</h1>
       </div>
 
-      <div className={`${Nunito.className} ${styles.rulesContainer}`}>
+      <div className={`${NunitoSans.className} ${styles.rulesContainer}`}>
         <p>
           Po uruchomieniu planszy etapu wybór kategorii możliwy jest przez
           kliknięcie w odpowiednią nazwę lub wciśnięcie odpowiednio klawiszy{" "}

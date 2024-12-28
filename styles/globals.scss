@@ -62,10 +62,6 @@ header {
     padding: 0.5rem calc(min(3rem, 3%) - $button-side);
   }
 
-  img {
-    user-select: none;
-  }
-
   a,
   button {
     opacity: 90%;

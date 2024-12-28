@@ -94,11 +94,12 @@ $gradient: linear-gradient(45deg, #651bb4, #0060c0); // custom color theme
   overflow: hidden;
 }
 
-$form-margin: 1rem;
+$form-margin: 1.25rem;
 
 .controls {
   position: relative;
   padding: $form-margin;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
