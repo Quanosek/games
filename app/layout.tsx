@@ -41,7 +41,7 @@ export default async function RootLayout({
           <header>
             <section>
               <div className="navigation">
-                <Link href="/" className="title">
+                <Link href="/">
                   <Image
                     alt="🎲"
                     src="/favicons/game-die.svg"
@@ -50,7 +50,7 @@ export default async function RootLayout({
                     draggable={false}
                     priority={true}
                   />
-                  <p>Pokój gier</p>
+                  <h1>Pokój gier</h1>
                 </Link>
 
                 <Link href="/info">

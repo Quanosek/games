@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import { Dotted } from "@/lib/fonts";
+import { Familiada } from "@/lib/fonts";
 import styles from "./styles.module.scss";
 
 export default function FamiliadaBoardLayout({
@@ -26,7 +26,7 @@ export default function FamiliadaBoardLayout({
         <>{children}</>
 
         <div className={styles.credits}>
-          <p className={Dotted.className}>
+          <p className={Familiada.className}>
             Stworzone na stronie games.klalo.pl
           </p>
         </div>

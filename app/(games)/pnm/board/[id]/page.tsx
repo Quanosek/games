@@ -251,7 +251,7 @@ export default function PnmIdBoard({ params }: { params: { id: number } }) {
     return (
       <div
         style={{
-          opacity: showBoard ? "100%" : "0",
+          opacity: showBoard ? 1 : 0,
           transition: "opacity 300ms ease-out",
         }}
       >

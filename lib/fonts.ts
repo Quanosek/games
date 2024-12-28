@@ -4,16 +4,12 @@ import localFont from "next/font/local";
 export const Nexa = localFont({
   src: [
     {
-      path: "../fonts/nexa-light.woff2",
-      weight: "200",
-    },
-    {
       path: "../fonts/nexa-regular.woff2",
-      weight: "400",
+      weight: "normal",
     },
     {
       path: "../fonts/nexa-bold.woff2",
-      weight: "800",
+      weight: "bold",
     },
   ],
 
@@ -28,7 +24,7 @@ export const NunitoSans = localFont({
 });
 
 // "Familiada" boards
-export const Dotted = localFont({
+export const Familiada = localFont({
   src: "../fonts/familiada-regular.woff2",
   display: "swap",
 });

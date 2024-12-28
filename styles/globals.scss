@@ -101,14 +101,9 @@ header {
     display: flex;
     align-items: center;
 
-    .title {
-      position: relative;
-      bottom: 3.5%;
-
-      p {
-        font-size: 120%;
-        font-weight: bold;
-      }
+    h1 {
+      font-size: 120%;
+      font-weight: bold;
     }
   }
 

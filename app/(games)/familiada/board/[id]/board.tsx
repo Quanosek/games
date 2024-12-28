@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 import { GameType } from "@/lib/enums";
-import { Dotted } from "@/lib/fonts";
+import { Familiada } from "@/lib/fonts";
 import type { DataTypes } from "../../page";
 import styles from "../styles.module.scss";
 
@@ -141,7 +141,7 @@ export default function FamiliadaBoardComponent({ id }: { id: number }) {
 
   return (
     <div
-      className={`${Dotted.className} ${styles.game}`}
+      className={`${Familiada.className} ${styles.game}`}
       style={{ backgroundImage }}
     >
       <div className={styles.totalPoints}>
