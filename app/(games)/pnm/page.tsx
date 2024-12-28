@@ -257,13 +257,20 @@ export default function PnmPage() {
                         pointerEvents:
                           k === 0 ||
                           params[j].answers[k - 1].value ||
-                          params[j].answers[k].value
+                          answer.value
                             ? "unset"
                             : "none",
                       }}
                     >
                       <input
                         name={`${i}-${j}-${k}-answer`}
+                        tabIndex={
+                          k === 0 ||
+                          params[j].answers[k - 1].value ||
+                          answer.value
+                            ? 0
+                            : -1
+                        }
                         value={answer.value}
                         placeholder={k === 0 ? "Wpisz odpowiedź" : ""}
                         autoComplete="off"
@@ -299,14 +306,14 @@ export default function PnmPage() {
                       />
 
                       <input
+                        type="radio"
+                        name={`${i}-${j}-check`}
+                        checked={answer.checked}
+                        tabIndex={-1}
                         style={{
                           // disable if answer is empty
                           pointerEvents: answer.value ? "unset" : "none",
                         }}
-                        type="radio"
-                        name={`${i}-${j}-check`}
-                        checked={answer.checked}
-                        required
                         onChange={() => {
                           setData((prev) => {
                             const newData = [...prev];

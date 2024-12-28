@@ -5,6 +5,8 @@ import PageLayout from "@/components/wrappers/page-layout";
 import styles from "@/styles/home.module.scss";
 
 export default function HomePage() {
+  const dev = process.env.NODE_ENV === "development";
+
   return (
     <PageLayout>
       <h1>Wybierz grę</h1>
@@ -43,7 +45,11 @@ export default function HomePage() {
           <p>{`"Familiada"`}</p>
         </Link>
 
-        <Link href="/pnm">
+        <Link
+          href="/pnm"
+          tabIndex={dev ? 0 : -1}
+          className={dev ? "" : "disabled"}
+        >
           <Image
             alt="💵"
             src="/favicons/dollar-banknote.svg"

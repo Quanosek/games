@@ -123,6 +123,11 @@ export default function QuizyPage() {
 
                 <textarea
                   name={`${i}-${j}-answer`}
+                  tabIndex={
+                    j === 0 || data[i].answers[j - 1].value || answer.value
+                      ? 0
+                      : -1
+                  }
                   value={answer.value}
                   placeholder={j === 0 ? "Wpisz odpowiedź" : ""}
                   autoComplete="off"
@@ -283,13 +288,12 @@ export default function QuizyPage() {
   );
 
   // game form component
-  const MainComponent = (index: number) => {
-    const params = data[index];
-    if (!params) return null;
+  const MainComponent = (i: number) => {
+    if (!data[i]) return null;
 
     let typeInfo: { src: string; name: string };
 
-    switch (params.type) {
+    switch (data[i].type) {
       case "closed":
         typeInfo = { src: "a-button", name: "Pytanie zamknięte" };
         break;
@@ -303,15 +307,15 @@ export default function QuizyPage() {
 
     return (
       <form
-        id={`${index}`}
+        id={`${i}`}
         className={styles.form}
         onSubmit={(e) => {
           e.preventDefault();
 
-          if (!emptyForm(params)) return;
+          if (!emptyForm(data[i])) return;
 
           return open(
-            `/quizy/board/${index + 1}`,
+            `/quizy/board/${i + 1}`,
             "game_window",
             "width=960, height=540"
           );
@@ -319,7 +323,7 @@ export default function QuizyPage() {
       >
         <div className={styles.controls}>
           <div className={styles.description}>
-            <p>{`Plansza ${index + 1}/${data.length}`}</p>
+            <p>{`Plansza ${i + 1}/${data.length}`}</p>
 
             <p>{"•"}</p>
 
@@ -339,13 +343,13 @@ export default function QuizyPage() {
             <button
               type="button"
               onClick={() => {
-                if (data[index].question || data[index].answers[0]?.value) {
+                if (data[i].question || data[i].answers[0]?.value) {
                   setData((prev) => {
                     const newData = [...prev];
-                    newData[index] = {
-                      type: data[index].type,
+                    newData[i] = {
+                      type: data[i].type,
                       question: "",
-                      answers: data[index].answers.map(() => ({
+                      answers: data[i].answers.map(() => ({
                         value: "",
                         checked: false,
                       })),
@@ -355,10 +359,10 @@ export default function QuizyPage() {
                 } else {
                   setData((prev) => {
                     const newData = [...prev];
-                    newData.splice(index, 1);
+                    newData.splice(i, 1);
 
                     const scrollIndex =
-                      index + 1 === data.length ? data.length - 2 : "";
+                      i + 1 === data.length ? data.length - 2 : "";
 
                     setTimeout(() => {
                       document
@@ -386,16 +390,11 @@ export default function QuizyPage() {
 
             <button
               type="button"
-              disabled={index + 1 === data.length}
+              disabled={i + 1 === data.length}
               onClick={() => {
                 setData((prev) => {
                   const newData = [...prev];
-
-                  [newData[index], newData[index + 1]] = [
-                    newData[index + 1],
-                    newData[index],
-                  ];
-
+                  [newData[i], newData[i + 1]] = [newData[i + 1], newData[i]];
                   return newData;
                 });
               }}
@@ -413,16 +412,11 @@ export default function QuizyPage() {
 
             <button
               type="button"
-              disabled={index === 0}
+              disabled={i === 0}
               onClick={() => {
                 setData((prev) => {
                   const newData = [...prev];
-
-                  [newData[index], newData[index - 1]] = [
-                    newData[index - 1],
-                    newData[index],
-                  ];
-
+                  [newData[i], newData[i - 1]] = [newData[i - 1], newData[i]];
                   return newData;
                 });
               }}
@@ -442,7 +436,7 @@ export default function QuizyPage() {
             <button
               type="submit"
               className={styles.presentationButton}
-              disabled={!emptyForm(params)}
+              disabled={!emptyForm(data[i])}
             >
               <p>Prezentuj</p>
             </button>
@@ -450,9 +444,9 @@ export default function QuizyPage() {
         </div>
 
         <div className={styles.content}>
-          {params.type === "closed" && ClosedBoard(index)}
-          {params.type === "gap" && GapBoard(index)}
-          {params.type === "open" && OpenBoard(index)}
+          {data[i].type === "closed" && ClosedBoard(i)}
+          {data[i].type === "gap" && GapBoard(i)}
+          {data[i].type === "open" && OpenBoard(i)}
         </div>
       </form>
     );
