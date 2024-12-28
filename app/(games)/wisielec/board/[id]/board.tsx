@@ -105,7 +105,7 @@ export default function WisielecBoardComponent({ id }: { id: number }) {
 
     // time countdown
     useEffect(() => {
-      if (gameResult) return;
+      if (remainingTime === -1 || gameResult) return;
 
       const interval = setInterval(() => {
         setRemainingTime((prevTime) => {
@@ -122,7 +122,7 @@ export default function WisielecBoardComponent({ id }: { id: number }) {
       }, 1000);
 
       return () => clearInterval(interval);
-    }, [gameResult]);
+    }, [remainingTime, gameResult]);
 
     // checking game state result
     useEffect(() => {

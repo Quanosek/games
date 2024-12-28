@@ -8,6 +8,18 @@ import type { DataTypes } from "../../page";
 import AnimatedBoard from "../animated-board";
 import styles from "../styles.module.scss";
 
+const KeyboardInteraction = (Shortcuts: any) => {
+  useEffect(() => {
+    const KeyupEvent = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+      Shortcuts(e);
+    };
+
+    document.addEventListener("keyup", KeyupEvent);
+    return () => document.removeEventListener("keyup", KeyupEvent);
+  }, [Shortcuts]);
+};
+
 export default function PnmBoardComponent({ id }: { id: number }) {
   const [data, setData] = useState<DataTypes[]>();
   const [selectedQuestion, setQuestion] = useState<DataTypes>();
@@ -42,19 +54,10 @@ export default function PnmBoardComponent({ id }: { id: number }) {
     };
 
     // keyboard interactions
-    useEffect(() => {
-      const KeyupEvent = (event: KeyboardEvent) => {
-        if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
-          return;
-        }
-
-        if (event.key === "1") categorySelected(0);
-        if (event.key === "2") categorySelected(1);
-      };
-
-      document.addEventListener("keyup", KeyupEvent);
-      return () => document.removeEventListener("keyup", KeyupEvent);
-    }, []);
+    KeyboardInteraction((e: KeyboardEvent) => {
+      if (e.key === "1") categorySelected(0);
+      if (e.key === "2") categorySelected(1);
+    });
 
     return (
       <AnimatedBoard>
@@ -109,7 +112,6 @@ export default function PnmBoardComponent({ id }: { id: number }) {
           const newValue = prev + 1;
 
           if (newValue < answersCounted + 1) {
-            answerAudio.current.pause();
             answerAudio.current.currentTime = 0;
             answerAudio.current.play();
             return newValue;
@@ -119,7 +121,7 @@ export default function PnmBoardComponent({ id }: { id: number }) {
             return 5;
           }
         });
-      }, 2_200);
+      }, 2_400);
 
       return () => clearInterval(interval);
     }, []);
@@ -151,80 +153,71 @@ export default function PnmBoardComponent({ id }: { id: number }) {
     });
 
     // keyboard interactions
-    useEffect(() => {
-      const KeyupEvent = (event: KeyboardEvent) => {
-        if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
-          return;
-        }
+    KeyboardInteraction((e: KeyboardEvent) => {
+      if (e.key === " ") {
+        // start counter
+        if (displayCounter === 5) {
+          setDisplayCounter(6);
 
-        if (event.key === " ") {
-          // start counter
-          if (displayCounter === 5) {
-            setDisplayCounter(6);
+          // smooth muting of the question loop
+          const interval = setInterval(() => {
+            if (!questionAudio.current) return;
 
-            // smooth muting of the question loop
-            const interval = setInterval(() => {
-              if (!questionAudio.current) return;
-
-              if (questionAudio.current.volume > 0.05) {
-                questionAudio.current.volume -= 0.05;
-              } else {
-                questionAudio.current.pause();
-                clearInterval(interval);
-              }
-            }, 1_000);
-          }
-
-          // stop time before end
-          if (remainingTime !== 0 && displayCounter === 6) {
-            setDisplayCounter(7);
-            setRemainingTime(0);
-
-            setTimeout(() => stopAudio.current?.play(), 300);
-
-            // smooth muting of all background music
-            const interval = setInterval(() => {
-              if (!questionAudio.current || !timerAudio.current) return;
-
-              if (questionAudio.current.volume > 0.05) {
-                questionAudio.current.volume -= 0.05;
-              }
-
-              if (timerAudio.current.volume > 0.05) {
-                timerAudio.current.volume -= 0.05;
-              } else {
-                clearInterval(interval);
-                questionAudio.current.pause();
-                timerAudio.current?.pause();
-              }
-            }, 100);
-          }
-
-          // reveal answers
-          if (
-            (remainingTime === 0 && displayCounter === 6) ||
-            displayCounter === 7
-          ) {
-            setDisplayCounter(8);
-
-            const packagesWon = selectedQuestion?.answers
-              .map((answer, index) => {
-                return answer.checked ? packages.boxes[index].packages : 0;
-              })
-              .reduce((acc, curr) => acc + curr, 0);
-
-            if (packagesWon) {
-              console.log(`You won ${packagesWon * 25_000} PLN!`);
+            if (questionAudio.current.volume > 0.05) {
+              questionAudio.current.volume -= 0.05;
             } else {
-              console.log("You lost!");
+              questionAudio.current.pause();
+              clearInterval(interval);
             }
+          }, 1000);
+        }
+
+        // stop time before end
+        if (remainingTime !== 0 && displayCounter === 6) {
+          setDisplayCounter(7);
+          setRemainingTime(0);
+
+          setTimeout(() => stopAudio.current?.play(), 300);
+
+          // smooth muting of all background music
+          const interval = setInterval(() => {
+            if (!questionAudio.current || !timerAudio.current) return;
+
+            if (questionAudio.current.volume > 0.05) {
+              questionAudio.current.volume -= 0.05;
+            }
+
+            if (timerAudio.current.volume > 0.05) {
+              timerAudio.current.volume -= 0.05;
+            } else {
+              clearInterval(interval);
+              questionAudio.current.pause();
+              timerAudio.current?.pause();
+            }
+          }, 100);
+        }
+
+        // reveal answers
+        if (
+          (remainingTime === 0 && displayCounter === 6) ||
+          displayCounter === 7
+        ) {
+          setDisplayCounter(8);
+
+          const packagesWon = selectedQuestion?.answers
+            .map((answer, index) => {
+              return answer.checked ? packages.boxes[index].packages : 0;
+            })
+            .reduce((acc, curr) => acc + curr, 0);
+
+          if (packagesWon) {
+            console.log(`You won ${packagesWon * 25_000} PLN!`);
+          } else {
+            console.log("You lost!");
           }
         }
-      };
-
-      document.addEventListener("keyup", KeyupEvent);
-      return () => document.removeEventListener("keyup", KeyupEvent);
-    }, [displayCounter, remainingTime, packages.boxes]);
+      }
+    });
 
     // display time counter
     const DynamicClock = () => {
