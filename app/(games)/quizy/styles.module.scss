@@ -183,21 +183,31 @@ $form-margin: 1.25rem;
 .formValue {
   position: relative;
   display: flex;
-  align-items: center;
 
-  $padding-left: 1rem;
+  $default-padding: 0.7rem;
+  $number-padding: 23px;
 
   p {
     z-index: 1;
     position: absolute;
-    left: $padding-left;
-    user-select: none;
+    top: $default-padding;
+    left: $default-padding;
+    width: $number-padding;
+    display: flex;
+    justify-content: center;
     pointer-events: none;
   }
 
-  input {
-    padding-left: calc(2.5 * $padding-left);
+  textarea {
+    padding: $default-padding;
+    padding-left: calc($default-padding + $number-padding);
+    background-color: var(--primary);
     border-radius: 0;
+
+    &::placeholder {
+      position: relative;
+      top: 0.5px;
+    }
   }
 }
 

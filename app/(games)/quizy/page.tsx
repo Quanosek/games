@@ -130,7 +130,8 @@ export default function QuizyPage() {
                   onChange={(e) => {
                     const value = e.target.value
                       .trimStart() // space as first character
-                      .replace(/\s\s+/g, " "); // double space
+                      .replace(/\s\s+/g, " ") // double space
+                      .replace(/\n/g, ""); // enters
 
                     setData((prev) => {
                       const newData = [...prev];

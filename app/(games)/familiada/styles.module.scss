@@ -183,7 +183,7 @@ $form-margin: 1.25rem;
   width: 100%;
 
   $default-padding: 0.7rem;
-  $number-padding: 44px;
+  $number-padding: 40px;
 
   p,
   textarea {
@@ -195,7 +195,7 @@ $form-margin: 1.25rem;
     z-index: 1;
     position: absolute;
     top: $default-padding;
-    left: 2px;
+    left: $default-padding;
     width: $number-padding;
     display: flex;
     justify-content: center;
@@ -204,7 +204,7 @@ $form-margin: 1.25rem;
 
   textarea {
     padding: $default-padding;
-    padding-left: $number-padding;
+    padding-left: calc($default-padding + $number-padding);
     background-color: var(--secondary);
 
     &::placeholder {
